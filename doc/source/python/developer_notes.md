@@ -1,13 +1,13 @@
-# Development Tips
+# 开发技巧
 
 
-## Running locally for testing
+## 在本地运行以进行测试
 
-Sometimes it is useful to be able to test your model locally without the need to build image with s2i or docker.
+有时，无需使用 s2i 或 docker 构建映像即可在本地测试模型很有用。
 
-This can be easily done with `seldon-core` as its installed the CLI command that starts the microservice.
+可通过安装的 `seldon-core` 命令行开启微服务。
 
-Assuming we have a simple model saved in `MyModel.py` file:
+假设我们有一个简单的模型存储在 `MyModel.py` 文件：
 ```python
 class MyModel:
 
@@ -24,12 +24,12 @@ class MyModel:
         return X
 ```
 
-We can start Seldon Core microservice with
+我们可以启动 Seldon Core 微服务
 ```bash
 seldon-core-microservice MyModel --service-type MODEL
 ```
 
-Then in other terminal we can send `curl` requests to test REST endpoint:
+然后在其他终端中，我们可以发送 curl 请求来测试 REST 节点：
 ```bash
 curl http://localhost:9000/api/v1.0/predictions \
     -H 'Content-Type: application/json' \
@@ -37,13 +37,13 @@ curl http://localhost:9000/api/v1.0/predictions \
 ```
 
 
-And assuming that `seldon-core` code is accessible at `${SELDON_CORE_DIR}` we can use `grpcurl` to send gRPC request:
+假设 `seldon-core` 代码存放在 `${SELDON_CORE_DIR}` 我们可以使用 `grpcurl` 发送 gRPC 请求：
 ```bash
 cd ${SELDON_CORE_DIR}/executor/proto && grpcurl \
     -d '{"data": {"names": ["input"], "ndarray": ["data"]}}' \
     -plaintext -proto ./prediction.proto  0.0.0.0:5000 seldon.protos.Seldon/Predict
 ```
 
-The `grpcurl` tool can be obtained using binaries released on [GitHub](https://github.com/fullstorydev/grpcurl) or using [asdf-vm](https://github.com/asdf-vm/asdf-plugins).
+`grpcurl` 工具可以使用 [GitHub](https://github.com/fullstorydev/grpcurl) 或者使用 [asdf-vm](https://github.com/asdf-vm/asdf-plugins).
 
-See [Python Server](./python_server.html#configuration) documentation for config options.
+查看 [Python 服务器](./python_server.html#configuration) 文档获取配置选项。

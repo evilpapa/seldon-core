@@ -4,7 +4,7 @@ A summary of the main contributions to the [Seldon Core release 1.7.0](https://g
 
 ## Experimental GPU Accelerated Explainers and Drift Detection
 
-As part of our NVIDIA GTC 2021 Talk this year we have added some new features for utilizing GPUs for explainability and drift detection.
+As part of our [NVIDIA GTC 2021 Talk](https://gtc21.event.nvidia.com/media/MLOps%20with%20NVIDIA%20GPUs%20on%20Kubernetes%20%5BS32020%5D/1_tgjkxf3l) this year we have added some new features for utilizing GPUs for explainability and drift detection.
 
 ### XGBoost Model with GPU TreeShap Explainer
 
@@ -71,7 +71,7 @@ spec:
       name: classifier
       implementation: SKLEARN_SERVER
       modelUri: mys3:sklearn/iris
-      storageInitializerImage: kfserving/storage-initializer:v0.6.1           # Specify custom image here
+      storageInitializerImage: gcr.io/kfserving/storage-initializer:v0.4.0    # Specify custom image here
       envSecretRefName: seldon-init-container-secret                          # Specify custom secret here
 ```
 
@@ -82,4 +82,7 @@ We have updated our base Python images to address CVEs identified, which aligns 
 ## Other highlights
 
 * Updated request logging examples to use OpenDistro for Elasticsearch
-*
+* 
+
+
+

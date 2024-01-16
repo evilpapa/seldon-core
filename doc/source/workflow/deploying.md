@@ -1,6 +1,6 @@
-# Deployment
+# 部署
 
-Once you have created your inference graph as a JSON or YAML Seldon Deployment resource you can deploy to Kubernetes with `kubectl`. For example, if your deployment is packaged in `my_ml_deployment.yaml`:
+一旦创建了 JSON 或 YAML 格式的 Seldon Deployment 部署资源，可使用`kubectl`，比如，你的部署打包为`my_ml_deployment.yaml`:
 
 ```bash
 kubectl apply -f my_ml_deployment.yaml
@@ -8,22 +8,22 @@ kubectl apply -f my_ml_deployment.yaml
 
 ## Helm Charts
 
-You can use Helm to manage your deployment as illustrated in the [Helm examples notebook](../examples/helm_examples.html).
+您可以使用 Helm 来管理您的部署 [Helm 示例](../examples/helm_examples.html)。
 
-We have a selection of [templated helm charts](../graph/helm_charts.html) you can use as a basis for your deployments.
+我们有一系列 [helm charts 模板](../graph/helm_charts.html) ，您可以用作你的部署基础。
 
 ## Ksonnet Apps
 
-You can use Ksonnet to manage your deployments as illustrated in the [Ksonnet examples notebook](../notebooks/ksonnet_examples.ipynb).
+您可以使用 Ksonnet 来管理您的部署 [Ksonnet 示例](../notebooks/ksonnet_examples.ipynb).
 
-We have a selection of [Ksonnet prototypes](../graph/ksonnet_templates.html) you can use as a basis for your deployments.
+我们有一系列 [Ksonnet prototypes 模板](../graph/ksonnet_templates.html) ，您可以用作你的部署基础。
 
 
-## Validate your Deployment
+## 部署验证
 
-You can check the status of the running deployments using kubectl
+您可以使用 `kubectl` 检查运行部署的状态
 
-For example:
+例如：
 
 ```bash
 kubectl get sdep -o jsonpath='{.items[].status}'

@@ -1,33 +1,26 @@
-# SKLearn Server
+# SKLearn 服务
 
-If you have a trained SKLearn model saved as a pickle you can deploy it simply
-using Seldon's prepackaged SKLearn server.
+如果你有已经训练好的保存为 pickle 的 SKLearn 模型，你可以非常简洁的使用 Seldon's prepackaged SKLearn server 进行发布。
 
-## Prerequisites
+## 要求
 
-Seldon expects that your model has been saved using `joblib`, and it named as
-`model.joblib`. 
-Note that this is the [recommended approach to serialise
-models](https://scikit-learn.org/stable/modules/model_persistence.html) by the
-SKLearn project.
+Seldon 预期模型使用 `joblib` 方式保存，并且命名未 `model.joblib`。
+注意，这是 SKLearn 项目 [推荐的序列化模型方法](https://scikit-learn.org/stable/modules/model_persistence.html)。
 
-Note that, since we are using `joblib`, it's important that your trained model
-matches the framework version expected in the inference server.
+请注意，当我们使用 `joblib`，在推理服务中，训练模型和框架版本的匹配非常重要。
 
-The expected versions in the latest SKLearn pre-packaged server are as follows:
+在最新的 SKLearn 预封装服务中，预期的版本如下：
 
 | Package | Version |
 | ------ | ----- |
 | `scikit-learn` | `0.24.2` |
 
-To check compatibility requirements for older versions of Seldon Core you can
-see the [compatibility table below](#version-compatibility).
+要检测 Seldon Core 的版本兼容性，请常看[兼容列表](#version-compatibility).
 
-## Usage
+## 使用方法
 
-To use the pre-packaged SKLearn server, it's enough to declare `SKLEARN_SERVER`
-as the `implementation` for your model.
-For example, for a saved Iris prediction model, you could do:
+要使用 pre-packaged SKLearn server，需要在模型的配置文件中将 `implementation` 声明为 `SKLEARN_SERVER`。
+例如，针对保存的 Iris 预估模型，可以这样配置：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -40,22 +33,21 @@ spec:
   - graph:
       children: []
       implementation: SKLEARN_SERVER
-      modelUri: gs://seldon-models/v1.14.0/sklearn/iris
+      modelUri: gs://seldon-models/v1.10.0-dev/sklearn/iris
       name: classifier
     name: default
     replicas: 1
 
 ```
 
-You can try a similar example in [this worked
-notebook](../examples/server_examples.html).
+可通过 [可工作
+notebook](../examples/server_examples.html) 进行尝试。
 
-### Sklearn inference method
+### Sklearn 预估方法
 
-By default the server will call `predict_proba` on your loaded model/pipeline.
-If you wish for it to call `predict` instead you can pass a parameter `method`
-and set it to `predict`.
-For example:
+默认情况下，服务会在加载的 model/pipeline 调用 `predict_proba`。
+要想调用 `predict` 需设置参数 `method` 为 `predict`。
+例如：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -68,7 +60,7 @@ spec:
   - graph:
       children: []
       implementation: SKLEARN_SERVER
-      modelUri: gs://seldon-models/v1.14.0/sklearn/iris
+      modelUri: gs://seldon-models/v1.10.0-dev/sklearn/iris
       name: classifier
       parameters:
         - name: method
@@ -78,20 +70,22 @@ spec:
     replicas: 1
 ```
 
-Acceptable values for the `method` parameter are `predict`, `predict_proba`,
-`decision_function`.
+`method` 可选参数值为：`predict`, `predict_proba`,
+`decision_function`。
 
 
-## V2 protocol
+## V2 KFServing 协议 [孵化中]
 
-The SKLearn server can also be used to expose an API compatible with the [V2
-V2 Protocol](../graph/protocols.md#v2-protocol).
-Note that, under the hood, it will use the [Seldon
-MLServer](https://github.com/SeldonIO/MLServer) runtime.
+.. Warning:: 
+  V2 KFServing 协议支持被考虑在孵化特性中。
+  这意味着 Seldon Core 的某些特性仍未得到支持（比如：tracing, graphs等）。
 
-In order to enable support for the V2 protocol, it's enough to
-specify the `protocol` of the `SeldonDeployment` to use `v2`.
-For example,
+MLFlow 服务也可用于暴露兼容 [V2
+KFServing 协议](../graph/protocols.md#v2-kfserving-protocol)的 API。
+注意，某些情况下，这会使用到 [Seldon
+MLServer](https://github.com/SeldonIO/MLServer) 运行时。
+
+为了支持 V2 KFServing 协议，设置`SeldonDeployment` 的 `protocol` 使用 `kfserving`，示例如下：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -100,12 +94,12 @@ metadata:
   name: sklearn
 spec:
   name: iris-predict
-  protocol: v2 # Activate the V2 protocol
+  protocol: kfserving # Activate the V2 protocol
   predictors:
   - graph:
       children: []
       implementation: SKLEARN_SERVER
-      modelUri: gs://seldon-models/v1.14.0/sklearn/iris
+      modelUri: gs://seldon-models/v1.10.0-dev/sklearn/iris
       name: classifier
       parameters:
         - name: method
@@ -114,28 +108,25 @@ spec:
     name: default
 ```
 
-You can try a similar example in [this worked
-notebook](../examples/server_examples.html).
+可通过相似的 [已工作
+notebook](../examples/server_examples.html)尝试。
 
-## Version compatibility
+## 版本兼容
 
-The version of SKLearn used by the pre-packaged inference server will depend on
-the installed version of Seldon Core.
-In particular, 
+SKLearn 使用的预编译包以来安装的 Seldon Core 版本。
+特别的，
 
 | Seldon Version | SKLearn Version |
 | -------------- | --------------- |
 | `>=1.3`          | `0.23.2`          |
 | `<1.3` (latest `1.2.3`)          | `0.20.3`          |
 
-Note that using a different version of SKLearn at training and inference time
-can cause unexpected issues when it comes to serving.
+注意，使用不同的版本训练和推会带来不可预期的问题。
 
-### Using an older version
+### 使用老版本
 
-If you wish to use an older image of the SKLearn inference server, you can
-override the used image in the `componentSpecs`.
-For example, to use version `1.2.3` of the SKLearn server you could do:
+若要使用老版本的 SKLearn inference server，可通过覆盖 `componentSpecs` 设置。
+比如，使用 `1.2.3` 版本可以按照如下配置：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -153,7 +144,7 @@ spec:
     graph:
       children: []
       implementation: SKLEARN_SERVER
-      modelUri: gs://seldon-models/v1.14.0/sklearn/iris
+      modelUri: gs://seldon-models/v1.10.0-dev/sklearn/iris
       name: classifier
     name: default
     replicas: 1
@@ -163,21 +154,16 @@ spec:
         value: DEBUG
 ```
 
-### Using a different version of SKLearn
+### 使用不同版本的 SKLearn
 
-If you wish to use an unsupported version of SKLearn, you can extend the
-existing SKLearn server to build your own. 
-In particular, you could extend the code in the
-[`servers/sklearnserver`](https://github.com/SeldonIO/seldon-core/tree/master/servers/sklearnserver)
-folder to build a custom image.
-This image used for the `SKLEARN_SERVER` implementation can then be overridden
-in the `componentSpecs`.
+如果需要使用未被支持的 SKLearn 版本，可以通过扩展现有的 SKLearn server 来创建你自己的服务。
+特别的，可通过代码目录的
+[`servers/sklearnserver`](https://github.com/SeldonIO/seldon-core/tree/master/servers/sklearnserver)来创建自己的镜像。
+此镜像用于 `SKLEARN_SERVER` 实现，可通过覆盖 `componentSpecs` 自定义。
 
-Note that you can also change the image used globally for the SKLearn server by
-editing the [`seldon-config` configmap](custom.md).
-This change would apply to all `SeldonDeployments` in your cluster leveraging
-the `SKLEARN_SERVER` implementation.
-For example, you could add the following to the configmap:
+注意，也可通过修改全局配置[`seldon-config` configmap](custom.md) 来指定使用SKLearn server。
+这个修改将影响集群中所有的 `SeldonDeployments` 的 `SKLEARN_SERVER` 实现。
+比如，下面的 `configmap` 配置：
 
 ```yaml
   SKLEARN_SERVER:

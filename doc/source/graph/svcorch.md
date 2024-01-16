@@ -1,37 +1,37 @@
-# Service Orchestrator
+# 服务编排
 
-The service orchestrator is a component that is added to your inference graph,
-as a sidecar container.
-Its main responsibilities are:
+服务编排器是一个
+作为 sidecar 容器添加到推理图中的组件。
+其主要职责是：
 
-- Correctly manage the request / response paths described by your inference graph.
-- Expose Prometheus metrics.
-- Provide Tracing via Open Tracing.
-- Add CloudEvent-based payload logging.
+- 正确管理推理图描述的请求/响应路径。
+- 公开 Prometheus 指标。
+- 通过开放追踪提供追踪。
+- 添加基于 CloudEvent 的负载日志记录。
 
-From Seldon Core `>=1.1`, the service orchestrator allows you to specify the
-protocol for the data plane of your inference graph.
-At present, we support the following protocols:
+从 Seldon Core `>=1.1` 开始，
+服务编排器允许您为推理图的数据平面指定协议。
+目前，我们支持以下协议：
 
-| Protocol | `SeldonDeployment` Key | Reference | 
-| --- | --- | --- | --- |
+| 协议 | `SeldonDeployment` 键 | 参考 | 
+| ---- | ---- | ---- | 
 | Seldon | `seldon` | [OpenAPI spec for Seldon](https://docs.seldon.io/projects/seldon-core/en/latest/reference/apis/openapi.html) |
 | Tensorflow | `tensorflow` | [REST API](https://www.tensorflow.org/tfx/serving/api_rest) and [gRPC API](https://github.com/tensorflow/serving/blob/master/tensorflow_serving/apis/prediction_service.proto) reference |
 | V2 | `v2` | [KServe Dataplane reference](https://github.com/kserve/kserve/tree/master/docs/predict-api/v2) |
 
-These protocols are supported by some of our pre-packaged servers out of the
-box.
-You can check their
-[documentation](https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html)
-for more details.
+我们的一些开箱即用的预封装服务器支持这些协议。您可以查看
+他们的
+你可以检查他们的
+[文档](https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html)
+获取更多信息。
 
-Additionally, you can see basic examples for all options in the [protocol
-examples notebook](../examples/protocol_examples.html).
+此外，您可以在 [协议示例笔记](../examples/protocol_examples.html)查看
+一节基础的配置示例。
 
-## Design
+## 设计
 
-The service orchestrator's core concern is to manage the request/response flow of calls through the defined inference graph.
-Given a graph shown below:
+服务编排器的核心关注点是通过定义的推理图管理调用的请求/响应流。
+给出如下图所示：
 
 ```YAML
 apiVersion: machinelearning.seldon.io/v1
@@ -60,20 +60,20 @@ spec:
     replicas: 1
 ```
 
-The service orchestrator component is added to the graph and manages the request flow as shown below:
+服务编排器组件被添加到图中并管理请求流，如下所示：
 
 ![svc-orch](./svcOrch1.png)
 
-The initial request (1) reaches the service orchestrator which forwards it to the first model (2) and the response is captured by the service orchestrator (3) which then forwards to second model (4) before the response is again captured by service orchestrator (5) before being returned to caller (6).
+初始请求 (1) 到达服务编排器，然后将其转发到第一个模型 (2) 并且被服务编排器 (3) 捕获响应，然后转发到第二个模型 (4)，然后服务编排器再次捕获响应(5) 在返回之前给调用者 (6) 。
 
-For more complex inference graphs the service orchestrator will handle routing components which may decide which of a subset of child components to send the request or aggregation components to combine responses from multiple components.
+对于更复杂的推理图，服务协调器将处理路由组件，这些路由组件可以决定子组件子集中的哪个子组件发送请求或聚合组件以组合来自多个组件的响应。
 
 
-## Resource Requests/Limits for Service Orchestrator
+## 服务编排的资源请求/限制
 
-You can set custom resource request and limits for this component by specifying
-them in a `svcOrchSpec` section in your Seldon Deployment.
-An example is shown below to set the engine cpu and memory requests:
+您可以通过 `svcOrchSpec` 
+在您的 Seldon 部署中为组件设置自定义资源请求和限制。
+下面显示了一个设置引擎 cpu 和内存请求的示例：
 
 ```JSON
 {
@@ -123,9 +123,9 @@ An example is shown below to set the engine cpu and memory requests:
 
 ```
 
-## Bypass Service Orchestrator (version >= 0.5.0)
+## 绕过服务协调器（版本 >= 0.5.0）
 
-If you are deploying a single model then for those wishing to minimize the latency and resource usage for their deployed model you can opt out of having the service orchestrator included. To do this add the annotation `seldon.io/no-engine: "true"` to the predictor. The predictor must contain just a single node graph. An example is shown below:
+如果您正在部署单个模型，对于希望将其部署模型的延迟和资源使用降至最低的人，您可以选择不包含服务协调器。为此，将注释 `seldon.io/no-engine: "true"` 添加到预测器。预测器必须只包含一个节点图。一个例子如下所示：
 
 ```YAML
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -154,26 +154,26 @@ spec:
     replicas: 1
 ```
 
-In these cases the external API requests will be sent directly to your model. At present only the python wrapper (>=0.13-SNAPSHOT) has been modified to allow this.
+在这些情况下，外部 API 请求将直接发送到您的模型。目前只有 python 封装器 (>=0.13-SNAPSHOT) 已被修改以允许这样做。
 
-Note no metrics or extra data will be added to the request so this would need to be done by your model itself if needed.
+请注意，请求中不会添加任何指标或额外数据，因此如果需要，这需要由您的模型本身完成。
 
-## Routing Metadata Injection
+## 路由元数据注入
 
-For performance reasons, by default the service orchestrator will only forward
-the request payload, without trying to de-serialise it.
-This may be a blocker for some use cases, like injecting routing metadata when
-[placing routers in your inference graph](../analytics/routers.md).
-This metadata can be useful to indicate which routes were taken for each
-request.
+出于性能原因，默认情况下，服务编排器只会转发请求有效负载，
+而不会尝试对其进行反序列化。
+对于某些用例，这可能是一个障碍，如
+[注入路由到推理图](../analytics/routers.md)。
+此元数据可用于指示
+每个请求采用了哪些路由。
 
-This behaviour can be changed through the `SELDON_ENABLE_ROUTING_INJECTION`
-environment variable of the orchestrator.
-When this variable is enabled (under `svcOrchSpec`), the orchestrator will
-interpret the request payload, and will inject this routing metadata for each
-request.
+可通过设置编排器 `SELDON_ENABLE_ROUTING_INJECTION` 
+环境变量来改变。
+当变量修改后 (在 `svcOrchSpec`)，
+编排器将解释请求有效负载，
+并为每个请求注入此路由元数据。
 
-You can see an example below on how this flag can be switched on:
+您可以在下面看到有关如何打开此标志的示例：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1
@@ -199,5 +199,4 @@ spec:
           # ...
     name: default
 ```
-
 

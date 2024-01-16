@@ -1,18 +1,18 @@
-# KNative Eventing Integration
+# KNative 事件集成
 
-Seldon has an integration with KNative eventing that allows for real time processing.
+Seldon 实现了集成 KNative 事件的实时处理。
 
-This allow Seldon Core users to connect SeldonDeployments through triggers that will receive any relevant Cloudevents.
+这允许 Seldon Core 用户通过触发器接收任何 来自 SeldonDeployments 的 Cloudevents 事件。
 
 ![](../images/stream-processing-knative.jpg)
 
-## Triggers
+## 触发器
 
-The way that KNative Eventing works is by creating triggers that send any relevant Cloudevents that match a specific setup into the relevant addressable location.
+KNative Eventing 的工作方式是创建相关触发器发送到匹配到的相关位置。
 
-Seldon Core implements the KNative Eventing Duck Typing requirements which allows users to create triggers that reference specific SeldonDeployments.
+Seldon Core 实现了 KNative Eventing Duck Typing 要求，允许用户创建引用特定 SeldonDeployments 的触发器。
 
-An example of a trigger for a SeldonDeployment named "iris-deployment" can be created with the following format:
+可以使用以下格式创建名为 “iris-deployment” 的 SeldonDeployment 触发器示例：
 
 ```yaml
 apiVersion: eventing.knative.dev/v1beta1
@@ -32,15 +32,15 @@ spec:
       name: iris-deployment
 ```
 
-This means that any Cloudevents of type "`seldon.iris-deployment.default.request`" will be sent to the SeldonDeployment with the name `iris-deployment`.
+这意味着任何类型为 “seldon.iris-deployment.default.request” 的 Cloudevents 都将被发送到名为 `iris-deployment` 的 SeldonDeployment。
 
-The URL path is inferred through our implementation of the Duck Typing from Knative, which automatically extracts the URL from the Kubernetes resource status, specifically from the attribute `status.addressable.url`. 
+URL 路径是通过我们从 Knative 中实现的 Duck Typing 来推断的，它会自动从 Kubernetes 资源状态中提取 URL，特别是从属性 `status.addressable.url` 中提取 URL。
 
-In the case of every Seldon Deployment, the `status.addressable.url` is always the serviceName, port and path for the first predictor. You can see the Addressable type in [our CRD definition](../reference/seldon-deployment.rst).
+对于每个 Seldon 部署，status.addressable.url始终是第一个预测器的服务名称、端口和路径。您可以在我们的 [CRD 定义](../reference/seldon-deployment.rst)中看到 Addressable 类型。
 
-## Overriding URI
+## 覆盖 URI
 
-In the case of multiple predictors, or in the case that you want to send the Cloudevent through your ingress, you can actually create a trigger that overrides the URI. An example of this would be the following:
+在有多个预测器的情况下，或者您想通过入口发送 Cloudevent 的情况下，您实际上可以创建一个覆盖 URI 的触发器。这方面的一个例子如下：
 
 ```yaml
 apiVersion: eventing.knative.dev/v1beta1
@@ -57,11 +57,11 @@ spec:
     uri: http://istio-ingressgateway/seldon/default/iris-deployment/api/v1.0/predicions
 ```
 
-Which would then create a trigger that would forward the messages of that type into that URI.
+然后它将创建一个触发器，将该类型的消息转发到该 URI。
 
-## Sending Test Requests
+## 发送测试请求
 
-In production you would have multiple services creating cloudevents from various different sources. However for testing, it's possible to send requests directly from your terminal to the KNative Eventing broker, by using the following `curl` docker image locally:
+在生产中，您将有多个服务从各种不同的来源创建云事件。但对于测试，可以通过本地 docker 镜像通过终端使用 curl 向 KNative Eventing 代理发送请求：
 
 ```bash
 kubectl run --quiet=true -it --rm curl --image=radial/busyboxplus:curl --restart=Never -- \
@@ -74,15 +74,15 @@ kubectl run --quiet=true -it --rm curl --image=radial/busyboxplus:curl --restart
         -d '{"data": { "ndarray": [[1,2,3,4]]}}'
 ```
 
-This will be sending a cloud event with the type `seldon.iris-deployment.default.request` into the default broker in the default namespace, which would actually match the example provided in the trigger above.
+这将会发送 `seldon.iris-deployment.default.request` 类型的云事件到默认空间的代理，它将自动匹配到实例中提供的触发器。
 
-## Seldon Cloudevent Response
+## Seldon Cloudevent 响应
 
-When receiving a Cloudevent, SeldonDeployments will return a Cloudevent-enabled response, which is available for other services to consume.
+当接收到 Cloudevent 时，SeldonDeployments 将返回一个 Cloudevent 响应，该响应可供其他服务使用。
 
-What this means is that you can create further triggers that could perform other actions with the resulting data.
+这意味着您可以创建更多触发器，这些触发器可以对结果数据执行其他操作。
 
-THe triggers will have to match the cloudevent headers, which are standardised by the SeldonDEployment, and are of the following format:
+触发器必须匹配是 SeldonDeployment 标准化的 cloudevent 标头，格式如下：
 
 ```text
 Ce-Id: SeldonDeployment unique request ID
@@ -91,7 +91,7 @@ Ce-Type: seldon.<sdep_name>.<namespace>.response
 Ce-Source: seldon.<sdep_name>.<namespace>
 ```
 
-This means that you could create a trigger for a seldon deployment of name `iris-deployment` in namespace `default`, such as the following example which would create an `event-display` pod that will print out the contents of that cloudevent:
+这意味着你可以为 `default` 空间下的 seldon 部署 `iris-deployment` 创建一个触发器，如示例 pod 中创建了一个 `event-display` 可以打印 cloudevent 内容的触发器：
 
 ```yaml
 ---
@@ -146,12 +146,12 @@ spec:
       targetPort: 8080
 ```
 
-This will show all the cloudevents that are sent with that are processed by the SeldonDeployment.
+这将显示与 SeldonDeployment 处理的所有云事件。
 
-## Hands on Example
+## 动手实例
 
-We have a fully worked notebook where we showcase these capabilities end to end.
+我们有一个完整的笔记本，我们可以在其中端到端地展示这些功能。
 
-You can try it yourself through the [Seldon Core Real Time Stream Processing with KNative Eventing](../examples/knative_eventing_streaming.nblink) page
+您可以通过 [Seldon Core KNative Eventing 实时流处理](../examples/knative_eventing_streaming.nblink)页面亲自尝试
 
 

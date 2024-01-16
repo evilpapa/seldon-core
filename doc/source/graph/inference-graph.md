@@ -1,12 +1,12 @@
-# Inference Graph
+# 推理图
 
-Seldon Core extends Kubernetes with its own custom resource SeldonDeployment where you can define your runtime inference graph made up of models and other components that Seldon will manage.
+Seldon Core 使用 k8s 自定义资源 SeldonDeployment 扩展 Kubernetes，您可以在其中定义由 Seldon 管理的模型和其他组件组成的运行时序推理图。
 
-A SeldonDeployment is a JSON or YAML file that allows you to define your graph of component images and the resources each of those images will need to run (using a Kubernetes PodTemplateSpec). The parts of a SeldonDeployment are shown below:
+一个 SeldonDeployment 为 JSON 或 YAML 文件，它允许你定义一张组件镜像图，以及运行在（Kubernetes PodTemplateSpec）模式下的镜像的资源。如下示例：
 
-![inference-graph](./inf-graph.png)
+![](./inf-graph.png)
 
-A minimal example for a single model, this time in YAML, is shown below:
+最小单元的 YAML 模型示例
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
 kind: SeldonDeployment
@@ -30,16 +30,16 @@ spec:
     replicas: 1
 ```
 
-The key components are:
+关键组件包括：
 
-  * A list of Predictors, each with a specification for the number of replicas.
-     * Each defines a graph and its set of deployments. Multiple predictors is useful when you want to split traffic between a main graph and a canary or for other production rollout scenarios.
-  * For each predictor a list of componentSpecs. Each componentSpec is a Kubernetes PodTemplateSpec which Seldon will build into a Kubernetes Deployment. Place here the images from your graph and their requirements, e.g. Volumes, ImagePullSecrets, Resources Requests etc.
-  * A graph specification that describes how your components are joined together.
+  * 预估列表，每个都包含特定数量的副本
+     * 每个都包含相应的推理图及部署信息。想在生产和 Canary 之间区分和控制流量是，多个推理图就会至关重要
+  * 预估器的 `componentSpecs`。每个 `componentSpec` 都是 Kubernetes 的`PodTemplateSpec`，Seldon 将构建到 Kubernetes Deployment。在这里贴出推理图所需镜像、依赖，如：Volumes, ImagePullSecrets, Resources Requests 等。
+  * 描述组件的组合方式
 
-## Example of graph with pre-processor and post-processor
+## 带有前置和后置处理的推理图示例
 
-Below we show an example that has a slightly more complex graph structure. In this case we are defining a pre-processor and post-processor components.
+面我们展示了一个具有稍微复杂的图形结构的示例。我们正在定义预处理器和后处理器组件
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -78,18 +78,18 @@ spec:
     replicas: 1
 ```
 
-## More complex inference graphs
+## 更复杂的推理图
 
-It's possible to define complex graphs with ROUTERS, COMBINERS, and other components. You can find more of these specialised examples in our [examples section](../examples/notebooks.rst).
+可以使用 ROUTERS, COMBINERS 等其他组件构造更复杂的推理图，可在[示例章节](../examples/notebooks.xhtml)找到这些特殊用例。
 
-## Learn about all types through GoLang Reference
+## 通过 GoLang 源码 学习所有类型
 
-You can learn more about the SeldonDeployment YAML definition by reading the content on our [Kubernetes Seldon Deployment GoLang Types file](../reference/seldon-deployment.rst).
+根据 [Kubernetes Seldon Deployment GoLang 类型文件](../reference/seldon-deployment.xhtml) 学习 SeldonDeployment YAML 定义。
 
 
-## Image UserIds
+## 镜像 UserIds
 
-We provide an environment variable DEFAULT_USER_ID (set in the helm chart install with `.Values.defaultUserID`) which allows you to set the default user id the images will run under. This defaults to 8888. If you wish to override this for your specific Pod/Container rather than globally you can change it as shown in the example below:
+我们提供一个环境变量 `DEFAULT_USER_ID` (通过 helm chart `.Values.defaultUserID` 设置) ，它允许镜像在此 User Id 下运行。默认 8888。如果想在特定的 Pod/Container 下（非全局），可通过以下方式设置：
 
 ```
 apiVersion: machinelearning.seldon.io/v1
@@ -116,6 +116,5 @@ spec:
     replicas: 1
 ```
 
-The above example makes the classifier container run with userId 1000. We recommend that all containers run with a non-root userid. On Openshift clusters this is usually enforced automatically.
-
+上述示例使传统容器以用户 Id 1000 运行。我们建议所有容器都使用非 root。在 Openshift 集群中，通常会强制自动执行此操作。
 

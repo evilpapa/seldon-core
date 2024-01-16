@@ -1,21 +1,21 @@
 ============================
-Reference
+参考
 ============================
 
 .. toctree::
     :maxdepth: 1
 
-    Annotation Based Configuration </graph/annotations.md>
-    Benchmarking </reference/benchmarking.md>
-    General Availability </reference/ga.md>
+    基于注解的配置 </graph/annotations.md>
+    基准测试 </reference/benchmarking.md>
+    一般可用性（GA） </reference/ga.md>
     Helm Charts </graph/helm_charts.md>
-    Images </reference/images.md>
-    Logging and Log Level </analytics/log_level.md>
-    Private Docker Registry </graph/private_registries.md>
-    Prediction APIs </reference/apis/index>
-    Python API Reference </python/api/modules.rst>
-    Release Highlights </reference/release-highlights>
+    镜像 </reference/images.md>
+    日志及等级 </analytics/log_level.md>
+    私有 Docker 注册中心 </graph/private_registries.md>
+    预估 APIs </reference/apis/index>
+    Python API 参考 </python/api/modules.rst>
+    发布亮点 </reference/release-highlights>
     Seldon Deployment CRD </reference/seldon-deployment.md>
-    Service Orchestrator </graph/svcorch.md>
+    服务编排器 </graph/svcorch.md>
     Kubeflow </analytics/kubeflow.md>
-    Archived Docs </nav/archive.rst>
+    文档归档 </nav/archive.rst>

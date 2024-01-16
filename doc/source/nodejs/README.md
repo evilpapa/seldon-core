@@ -1,36 +1,36 @@
-# Packaging a NodeJS model for Seldon Core using s2i
+# 使用 s2i 为 Seldon Core 打包 NodeJS 模型
 
-In this guide, we illustrate the steps needed to wrap your own JS model running on a node engine in a docker image ready for deployment with Seldon Core using [source-to-image app s2i](https://github.com/openshift/source-to-image).
+本章中，我们说明了使用[source-to-image app s2i](https://github.com/openshift/source-to-image)构建的镜像在 node 引擎运行封装的 JS 模型的步骤。
 
-If you are not familiar with s2i you can read [general instructions on using s2i](../wrappers/s2i.md) and then follow the steps below.
+如果您不熟悉 s2i，您可以阅读 [使用 s2i 的一般说明](../wrappers/s2i.md)，然后按照以下步骤。
 
-## Step 1 - Install s2i
+## 步骤 1 - Install s2i
 
-[Download and install s2i](https://github.com/openshift/source-to-image#installation)
+[下载安装 s2i](https://github.com/openshift/source-to-image#installation)
 
-- Prerequisites for using s2i are:
-  - Docker
-  - Git (if building from a remote git repo)
+ * 使用 s2i 准备工作
+   * Docker
+   * Git（如果使用远程 git 仓库）
 
-To check everything is working you can run
+所有工作就绪，可执行以下
 
 ```bash
 s2i usage seldonio/seldon-core-s2i-nodejs:0.1
 ```
 
-## Step 2 - Create your source code
+## 步骤 2 - 创建源代码
 
-To use our s2i builder image to package your NodeJS model you will need:
+要使用 s2i 构建封装 NodeJS 模型的镜像，你需要：
 
-- An JS file which provides an ES5 Function object or an ES6 class for your model and that has appropriate generics for your component, i.e. an `init` and a `predict` for the model.
-- A package.json that contains all the dependencies and meta data for the model
-- .s2i/environment - model definitions used by the s2i builder to correctly wrap your model
+- 一个 JS 文件，它为您的模型提供 ES5 函数对象或 ES6 类，并且具有适合您的组件的泛型，即模型的 `init` 和 `a `predict` 组件
+- 包含所有依赖和模型元数据的 package.json
+- .s2i/environment - s2i 构建器用于正确封装模型的模型定义
 
-We will go into detail for each of these steps:
+我们将详细介绍每个步骤：
 
-### NodeJS Runtime Model file
+### NodeJS 运行时模型文件
 
-Your source code should which provides an ES5 Function object or an ES6 class for your model. For example, looking at our skeleton JS structure:
+的源代码应该为您的模型提供 ES5 函数对象或 ES6 类。例如，查看我们的脚手架 JS 结构：
 
 ```js
 let MyModel = function() {};
@@ -49,7 +49,7 @@ MyModel.prototype.predict = function(newdata, feature_names) {
 module.exports = MyModel;
 ```
 
-Also the model could be an ES6 class as follows
+该模型也可以是 ES6 类，如下所示
 
 ```js
 class MyModel {
@@ -66,16 +66,16 @@ class MyModel {
 module.exports = MyModel;
 ```
 
-- A `init` method for the model object. This will be called on startup and you can use this to load any parameters your model needs. This function may also be an async,for example in case if it has to load the model weights from a remote location.
-- A generic `predict` method is created for my model class. This will be called with a `newdata` field with the data object to be predicted.
+- 一个用于模型对象的 `init` 方法。这将在启动时调用，您可以使用它来加载模型所需的任何参数。此函数也可能是异步的，例如，如果它必须从远程位置加载模型权重。
+- 一个创建的模型类的通用 `predict` 方法。这将用于预测包含 `newdata` 字段的数据对象。
 
 ### package.json
 
-Populate an `package.json` with any software dependencies your code requires using an `npm init` command and save your dependencies to the file.
+`package.json` 使用命令 `npm init` 填充您的代码所需的任何软件依赖项，并将您的依赖项保存到文件中。
 
 ### .s2i/environment
 
-Define the core parameters needed by our node JS builder image to wrap your model. An example is:
+定义我们的 node JS 构建器映像所需的核心参数来封装您的模型。一个例子是：
 
 ```bash
 MODEL_NAME=MyModel.js
@@ -84,32 +84,32 @@ SERVICE_TYPE=MODEL
 PERSISTENCE=0
 ```
 
-These values can also be provided or overridden on the command line when building the image.
+构建映像时，也可以在命令行上提供或覆盖这些值。
 
-## Step 3 - Build your image
+## 步骤 3 - Build your image
 
-Use `s2i build` to create your Docker image from source code. You will need Docker installed on the machine and optionally git if your source code is in a public git repo.
+使用 `s2i build` 从你的源码构建 Docker 镜像。如果您的源代码在公共 git 存储库中，您将需要在机器上安装 Docker 和可选的 git。
 
-Using s2i you can build directly from a git repo or from a local source folder. See the [s2i docs](https://github.com/openshift/source-to-image/blob/master/docs/cli.md#s2i-build) for further details. The general format is:
+使用 s2i，您可以直接从 git 存储库或本地源文件夹构建。有关更多详细信息，请参阅 [s2i 文档](https://github.com/openshift/source-to-image/blob/master/docs/cli.md#s2i-build)。一般格式为：
 
 ```bash
 s2i build <git-repo> seldonio/seldon-core-s2i-nodejs:0.1 <my-image-name>
 s2i build <src-folder> seldonio/seldon-core-s2i-nodejs:0.1 <my-image-name>
 ```
 
-An example invocation using the test template model inside seldon-core:
+在 seldon-core 中使用测试模板模型的示例调用：
 
 ```bash
 s2i build https://github.com/seldonio/seldon-core.git --context-dir=incubating/wrappers/s2i/nodejs/test/model-template-app seldonio/seldon-core-s2i-nodejs:0.1 seldon-core-template-model
 ```
 
-The above s2i build invocation:
+上面的 s2i 构建调用：
 
-- uses the GitHub repo: https://github.com/seldonio/seldon-core.git and the directory `incubating/wrappers/s2i/nodejs/test/model-template-app` inside that repo.
-- uses the builder image `seldonio/seldon-core-s2i-nodejs`
-- creates a docker image `seldon-core-template-model`
+- 使用 GitHub 存储库: https://github.com/seldonio/seldon-core.git 和该存储库中的目录 `incubating/wrappers/s2i/nodejs/test/model-template-app`
+- 使用构建器图像 `seldonio/seldon-core-s2i-nodejs`
+- 使用 docker 图像 `seldon-core-template-model`
 
-For building from a local source folder, an example where we clone the seldon-core repo:
+对于从本地源文件夹构建，我们克隆 seldon-core 存储库的示例：
 
 ```bash
 git clone https://github.com/seldonio/seldon-core.git
@@ -117,40 +117,40 @@ cd seldon-core
 s2i build incubating/wrappers/s2i/nodejs/test/model-template-app seldonio/seldon-core-s2i-nodejs:0.1 seldon-core-template-model
 ```
 
-For more help see:
+如需更多帮助，请参阅：
 
 ```bash
 s2i usage seldonio/seldon-core-s2i-nodejs:0.1
 s2i build --help
 ```
 
-## Reference
+## 参考
 
-### Environment Variables
+### 环境变量
 
-The required environment variables understood by the builder image are explained below. You can provide them in the `.s2i/environment` file or on the `s2i build` command line.
+下面解释了构建器映像理解的必需环境变量。您可以在 `.s2i/environment` 文件中或在命令 `s2i build` 中提供。
 
 ### MODEL_NAME
 
-The name of the JS file containing the model.
+包含模型的 JS 文件的名称。
 
 ### API_TYPE
 
-API type to create. Can be REST or GRPC.
+要创建的 API 类型。可以是 REST 或 GRPC。
 
 ### SERVICE_TYPE
 
-The service type being created. Available options are:
+正在创建的服务类型。可用选项有：
 
 - MODEL
 - TRANSFORMER
 
 ### PERSISTENCE
 
-Can only by 0 at present.
+目前只能由0。
 
-## Creating different service types
+## 创建不同的服务类型
 
 ### MODEL
 
-- [Example model](../examples/notebooks.html)
+- [模型示例](../examples/notebooks.html)

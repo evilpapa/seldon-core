@@ -1,10 +1,10 @@
-# Budgeting Disruptions
+# 熔断
 
-High availability is an important aspect in running production systems.
-To this end, you can add Pod Disruption Budget Specifications to the Pod Template Specifications you create.
-Depending on how you want your application to handle disruptions, you can define your disruption budget accordingly.
+高可用性是运行生产系统的一个重要方面。
+为此，您可以将 Pod 熔断规范添加到您创建的 Pod 模板规范中。
+根据相应地定义来让应用程序处理熔断。
 
-An example Seldon Deployment with disruption budgets defined can be seen below:
+Seldon Deployment 熔断配置实例：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1
@@ -36,4 +36,4 @@ spec:
     name: example
 ```
 
-This example ensures that our serving capacity does not decrease by more than 10%.
+这个例子确保我们的服务能力不会下降超过10%。

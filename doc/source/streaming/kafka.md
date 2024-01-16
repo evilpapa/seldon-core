@@ -1,8 +1,8 @@
-# Native Kafka Stream Processing
+# 原生 Kafka 流处理（>=1.2.0, alpha）
 
-Seldon provides a native kafka integration when you specify `serverType: kafka` in your SeldonDeployment.
+Seldon 从 1.2 版开始提供本地 kafka 集成。当您在 SeldonDeployment 中指定时 `serverType: kafka`。
 
-When `serverType: kafka` is specified you need to also specify environment variables in `svcOrchSpec` for KAFKA_BROKER, KAFKA_INPUT_TOPIC, KAFKA_OUTPUT_TOPIC. An example is shown below for a Tensorflow CIFAR10  model:
+当指定 `serverType: kafka` 还需要在 `svcOrchSpec` 设置 KAFKA_BROKER、KAFKA_INPUT_TOPIC、KAFKA_OUTPUT_TOPIC 环境变量。下面显示了 Tensorflow CIFAR10 模型的示例：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1
@@ -45,41 +45,41 @@ spec:
     replicas: 1
 ```
 
-The above creates a REST tensorflow deployment using the tensorflow protocol and connects to input and output topics.
+以上使用 tensorflow 协议创建了一个 REST tensorflow 部署，并连接到输入和输出主题。
 
-## Details
+## 细节
 
-For the SeldonDeployment:
+对于 SeldonDeployment：
 
- 1. Start with any Seldon inference graph
- 1. Set `spec.serverType` to `kafka`
- 1. Add a `spec.predictor[].svcOrchSpec.env` with settings for KAFKA_BROKER, KAFKA_INPUT_TOPIC, KAFKA_OUTPUT_TOPIC.
+ 1. 从任何 Seldon 推理图开始
+ 1. 设置 `spec.serverType` 为 `kafka`
+ 1. 添加 `spec.predictor[].svcOrchSpec.env` 为 KAFKA_BROKER, KAFKA_INPUT_TOPIC, KAFKA_OUTPUT_TOPIC。
 
-For the input kafka topic:
+对于输入 kafka 主题：
 
-Create requests streams for the input prediction of your specified protocol and transport.
+为指定协议和传输的输入预测创建请求流。
 
- * For REST: the JSON representation of a predict request in the given protocol.
- * For gRPC: the protobuffer binary serialization of the request for the given protocol. You should also add a metadata field called `proto-name` with the package name of the protobuffer so it can be decoded, for example `tensorflow.serving.PredictRequest`. We can only support proto buffers for native grpc protocols supported by Seldon.
+ * 对于 REST: 给定预测请求协议中的 JSON 表示。
+ * 对于 gRPC:给定协议的请求的 protobuffer 二进制序列化。 You should also add a metadata field called `proto-name` with the package name of the protobuffer so it can be decoded, for example `tensorflow.serving.PredictRequest`. We can only support proto buffers for native grpc protocols supported by Seldon.
 
 
-## TLS Settings
+## TLS 设置
 
-To allow TLS connections to Kafka for the consumer and produce use the following environment variables to the service orchestator section:
+要允许消费者和生产者与 Kafka 建立 TLS 连接，请在服务编排环节使用以下环境变量：
 
-  * Set  KAFKA_SECURITY_PROTOCOL to "ssl"
-  * If you have the values for keys and certificates use:
+  * 设置  KAFKA_SECURITY_PROTOCOL 为 "ssl"
+  * 如果您有密钥和证书的值，请使用：
      * KAFKA_SSL_CA_CERT
      * KAFKA_SSL_CLIENT_CERT
      * KAFKA_SSL_CLIENT_KEY
-  * If you have the file locations for the certificates use:
+  * 如果您有证书的文件位置，请使用：
      * KAFKA_SSL_CA_CERT_FILE
      * KAFKA_SSL_CLIENT_CERT_FILE
      * KAFKA_SSL_CLIENT_KEY_FILE
-  * If you key is password protected then add
-     * KAFKA_SSL_CLIENT_KEY_PASS (optional)
+  * 如果您的密钥受密码保护，则添加
+     * KAFKA_SSL_CLIENT_KEY_PASS (可选)
 
-An example spec that gets values from screts is shown below and comes from the [Kafka KEDA demo](../examples/kafka_keda.html).
+下面显示了一个从 screts 获取值的示例规范，来自 [Kafka KEDA 演示](../examples/kafka_keda.html).
 
 ```
    svcOrchSpec:
@@ -114,9 +114,9 @@ An example spec that gets values from screts is shown below and comes from the [
             key: user.password
 ```
 
-## KEDA Scaling
+## KEDA 缩放
 
-KEDA can be used to scale Kafka SeldonDeployments by looking at the consumer lag. 
+KEDA 可用于缩放 Kafka SeldonDeployments 通过查看消费者滞后来扩展。
 
 ```
       kedaSpec:
@@ -136,15 +136,15 @@ KEDA can be used to scale Kafka SeldonDeployments by looking at the consumer lag
             name: seldon-kafka-auth
 ```
 
-In the above we:
+在上面我们有：
 
- * define bootstrap servers for KEDA to connect to via `bootstrapServer`
- * define consumer group to monitor via `consumerGroup`
- * set the lag to scale up on via `lagThreshold`
- * monitor a particular topic via `topic`
- * define TLS authentication via a AuthenticanTrigger via `authenticationRef`
+ * 定义启动服务通过 `bootstrapServer` 连接 KEDA
+ * 通过 `consumerGroup` 定义消费组
+ * 设置 `lagThreshold` 进行扩展
+ * 通过 `topic` 监控特定主题
+ * 通过 AuthenticanTrigger `authenticationRef` 设置 TLS 认证
 
-The authentication trigger we used for this was extracting the TLS details from secrets, e.g.
+我们使用的认证触发器从密钥中提取 TLS 明细，例如：
 
 ```
 apiVersion: keda.sh/v1alpha1
@@ -168,9 +168,9 @@ spec:
     key: user.key
 ```
 
-A worked example can be found [here](../examples/kafka_keda.html).
+可工作示例在[此处](../examples/kafka_keda.html)。
 
-## Examples
+## 示例
 
- * [A worked example for a CIFAR10 image classifier is available](../examples/cifar10_kafka.html).
- * [A worked example for Kafka with KEDA scaling using TLS connections to Kafka](../examples/kafka_keda.html).
+ * [可工作的 CIFAR10 图片分类](../examples/cifar10_kafka.html)。
+ * [可工作的 Kafka 集成 KEDA 自动缩放使用 TLS 连接 Kafka](../examples/kafka_keda.html)。

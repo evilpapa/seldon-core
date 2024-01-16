@@ -1,92 +1,82 @@
-# Documentation for Seldon Core
+# Seldon Core 文档
 
-This directory contains the sources (`.md` and `.rst` files) for the
-documentation. The main index page is defined in `source/index.rst`.
-The Sphinx options and plugins are found in the `source/conf.py` file.
-The documentation is generated in full by calling `make html`.
+该目录包含文档的（`.md` 和 `.rst` 文件)。
+主索引页面定义在 `source/index.rst`。
+Sphinx 配置和插件可以在 `source/conf.py` 找到。
+文档生成通过 `make html` 命令实现。
 
-## Requirements
+## 要求
 
-To build the documentation, first we need to install Python requirements:
+要构建文档，首先需要安装 Python 依赖：
 
 ```bash
 make install-dev
 ```
 
-### Install pandoc
+### 安装 pandoc
 
-We also need `pandoc` for parsing Jupyter notebooks, the easiest way
-to install this is using conda:
+我们使用 `pandoc` 编译 Jupyter notebooks，最简单的方式是使用 conda 安装：
 
 `conda install -c conda-forge pandoc=1.19`
 
-## Usage
+## 用法
 
-To build the docs locally, you can run:
+本地构建请执行：
 
 ```bash
 make html
 ```
 
-The resulting documentation is located in the `_build` directory with
-`_build/html/index.html` marking the homepage.
+编译结果保存在 `_build` 目录，并通过 `_build/html/index.html` 索引主页。
 
-### Live edit
+### 在线编辑
 
-During development, is useful to have the docs server running in the background
-and watching for changes on the docs.
-This can be done by running:
+开发中，后台运行文档的变化还是非常有必要的。
+通过命令运行：
 
 ```bash
 make livehtml-fast
 ```
 
-## Sphinx extensions and plugins
+## Sphinx 扩展和插件
 
-We use various Sphinx extensions and plugins to build the documentation:
+我们使用如下 Sphinx 扩展和插件来构建文档：
 
- * [m2r2](https://github.com/crossnox/m2r2) - to handle both `.rst` and `.md`
- * [sphinx.ext.napoleon](https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html) - support extracting Numpy style doctrings for API doc generation
- * [sphinx_autodoc_typehints](https://github.com/agronholm/sphinx-autodoc-typehints) - support parsing of typehints for API doc generation
- * [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc) - automatic running of [sphinx-apidoc](https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html) during the build to document API
- * [nbsphinx](https://nbsphinx.readthedocs.io) - parsing Jupyter notebooks to generate static documentation
- * [nbsphinx_link](https://nbsphinx-link.readthedocs.io) - support linking to notebooks outside of Sphinx source directory via `.nblink` files
+ * [m2r2](https://github.com/crossnox/m2r2) - 处理 `.rst` 和 `.md`
+ * [sphinx.ext.napoleon](https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html) - 支持 API 文档生成提取 Numpy 风格的文档字符串
+ * [sphinx_autodoc_typehints](https://github.com/agronholm/sphinx-autodoc-typehints) - 支持 API 文档生成解析类型提示
+ * [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc) - 在构建 API 文档期间自动运行 [sphinx-apidoc](https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html)
+ * [nbsphinx](https://nbsphinx.readthedocs.io) - 解析 Jupyter notebooks 生成静态文档
+ * [nbsphinx_link](https://nbsphinx-link.readthedocs.io) - 通过 `.nblink` 文件链接 Sphinx 源文件夹之外的 notebooks。
 
-The full list of plugins and their options can be found in `source/conf.py`.
+完整的插件和参数可在 `source/conf.py` 找到。
 
-## Tips & Tricks
+## 提示与技巧
 
-### Linking to markdown outside of `doc/source`
+### 链接 `doc/source` 之外的 markdown
 
-Referencing documents outside of `doc/source` tree does not work out of the box but there
-is an easy workaround:
+在 `doc/source` 目录树之外引用文档并不能立即使用，但是有是一个简单的解决方法： 
 
-1. Create a simple `rst` file including `include` or `mdinclude` directive, e.g. see [this](source/reference/integration_nvidia_link.rst) link referenced [here](source/reference/images.md)
+1. 创建一个包含 `include` 或 `mdinclude` 指令的 `rst` 文件，比如，参考[此处](source/reference/integration_nvidia_link.rst) 链接引用到 [此处](source/reference/images.md)
 
         .. mdinclude:: ../../../integrations/nvidia-inference-server/README.md
 
-2. Reference this file instead of included one
+2. 使用链接引用来替代包含文件
 
-### Linking to notebooks outside of `doc/source`
+### 链接 `doc/source` 之外的 notebooks
 
-To reference notebooks which sit outside of the `doc` folder, you will need to
-create an `*.nblink` file which links to it.
-You can check the
-[`source/examples/seldon_core_setup.nblink`](source/examples/seldon_core_setup.nblink)
-file as an example.
+要链接存储在 `doc` 目录之外的 notebooks 文件，你需要创建一个链接到它的 `*.nblink` 文件。
 
-Note that some notebooks may link to other resources, like images, which
-usually sit relative to their folder (e.g. in a local `images/` folder).
-These files also need to be referenced, so that they get linked correctly in
-the final output.
-We can specify these files using the `extra-media` key in the `*.nblink` file.
-You can check the
-[`source/examples/graph-metadata.nblink`](source/examples/seldon_core_setup.nblink)
-file as an example.
+参考 [source/examples/seldon_core_setup.nblink](source/examples/seldon_core_setup.nblink)示例。
 
-The complete workaround would look like:
+注意有些 notebooks 可能链接了其他资源，比如图片，通常这些图片会保存在他们所在目录中（比如：`images/` 文件夹）。
+这些文件也需要被引用到，这样他们在最终输出才能被正确链接。
+可在 `*.nblink` 文件定义 `extra-media` 关键词来使用他们。
+请参考 [source/examples/graph-metadata.nblink](source/examples/seldon_core_setup.nblink) 示例。
 
-1. Create a simple `nblink` file pointing to the notebook:
+完整的解决方法如下所示： 
+
+1. 创建简单的 `nblink` 文件指向 notebook：
 
    ```json
    {
@@ -94,7 +84,7 @@ The complete workaround would look like:
    }
    ```
 
-2. (Optional) Add any extra resources (e.g. images) that the notebook links to:
+2. （可选）添加 notebook 链接的额外资源（比如：图片）：
 
    ```json
    {
@@ -103,5 +93,5 @@ The complete workaround would look like:
    }
    ```
 
-3. Reference this file instead of the included one.
+3. 引用而不是加载该文件。
 

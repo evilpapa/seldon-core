@@ -1,8 +1,8 @@
 =====
-Blogs
+博客
 =====
 
-Blog articles featuring different use cases of Seldon:
+不同 Seldon 使用场景的博客文章：
 
 .. toctree::
    :maxdepth: 1

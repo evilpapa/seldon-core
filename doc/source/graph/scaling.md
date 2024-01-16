@@ -1,18 +1,18 @@
-# Scaling Replicas
+# 扩缩容
 
-## Replica Settings
+## 副本设置
 
-Replicas settings can be provided at several levels with the most specific taking precedence, from most general to most specific as shown below:
+副本设置可在几个优先级别上提供，从最一般到最具体，如下所示：
 
   * `.spec.replicas`
   * `.spec.predictors[].replicas`
   * `.spec.predictors[].componentSpecs[].replicas`
 
-If you use the annotation `seldon.io/engine-separate-pod` you can also set the number of replicas for the service orchestrator in:
+如果使用了 `seldon.io/engine-separate-pod` 注解，你也可以为服务编排设置指定数量的副本：
 
  * `.spec.predictors[].svcOrchSpec.replicas`
 
-As illustration, a contrived example showing various options is shown below:
+如下所示，下面显示了各种选项的示例：
 
 ```
 apiVersion: machinelearning.seldon.io/v1
@@ -61,15 +61,15 @@ spec:
 
 ```
 
- * classfier will have a deployment with 2 replicas as specified by the predictor it is defined within
- * classifier2 will have a deployment with 3 replicas as that is specified in its componentSpec
- * classifier3 will have 1 replica as it takes its value from `.spec.replicas`
+ * classfier 在 predictors 定义下有 2 个副本 
+ * classifier2 在 componentSpec 定义下有 3 个部署的副本
+ * classifier3 在 `.spec.replicas` 值定义下只有 1 个副本
 
-For more details see [a worked example for the above replica settings](../examples/scale.html).
+更多信息查看 [可工作副本设置示例](../examples/scale.html)。
 
-## Scale replicas
+## 副本调度
 
-Its is possible to use the `kubectl scale` command to set the `replicas` value of the SeldonDeployment. For simple inference graphs this can be an easy way to scale them up and down. For example:
+有能力使用 `kubectl scale` 命令设置 SeldonDeployment 的 `replicas` 值。在单预估图中可轻松进行扩缩容。比如：
 
 ```
 apiVersion: machinelearning.seldon.io/v1
@@ -93,22 +93,22 @@ spec:
     name: example
 ```
 
-One can scale this Seldon Deployment up using the command:
+通过以下命令为 Seldon Deployment 扩容
 
 ```console
 kubectl scale --replicas=2 sdep/seldon-scale
 ```
 
-For more details you can follow [a worked example of scaling](../examples/scale.html).
+更多信息参考 [扩缩容配置示例](../examples/scale.html)。
 
-## Autoscaling Seldon Deployments
+## 自动扩容 Seldon Deployments
 
-To autoscale your Seldon Deployment resources you can add Horizontal Pod Template Specifications to the Pod Template Specifications you create. There are two steps:
+要自动为 Seldon Deployment 资源扩容，你可以添加水平的 Horizontal Pod 模板定义。创建模板定义分三步执行：
 
-  1. Ensure you have a resource request for the metric you want to scale on if it is a standard metric such as cpu or memory. This has to be done for every container in the seldondeployment, except for the seldon-container-image and the storage initializer. Some combinations of protocol and server type may spawn additional support containers; resource requests have to be added to those containers as well.
-  2. Add a HPA Spec referring to this Deployment. (We presently support v2beta2 version of k8s HPA Metrics spec)
+  1. 如果是标准指标（如 cpu 或内存），请确保您对要扩展的指标有资源请求。
+  1. 添加 HPA 定义关联到部署。（我们当前提供 v1beta1 版本 k8s HPA 指标定义）
 
-To illustrate this we have an example Seldon Deployment below:
+为了说明这一点，我们有一个例子 Seldon 部署如下：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1
@@ -145,12 +145,12 @@ spec:
     name: example
 ```
 
-The key points here are:
+这里的要点是：
 
- * We define a CPU request for our container. This is required to allow us to utilize cpu autoscaling in Kubernetes.
- * We define an HPA associated with our componentSpec which scales on CPU when the average CPU is above 70% up to a maximum of 3 replicas.
+ * 我们定义了容器的 CPU 请求。这需要允许我们在 k8s 为 cpu 自动扩展。
+ * 我们定义了与组件相关的 HPA Spec，当平均 CPU 高于 70% 时，该组件在 CPU 上缩放，最多可复制 3 个副本。
 
-Once deployed, the HPA resource may take a few minutes to start up. To check status of the HPA resource, `kubectl describe hpa -n <podname>` may be used.
+一旦发布，HPA 资源会花几分钟来启动。要检查 HPA 资源状态，`kubectl describe hpa -n <podname>` 将会有用。
 
 
-For a worked example see [this notebook](../examples/autoscaling_example.html).
+参考示例 [notebook](../examples/autoscaling_example.html)。

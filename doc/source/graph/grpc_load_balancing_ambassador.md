@@ -1,4 +1,4 @@
-# GRPC Load Balancing with Ambassador
+# 使用 Ambassador 进行 GRPC 负载平衡
 
 ```json
 {
@@ -28,8 +28,8 @@
                     "children": [],
                     "name": "classifier",
                     "endpoint": {
-			"type" : "GRPC"
-		    },
+						"type" : "GRPC"
+		    		},
                     "type": "MODEL"
                 },
                 "name": "example",

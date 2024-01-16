@@ -1,42 +1,40 @@
-# MLflow Server
+# MLflow 服务器
 
-If you have a trained MLflow model you are able to deploy one (or several)
-of the versions saved using Seldon's prepackaged MLflow server.
-During initialisation, the built-in reusable server will create the [Conda
-environment](https://www.mlflow.org/docs/latest/projects.html#project-environments)
-specified on your `conda.yaml` file.
+如果您有一个 MLflow 模型你可以使用 Seldon 预封装服务进行一个（或多个）
+版本服务发布。
+在初始化过程中，内建的
+可复用服务器会自动创建 [Conda
+环境](https://www.mlflow.org/docs/latest/projects.html#project-environments)
+并根据指定的 `conda.yaml` 文件来创建。
 
-## Pre-requisites
+## 预处理
 
-To use the built-in MLflow server the following pre-requisites need to be met:
+要使用内置的 MLflow 服务器，需要满足以下先决条件：
 
-- Your [MLmodel artifact
-  folder](https://www.mlflow.org/docs/latest/models.html) needs to be
-  accessible remotely (e.g. as `gs://seldon-models/mlflow/elasticnet_wine_1.8.0`).
-- Your model needs to be compatible with the [python_function
-  flavour](https://www.mlflow.org/docs/latest/models.html#python-function-python-function).
-- Your `MLproject` environment needs to be specified using Conda.
+- 你的 [MLmodel artifact
+  文件夹](https://www.mlflow.org/docs/latest/models.html) 可
+  远程访问（如：`gs://seldon-models/mlflow/elasticnet_wine_1.8.0`）。
+- 模型需要与 [python_function
+  flavour](https://www.mlflow.org/docs/latest/models.html#python-function-python-function)兼容。
+- `MLproject` 环境需要指定使用 Conda。
 
-## Conda environment creation
+## Conda 环境创建
 
-The MLflow built-in server will create the Conda environment specified on your
-`MLmodel`'s `conda.yaml` file during initialisation.
-Note that this approach may slow down your Kubernetes `SeldonDeployment`
-startup time considerably.
+MLflow内置服务器初始化期间会根据
+`MLmodel`的`conda.yaml`配置文件创建 Conda 环境。
+注意此方法可能会减慢你的 Kubernetes `SeldonDeployment` 
+启动时间。
 
-In some cases, it may be worth to consider [creating your own custom reusable
-server](./custom.md).
-For example, when the Conda environment can be considered stable, you can
-create your own image with a fixed set of dependencies.
-This image can then be re-used across different model versions using the same
-pre-loaded environment.
+某些情况下，可以考虑 [自定义创建可复用
+服务器](./custom.md)。
+比如，当 Conda 环境稳定时可使用
+一组固定的依赖库创建自己的镜像。
+此镜像可作为可复用预加载环境
+用于不同的模型版本。
 
-Note that installation of `conda` packages may take longer than the `livenessProbe` limits.
-This can be worked around by setting longer limits, see our [elasticnet wine manifest](https://github.com/SeldonIO/seldon-core/blob/master/servers/mlflowserver/samples/elasticnet_wine.yaml) for an example.
+## 示例
 
-## Examples
-
-An example for a saved Iris prediction model can be found below:
+保存了 Iris 预估模型的示例如下
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -57,7 +55,7 @@ spec:
 
 ## MLFlow xtype
 
-By default the server will call your loaded model's predict function with a `numpy.ndarray`. If you wish for it to call it with `pandas.DataFrame` instead, you can pass a parameter `xtype` and set it to `DataFrame`. For example:   
+默认情况下服务器会通过`numpy.ndarray` 调用模型的预估函数。如果希望通过 `pandas.DataFrame` 替代，你可通过 `xtype` 参数赋值 `DataFrame` 来使用，如：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -80,45 +78,51 @@ spec:
       replicas: 1
 ```
 
-You can also try out a [worked
+也可尝试 [可工作的
 notebook](../examples/server_examples.html#Serve-MLflow-Elasticnet-Wines-Model)
-or check our [talk at the Spark + AI Summit
-2019](https://www.youtube.com/watch?v=D6eSfd9w9eA).
+或者查看 [talk at the Spark + AI Summit
+2019](https://www.youtube.com/watch?v=D6eSfd9w9eA)。
 
-## V2 protocol
+## V2 KFServing 协议 [孵化中]
 
-The MLFlow server can also be used to expose an API compatible with the [V2
-Protocol](../graph/protocols.md#v2-protocol).
-Note that, under the hood, it will use the [Seldon
-MLServer](https://github.com/SeldonIO/MLServer) runtime.
+.. Warning:: 
+  V2 KFServing 协议支持被考虑在孵化
+  特性中。
+  这意味着 Seldon Core 的某些特性仍未得到支持（比如：
+  tracing, graphs等）。
 
-### Create a model using `mlflow` and deploy to `seldon-core`
-As an example we are going to use the elasticnet wine model.
+MLFlow 服务也可用于暴露兼容 [V2
+KFServing 协议](../graph/protocols.md#v2-kfserving-protocol)的 API。
+注意，某些情况下，这会使用到 [Seldon
+MLServer](https://github.com/SeldonIO/MLServer) 运行时。
 
-- Create a `conda` environment
+### 创建使用 `mlflow` 的模型并使用 `seldon-core` 发布
+作为示例，我们将使用 elasticnet wine 模型。
+
+- 创建 `conda` 环境
 
 ```bash
 $ conda -y create -n python3.8-mlflow-example python=3.8
 $ conda activate python3.8-mlflow-example
 ```
 
-- Install `mlflow`
+- 安装 `mlflow`
 
 ```bash
 $ pip install mlflow
 ```
 
-- Train the elasticnet wine example
+- 训练 elasticnet wine 示例
 
 ```bash
 $ git clone https://github.com/mlflow/mlflow
 $ cd mlflow/examples
 $ python sklearn_elasticnet_wine/train.py
 ```
-After the script ends, there will be a models persisted at `mlruns/0/<uuid>/artifacts/model`. This can
-be fetched from the ui (`mlflow ui`)
+脚本结束后，会有一个模型持久化存储在 `mlruns/0/<uuid>/artifacts/model`。这可以
+通过 ui 获取（`mlflow ui`）
 
-- Install additional packaged required to deploy and pack the conda environment using [conda-pack](https://conda.github.io/conda-pack/)
+- 使用 [conda-pack](https://conda.github.io/conda-pack/) 安装部署和打包conda 所需的附加软件包
 
 ```bash
 $ pip install conda-pack
@@ -127,18 +131,18 @@ $ pip install mlserver-mlflow
 $ cd mlflow/examples/mlruns/0/<uuid>/artifacts/model
 $ conda pack -o environment.tar.gz -f
 ```
-This will pack the current conda environment to `environment.tar.gz`, this will be required by `mlserver` to create the same environment used during train for serving the model.
+这会将当前的 conda 环境打包到 `environment.tar.gz`，这也是 `mlserver` 创建服务模型时同训练所需要的一样的环境。
 
-- copy the model directory to a Google Storage bucket that is accessible by seldon-core
+- 将模型目录复制到可由 seldon-core 访问的 Google Storage 存储桶
 
 ```bash
 $ gsutil cp -r ../model gs://seldon-models/test/elasticnet_wine_<uuid>
 ```
 
-- deploy the model to seldon-core
-In order to enable support for the V2 protocol, it's enough to
-specify the `protocol` of the `SeldonDeployment` to use `v2`.
-For example,
+- 发布模型到 seldon-core
+为了支持 V2 KFServing 协议，需要
+指定 `SeldonDeployment` 配置项  `protocol` 为 `kfserving`。
+比如，
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -146,7 +150,7 @@ kind: SeldonDeployment
 metadata:
   name: mlflow
 spec:
-  protocol: v2  # Activate the v2 protocol
+  protocol: kfserving  # Activate the v2 protocol
   name: wines
   predictors:
     - graph:
@@ -158,7 +162,7 @@ spec:
       replicas: 1
 ```
 
-- get predictions from the deployed model using REST
+- 使用 REST 从部署的模型中获取预测
 
 ```python
 import json
@@ -278,6 +282,6 @@ response = requests.post(endpoint, json=inference_request)
 print(json.dumps(response.json(), indent=2))
 ```
 
-### Caveats
-- The version of `mlserver` installed in the conda environment will need to match the supported version in `seldon-core`. We are working on tooling to make this more seamless.
-- Check the caveats of using [`conda-pack`](https://conda.github.io/conda-pack/#caveats)
+### 注意事项
+- conda 环境中安装的 `mlserver` 版本需与 `seldon-core` 匹配。我们正在开发工具以使其更加无缝。
+- 检查使用 [`conda-pack`](https://conda.github.io/conda-pack/#caveats) 的注意事项

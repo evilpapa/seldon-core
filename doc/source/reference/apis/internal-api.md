@@ -1,8 +1,8 @@
-# Internal Microservice API
+# 内部微服务 API
 
 ![graph](./graph.png)
 
-To add microservice components to a runtime prediction graph users need to create service that respects the internal API. The API provides a default service for each type of component within the system:
+要将微服务组件添加到运行时预测图中，用户需要创建遵循内部 API 规范的服务。API 为系统内的每种类型的组件提供默认服务：
 
  * [Model](#model)
  * [Router](#router)
@@ -10,11 +10,11 @@ To add microservice components to a runtime prediction graph users need to creat
  * [Transformer](#transformer)
  * [Output_Transformer](#output_transformer)
 
-See full [proto definition](./prediction.md#proto-buffer-and-grpc-definition).
+查看完整的 [proto 定义](./prediction.md#proto-buffer-and-grpc-definition)。
 
 ## Model
 
-A service to return predictions.
+一个返回预估的服务。
 
 ### REST API
 
@@ -24,13 +24,13 @@ A service to return predictions.
  | Request | JSON representation of SeldonMessage
  | Response | JSON representation of SeldonMessage
 
-Example request payload:
+请求 payload 示例：
 
 ```json
 {"data":{"names":["a","b"],"tensor":{"shape":[2,2],"values":[0,0,1,1]}}}
 ```
 
-Example response payload
+响应 payload 示例
 
 
 ### gRPC
@@ -43,9 +43,9 @@ service Model {
 }
 ```
 
-## Route
+## 路由
 
-A service to route requests to one of its children and receive feedback rewards for them.
+一种将请求路由到它的一个子服务并为他们接收反馈奖励的服务。
 
 ### REST API
 
@@ -53,16 +53,16 @@ A service to route requests to one of its children and receive feedback rewards 
  | | |
  | - |- |
  | Endpoint | POST /route |
- | Request | JSON representation of SeldonMessage
- | Response | JSON representation of SeldonMessage
+ | Request | SeldonMessage JSON 表示
+ | Response | SeldonMessage JSON 表示
 
-Example request payload:
+请求负载示例：
 
 ```json
 {"data":{"names":["a","b"],"tensor":{"shape":[2,2],"values":[0,0,1,1]}}}
 ```
 
-Example response payload:
+响应负载示例：
 
 ```json
 {"data":{"ndarray":[1]}}
@@ -77,15 +77,15 @@ service Router {
 ```
 
 
-## Send Feedback
+## 发送反馈
 
  | | |
  | - |- |
  | Endpoint | POST /send-feedback |
- | Request | JSON representation of Feedback
- | Response | JSON representation of SeldonMessage
+ | Request | Feedback 的 JSON 表示
+ | Response | SeldonMessage 的 JSON 表示
 
-Example request payload:
+请求有效负载示例：
 
 ```json
 {
@@ -122,7 +122,7 @@ service Router {
 
 ## Combiner
 
-A service to combine responses from its children into a single response.
+将来自其子级的响应组合成单个响应的服务。
 
 ### REST API
 
@@ -130,8 +130,8 @@ A service to combine responses from its children into a single response.
  | | |
  | - |- |
  | Endpoint | POST /combine |
- | Request | JSON representation of SeldonMessageList
- | Response | JSON representation of SeldonMessage
+ | Request | SeldonMessageList 的 JSON 表示
+ | Response | SeldonMessage 的 JSON 表示
 
 
 ### gRPC
@@ -145,7 +145,7 @@ service Combiner {
 
 ## Transformer
 
-A service to transform its input.
+转换输入的服务。
 
 ### REST API
 
@@ -153,10 +153,10 @@ A service to transform its input.
  | | |
  | - |- |
  | Endpoint | POST /transform-input |
- | Request | JSON representation of SeldonMessage
- | Response | JSON representation of SeldonMessage
+ | Request | SeldonMessage 的 JSON 表示
+ | Response | SeldonMessage 的 JSON 表示
 
-Example request payload:
+请求负载示例：
 
 ```json
 {"data":{"names":["a","b"],"tensor":{"shape":[2,2],"values":[0,0,1,1]}}}
@@ -173,7 +173,7 @@ service Transformer {
 
 ## Output_Transformer
 
-A service to transform the response from its child.
+一种服务，用于转换来自其子级的响应。
 
 ### REST API
 
@@ -183,7 +183,7 @@ A service to transform the response from its child.
  | Request | JSON representation of SeldonMessage
  | Response | JSON representation of SeldonMessage
 
-Example request payload:
+请求负载示例：
 
 ```json
 {"data":{"names":["a","b"],"tensor":{"shape":[2,2],"values":[0,0,1,1]}}}

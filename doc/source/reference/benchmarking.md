@@ -1,43 +1,43 @@
-# Seldon-core Benchmarking and Load Testing
+# Seldon-core 基准和负载测试
 
-This page is a work in progress to provide benchmarking and load testing.
+此页面正在提供基准和负载测试。
 
-This work is ongoing and we welcome feedback
+这项工作正在进行中，我们欢迎您的反馈。
 
-## Tools
+## 工具
 
- * For REST tests we use [vegeta](https://github.com/tsenart/vegeta)
- * For gRPC tests we use [ghz](https://ghz.sh/)
+ * 针对 REST 测试我们使用 [vegeta](https://github.com/tsenart/vegeta)
+ * 针对 gRPC 测试我们使用 [ghz](https://ghz.sh/)
 
-## Service Orchestrator
+## 服务编排
 
-These benchmark tests are to evaluate the extra latency added by including the service orchestrator.
+这些基准测试旨在评估包括服务编排器在内的额外延迟。
 
- * [Service orchestrator benchmark](../examples/bench_svcOrch.html)
+ * [服务编排基准测试](../examples/bench_svcOrch.html)
 
-### Results
+### 结果
 
-On A 3 node DigitalOcean cluster 24vCPUs 96 GB, running Tensorflow Flowers image classfier.
+在一个3节点的 DigitalOcean 集群 24vCPUs 96 GB，运行着 Tensorflow 花朵图像分类器。
 
-| Test | Additional latency |
+| 测试 | 额外延迟 |
 | ---  | ------------------ |
 | REST | 9ms |
 | gRPC | 4ms |
 
-Further work:
+进一步工作：
 
- * Statistical confidence test
+ * 统计置信测试
 
 
 ## Tensorflow
 
-Test the max throughput and HPA usage.
+测试最大吞吐量和 HPA 使用情况。
 
- * [Tensorflow benchmark](../examples/bench_tensorflow.html)
+ * [Tensorflow 基准测试](../examples/bench_tensorflow.html)
 
-### Results
+### 结果
 
-On A 3 node DigitalOcean cluster 24vCPUs 96 GB, running Tensorflow Flowers image classfier with HPA and running at max throughput for a single model. No ramp up, as vegeta does not support this. See notebook for details.
+在一个3节点的 DigitalOcean 集群 24vCPUs 96 GB, 使用 HPA 运行着 Tensorflow Flowers 花朵图像分类器并以单个型号的最大吞吐量运行。 No ramp up, as vegeta does not support this. 查看 notebook 明细。
 
 ```
 Latencies:
@@ -52,9 +52,9 @@ Throughput: 23.997572337989126/s
 Errors: False
 ```
 
-## Flexible Benchmarking with Argo Workflows
+## 基于 Argo 工作流的灵活的基准测试
 
-We have also an example that shows how to leverage the batch processing workflow that we showcase in the examples, but to perform benchmarking with Seldon Core models.
+我们还有一个示例，说明如何利用我们在示例中展示的批量处理工作流，但如何利用 Seldon Core 模型执行基准测试。
 
- * [Seldon deployment benchmark](../examples/vegeta_bench_argo_workflows.html)
+ * [Seldon deployment 基准测试](../examples/vegeta_bench_argo_workflows.html)
 

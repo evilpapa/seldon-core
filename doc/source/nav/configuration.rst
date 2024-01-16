@@ -1,13 +1,13 @@
 ================
-Configuration
+配置
 ================
 
 .. toctree::
     :maxdepth: 1
 
-    Installation </nav/config/installation.rst>
-    Deployments </nav/config/deployments.rst>
-    Servers </nav/config/servers.rst>
-    Routing </nav/config/routing.rst>
-    Wrappers and SDKs </nav/config/wrappers.rst>
-    Integrations </nav/config/integrations.rst>
+    安装 </nav/config/installation.rst>
+    发布 </nav/config/deployments.rst>
+    服务器 </nav/config/servers.rst>
+    路由 </nav/config/routing.rst>
+    语言封装和 SDK </nav/config/wrappers.rst>
+    集成 </nav/config/integrations.rst>

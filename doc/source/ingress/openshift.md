@@ -1,12 +1,12 @@
 # Openshift
 
-## Working with RedHat Openshift Service Mesh
+## 使用 RedHat Openshift 服务网格运行
 
-If you run with Openshift RedHat Service Mesh you can work with Seldon by following these steps.
+如果您使用 Openshift RedHat Service Mesh 运行，您可以按照以下步骤使用 Seldon。
 
-### Create Gateway
+### 创建网关
 
-Ensure you create a Gateway in istio-system. For 
+确保在 istio-system 中创建网关。如
 
 ```
 apiVersion: networking.istio.io/v1alpha3
@@ -26,9 +26,9 @@ spec:
     - "*"
 ```
 
-### Activate Istio
+### 激活 Istio
 
-1. Update the Seldon Core CSV to activate istio. Add:
+1. 更新 Seldon Core CSV 以激活 istio。添加：
 
 ```
   config:
@@ -38,11 +38,11 @@ spec:
 ```
 
 
-### Namespace Seldon Core Install
+### 命名空间 Seldon Core 安装
 
-If you install Seldon Core in a particular namespace you will need to:
+如果您在特定命名空间中安装 Seldon Core，您将需要：
 
- 1. Add a NetworkPolicy to allow the webhooks to run. For the namespace yoy are running the operator create:
+ 1. 添加 NetworkPolicy 以允许 webhook 运行。在你运行 operator 的名称空间运行：
 
 ```
 apiVersion: networking.k8s.io/v1
@@ -63,11 +63,11 @@ spec:
 ```
 
 
-## Deleting Seldon Core Operator
+## 删除 Seldon Core Operator
 
-At present webhook configuration is not cleaned up on delete of a Seldon Core Operator. You will need to delete the `MutatingWebhookConfiguration` and `ValidatingWebhookConfiguration`.
+目前，在删除 Seldon 核心操作员时未清理 webhook 配置。您将需要删除 `MutatingWebhookConfiguration` 和 `ValidatingWebhookConfiguration`。
 
-For namespace installs of Seldon Core these will be called:
+对于 Seldon Core 的命名空间安装，这些将被调用：
 
  * `seldon-mutating-webhook-configuration-<namespace>`
  * `seldon-validating-webhook-configuration-<namespace>`

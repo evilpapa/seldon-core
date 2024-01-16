@@ -1,12 +1,12 @@
 ==================================
-Seldon Deployment Reference Types
+Seldon Deployment 参考类型
 ==================================
 
-A SeldonDeployment is defined as a custom resource definition within Kubernetes.
+SeldonDeployment 被定义为 Kubernetes 中的自定义资源。
 
-If you want to learn about more practical examples of the use of the SeldonDeployment types you can check the `Inference Graph Section on the Worfklow Documentation Section <../graph/inference-graph.html>`_.
+如果您想了解更多使用 SeldonDeployment 类型的实际示例，可以查看 `Worfklow 文档部分的推理图部分<../graph/inference-grpah.md>`_。
 
-Below is the 2nd half of our `seldondeployment_types.go <https://github.com/SeldonIO/seldon-core/blob/master/operator/apis/machinelearning.seldon.io/v1/seldondeployment_types.go>`_ file which contains the types that are used in the SeldonDeployment YAML files.
+下面是我们的 `seldondeployment_types.go <https://github.com/SeldonIO/seldon-core/blob/master/operator/apis/machinelearning.seldon.io/v1/seldondeployment_types.go>`_ 文件的第二部分，其中包含 SeldonDeployment YAML 文件中使用的类型。
 
 .. literalinclude:: ../../../operator/apis/machinelearning.seldon.io/v1/seldondeployment_types.go
    :language: go

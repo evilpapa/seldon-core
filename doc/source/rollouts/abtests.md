@@ -1,33 +1,33 @@
-# AB Testing and Progressive Rollouts
+# AB 测试和渐进式发布
 
-## Simple AB Tests
+## 简单的 AB 测试
 
-Seldon Core provides the ability to easily create AB Tests and Shadows using Istio and Ambassador to split traffic as required.
+Seldon Core 提供了使用 Istio 和 Ambassador 按照要求进行流量划分，轻松创建 AB 测试和影子流量部署的能力。
 
- * [Istio AB Test/Canary Example](../examples/istio_canary.html)
- * [Ambassador AB Tests/Canary Example](../examples/ambassador_canary.html)
+ * [Istio AB Test/Canary 示例](../examples/istio_canary.html)
+ * [Ambassador AB Tests/Canary 示例](../examples/ambassador_canary.html)
 
-Metrics can be evaluated in prometheus for the different predictors in the AB Test using the [Seldon Analytics dashboard](../analytics/analytics.html).
-
-
-## Advanced AB Test Experiments and Progressive Rollouts
-
-For more advanced use cases we recommend our integration with [Iter8](https://iter8.tools) to provide clear experimentation utilizing clear objectives and rewards for candidate model selection. Iter8 also provides progressive rollout capabilities to automatically allow testing of candidate models and promoting them to the production model if they perform better than the incumbant model.
-
-In Seldon we provide two current examples on how to run Iter8 experiments.
-
- 1. Seldon/Iter8 Experiment over single Seldon Deployment.
- 1. Seldon/Iter8 experiment over separate Seldon Deployments.
+使用 [Seldon Analytics 面板](../analytics/analytics.html)可在 AB 测试中使用 prometheus 为不同的预估器分析计算指标。
 
 
-## Seldon - Iter8 Experiment over single Seldon Deployment
+## 高级 AB 测试实验以及渐进式发布
 
-The first option is to create an AB Test for the candidate model with an updated Seldon Deployment and run an Iter8 experiment to progressively rollout the candidate based on a set of metrics. The architecture is show below:
+更高级的用例我们推荐使用 [Iter8](https://iter8.tools) 进行集成，它提供了明确的候选实验目标以及清晰的候选模型优胜版。Iter8 还提供渐进式发布功能，以自动选择测试候选模型，如果候选模型的性能优于孵化模型，则将其推广到生产环境。
+
+在 Seldon，我们提供了两个关于如何运行 Iter8 实验的当前示例。
+
+ 1. 在单个 Seldon Deployment 上的 Seldon/Iter8 实验。
+ 1. 在特定 Seldon Deployments 上的 Seldon/Iter8 实验。
+
+
+## 在单个 Seldon Deployment 上的 Seldon - Iter8 实验
+
+第一个选项是使用更新的 Seldon Deployment 候选模型创建 AB 实验，运行 Iter8 实验，并以一组指标标准逐步推出候选模型。架构如下：
 
 ![seldonIter8Single](seldon-iter8-single.png)
 
 
-We begin by updating our default model to start an AB test as shown below:
+我们首先更新默认模型以启动 AB 测试，如下所示：
 
 ```yaml
 apiVersion: v1
@@ -43,10 +43,10 @@ metadata:
 spec:
   predictors:
   - name: baseline
-    traffic: 100
+    traffic: 100    
     graph:
       name: classifier
-      modelUri: gs://seldon-models/v1.14.0/sklearn/iris
+      modelUri: gs://seldon-models/v1.10.0-dev/sklearn/iris
       implementation: SKLEARN_SERVER
   - name: candidate
     traffic: 0
@@ -57,9 +57,9 @@ spec:
 
 ```
 
-Here we have the incumbant SKLearn model and a candidate XGBoost model to replace it, presently with 0 traffic.
+这里我们有孵化的 SKLearn 模型和一个候选的 XGBoost 模型来替代它，当前流量为 0。
 
-Next, we tell Iter8 the metrics it can use with an Iter8 Metrics custom resource.
+接下来，我们告诉 Iter8 它可用于 Iter8 指标自定义资源的指标。
 
 ```yaml
 apiVersion: v1
@@ -83,7 +83,7 @@ spec:
   sampleSize: iter8-seldon/request-count
   type: Gauge
   units: milliseconds
-  urlTemplate: http://seldon-monitoring-prometheus.seldon-system.svc:9090/api/v1/
+  urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query
 ---
 apiVersion: iter8.tools/v2alpha2
 kind: Metric
@@ -99,7 +99,7 @@ spec:
       sum(increase(seldon_api_executor_server_requests_seconds_count{code!='200',seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0)
   provider: prometheus
   type: Counter
-  urlTemplate: http://seldon-monitoring-prometheus.seldon-system.svc:9090/api/v1/
+  urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query  
 ---
 apiVersion: iter8.tools/v2alpha2
 kind: Metric
@@ -116,7 +116,7 @@ spec:
   provider: prometheus
   sampleSize: iter8-seldon/request-count
   type: Gauge
-  urlTemplate: http://seldon-monitoring-prometheus.seldon-system.svc:9090/api/v1/
+  urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query    
 ---
 apiVersion: iter8.tools/v2alpha2
 kind: Metric
@@ -134,7 +134,7 @@ spec:
   sampleSize: iter8-seldon/request-count
   type: Gauge
   units: milliseconds
-  urlTemplate: http://seldon-monitoring-prometheus.seldon-system.svc:9090/api/v1/
+  urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query      
 ---
 apiVersion: iter8.tools/v2alpha2
 kind: Metric
@@ -150,7 +150,7 @@ spec:
       sum(increase(seldon_api_executor_client_requests_seconds_sum{seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0)
   provider: prometheus
   type: Counter
-  urlTemplate: http://seldon-monitoring-prometheus.seldon-system.svc:9090/api/v1/
+  urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query
 ---
 apiVersion: iter8.tools/v2alpha2
 kind: Metric
@@ -166,11 +166,11 @@ spec:
       sum(increase(seldon_api_executor_server_requests_seconds_count{service='feedback',seldon_deployment_id='$sid',predictor_name='$predictor',kubernetes_namespace='$ns'}[${elapsedTime}s])) or on() vector(0)
   provider: prometheus
   type: Gauge
-  urlTemplate: http://seldon-monitoring-prometheus.seldon-system.svc:9090/api/v1/
+  urlTemplate: http://seldon-core-analytics-prometheus-seldon.seldon-system/api/v1/query
 
 ```
 
-This creates a set of metrics for use in experiments with their corresponding Prometheus Query Language expressions. These metrics are parameterized and can be used across different experiments.
+这创建了一组指标，用于与其相应的 Prometheus 查询语言表达式的实验。这些指标是参数化的，可用于不同的实验。
 
 ```
 NAME                           TYPE      DESCRIPTION
@@ -182,9 +182,9 @@ request-count                  Counter   Number of requests
 user-engagement                Gauge     Number of feedback requests
 ```
 
-The metrics can then be used in experiments to define rewards to compare models and service level objectives models need to attain to be considered to be running successfully.
+然后，这些指标可用于实验定义奖励给对比模型和服务级目标模型来决策出运行成功的目标。
 
-Once the metrics are defined an experiment can be started as expressed by the Iter8 Experiment CRD:
+一旦指标定义，就可以按照 Iter8 实验 CRD 标识开始实验：
 
 ```yaml
 apiVersion: iter8.tools/v2alpha2
@@ -257,16 +257,16 @@ spec:
 
 ```
 
-This has several key sections:
+这有几个关键部分：
 
- * Strategy: The type of experiment to run and actions to take on completion.
- * Criteria: Key metrics for rewards and service objectives.
- * Duration: How long to run the experiment.
- * VersionInfo: Details of the various candidate models to compare.
+ * Strategy: 策略：运行的实验类型和完成的操作。
+ * Criteria: 标准：奖励和服务目标的关键指标。
+ * Duration: 持续时间：运行实验的时间。
+ * VersionInfo: 版本信息：要比较的各种候选模型的详细信息。
 
-Once the experiment is launched traffic will be moved to the various candidates based on the defined rewards and objectives.
+实验启动后，流量将根据定义的奖励和目标移动到各个候选者。
 
-As the experiment progresses the status can be tracked with iter8 tool, `iter8ctl`:
+随着实验的进行，可以使用 iter8 工具 `iter8ctl` 跟踪状态：
 
 ```
 ****** Overview ******
@@ -321,7 +321,7 @@ Version recommended for promotion: iris-v2
 
 ```
 
-We can check the state of the experiment via kubectl also:
+我们也可以通过 kubectl 检查实验的状态：
 
 ```bash
 kubectl get experiment
@@ -330,19 +330,19 @@ quickstart-exp   A/B    iris     Completed   15                     ExperimentCo
 
 ```
 
-In the above examples a final stage promotion action is defined for the successful candidate to be updated to the new default Seldon deployment.
+在上述示例中，为成功候选版本定义了最后操作行为，来更新新的默认的 Seldon deployment。
 
-As a next step [run the notebook running through this example](../examples/iter8-single.html).
+下一步 [运行示例 notebook](../examples/iter8-single.html)。
 
-## Seldon/Iter8 Experiment over separate Seldon Deployments
+## 运行特定 Seldon Deployments 的 Seldon/Iter8 实验
 
-We can also run experiments over separate Seldon Deployments. This though would require the creation in your service mesh of choice for a routing rule that Iter8 can modify to push traffic to each Seldon Deployment.
+我们还可以在特定的部署上运行实验。这需要通过在创建服务网格是选择路由流量规则可被 Iter8 修改并推送流量到各个 Seldon Deployment。
 
-The architecture for this type of experiment is shown below:
+此类实验的架构如下所示：
 
 ![seldonIter8Separate](seldon-iter8-separate.png)
 
-The difference here is we have two Seldon Deployments. A baseline:
+不同之处在与我们有两个 Seldon Deployments。一个基线为：
 
 ```yaml
 apiVersion: v1
@@ -360,11 +360,11 @@ spec:
   - name: default
     graph:
       name: classifier
-      modelUri: gs://seldon-models/v1.14.0/sklearn/iris
+      modelUri: gs://seldon-models/v1.10.0-dev/sklearn/iris
       implementation: SKLEARN_SERVER
 ```
 
-We also have a candidate:
+一个候选模型：
 
 ```yaml
 apiVersion: v1
@@ -386,7 +386,7 @@ spec:
       implementation: XGBOOST_SERVER
 ```
 
-Then, for Istio we need a new routing-rule to split traffic between the two:
+然后，我们需要 Istio 定义路由规则来为上面两个划分流量：
 
 
 ```yaml
@@ -423,7 +423,7 @@ spec:
 
 ```
 
-The metrics are the same as in the previous section. The experiment is very similar but has different VersionInfo section to point to the Istio VirtualService to modify to switch traffic:
+指标定义同上面的节点相同。与上面实验非常相似，但具有不同的 VersionInfo 指向到 Istio VirtualService 来修改切换流量：
 
 ```yaml
 apiVersion: iter8.tools/v2alpha2
@@ -466,7 +466,7 @@ spec:
         kind: VirtualService
         name: routing-rule
         namespace: default
-        fieldPath: .spec.http[0].route[0].weight
+        fieldPath: .spec.http[0].route[0].weight      
       variables:
       - name: ns
         value: ns-baseline
@@ -483,7 +483,7 @@ spec:
         kind: VirtualService
         name: routing-rule
         namespace: default
-        fieldPath: .spec.http[0].route[1].weight
+        fieldPath: .spec.http[0].route[1].weight      
       variables:
       - name: ns
         value: ns-candidate
@@ -496,6 +496,6 @@ spec:
 
 ```
 
-The progression of the experiment is very similar with in this case the best model be promoted onto of the existing default baseline.
+实验的进展与在这种情况下，将最佳模型推广到现有默认基线上相似。
 
-As a next step [run the notebook running through this example](../examples/iter8-separate.html).
+下一步骤 [运行示例 notebook](../examples/iter8-separate.html)。

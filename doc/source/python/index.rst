@@ -1,22 +1,22 @@
 ==========================
-Python Seldon Core Module
+Seldon Core Python 模块
 ==========================
 
-The Python seldon-core module provides two core pieces of functionality:
+Python模块提供两个核心功能：
 
-1. The Language Wrapper logic to wrap Python Models
-2. A Seldon Core Python Client to send requests to deployed models
+1. 语言封装逻辑来封装 Python 模型
+2. Seldon核心 Python 客户端向部署的模型发送请求
 
-You can use the following links to navigate the Python seldon-core module:
+您可以使用以下链接导航 Python模块：
 
 .. toctree::
    :maxdepth: 1
 
-   Install the Seldon Core Python module <python_module.md>
-   Creating your Python inference class <python_component.md>
-   Create image with S2I <python_wrapping_s2i.md>
-   Create image with a Dockerfile <python_wrapping_docker.md>
-   Seldon Python server configuration <python_server.rst>
-   Calling the Seldon API with the Seldon Python client <seldon_client.md>
-   Python API reference </python/api/modules>
-   Development Tips <developer_notes>
+   安装 Seldon Core Python 模块 <python_module.md>
+   创建 Python 预估类 <python_component.md>
+   使用 S2I 创建镜像 <python_wrapping_s2i.md>
+   使用 Dockerfile 创建镜像 <python_wrapping_docker.md>
+   Seldon Python 服务端配置 <python_server.md>
+   使用 Seldon Python 客户端请求 Seldon API <seldon_client.md>
+   Python API 参考 <api/modules>
+   开发小技巧 <developer_notes>

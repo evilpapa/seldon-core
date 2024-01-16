@@ -1,31 +1,30 @@
-# Model and Deployment Metadata
+# 模型和元数据发布
 
 ![metadata](./metadata.svg)
 
 
-## Examples
+## 示例
 
-### Basic Examples
-- [Simple Metadata Example](../../examples/metadata.html)
-- [Complex Graphs Metadata Example](../../examples/graph-metadata.html)
-- [Metadata GRPC API example](../../examples/metadata_grpc.html)
-- [Metadata Schema and Validation](../../examples/metadata_schema.html)
+### 基础示例
+- [简单元数据示例](../../examples/metadata.html)
+- [复杂图元数据示例](../../examples/graph-metadata.html)
+- [元数据 GRPC API 示例](../../examples/metadata_grpc.html)
+- [元数据架构和验证](../../examples/metadata_schema.html)
 
-### Metadata integrations with Frameworks
+### 元数据在框架中的实现
 
-- [SKLearn Server example with MinIO](../../examples/minio-sklearn.html)
-- [Deploying models trained with Pachyderm](../../examples/pachyderm-simple.html)
-- [Deploying models trained with DVC](../../examples/dvc.html)
+- [基于 MinIO 的 SKLearn Server 示例](../../examples/minio-sklearn.html)
+- [发布使用 Pachyderm 训练的模型](../../examples/pachyderm-simple.html)
+- [发布使用 DVC 训练的模型](../../examples/dvc.html)
 
 
-## Model Metadata
+## 模型元数据
 
-With Seldon you can easily add metadata to your models.
+在 Seldon 中，你可以轻易的为模型添加元数据。
 
-### Prepackaged model servers
+### 预封装模型服务器
 
-To add metadata to your prepackaged model servers simply add a file named `metadata.yaml`
-to the S3 bucket with your model:
+要添加元数据到预封装模型服务器中，只需简单的将 `metadata.yaml` 添加到存储你模型的 S3 存储桶中：
 ```YAML
 name: my-model
 versions: [my-model/v1]
@@ -44,11 +43,11 @@ custom:
   extra: information
 ```
 
-See [SKLearn Server example with MinIO](../../examples/minio-sklearn.html) for more details.
+查看[基于 MinIO 的 SKLearn Server 示例](../../examples/minio-sklearn.html)获取更多信息。
 
-### Python Language Wrapper
+### Python 语言封装
 
-You can add model metadata you your custom Python model by implementing `init_metadata` method:
+你可以实现 `init_metadata` 方法来添加元数据到你自定义的 Python 模型：
 
 ```python
 class Model:
@@ -70,12 +69,11 @@ class Model:
         return meta
 ```
 
-See [Python wrapper](../../python/python_component.html#incubating-features) documentation for more details and
-notebook [Basic Examples for Model with Metadata](../../examples/metadata.html).
+查看 [Python wrapper](../../python/python_component.html#incubating-features) 文档获取更多信息，以及参考[包含元数据的模型基础示例](../../examples/metadata.html) notebook。
 
-### Overwrite via environmental variable
+### 通过环境变量覆盖
 
-You can also always specify `MODEL_METADATA` environmental variable which takes ultimate priority.
+也可定义 `MODEL_METADATA` 有更高优先级的环境变量。
 
 ```YAML
 apiVersion: machinelearning.seldon.io/v1
@@ -117,14 +115,13 @@ spec:
 ```
 
 
-## Deployment Metadata
-Model metadata allow you to specify metadata for each of the components (nodes) in your graph.
-New orchestrator engine will probe all nodes for their metadata and derive global `inputs` and `outputs` of your graph.
-It will then expose them together with all nodes' metadata at a single endpoint `/api/v1.0/metadata/` of your deployment.
-
+## 元数据开发
+模型元数据允许你在你的图中为每个组件（节点）定义特殊的元数据。
+新的编排引擎会自动探测所有节点的元数据并为你的图派生全局的 `inputs` 和 `outputs`。
+然后，他会在你的发布中将所有节点的元数据暴露在单一节点的 `/api/v1.0/metadata/`。
 ![graph-metadata](./graph-metadata.svg)
 
-Example response:
+返回值示例：
 ```json
 {
     "name": "example",
@@ -163,14 +160,14 @@ Example response:
 }
 ```
 
-See example [notebook](../../examples/graph-metadata.html) for more details.
+查看示例 [notebook](../../examples/graph-metadata.html) 获取更多信息。
 
 
-## Metadata endpoint
+## 元数据节点
 
-Model metadata can be obtained through GET request at `/api/v1.0/metadata/{MODEL_NAME}` endpoint of your deployment.
+在部署节点可以通过 GET 请求 `/api/v1.0/metadata/{MODEL_NAME}` 获取模型元数据。
 
-Example response:
+返回值示例：
 ```json
 {
   "name": "my-model",
@@ -183,19 +180,19 @@ Example response:
 ```
 
 
-## Deep dive: SeldonMessage and kfserving V2 metadata reference
+## 深入：SeldonMessage 和 kfserving 元数据参考
 
-You can define inputs/outputs of your model metadata using one of two formats:
-- `v1` format that closely correlates to the current structure of `SeldonMessage`
-- `v2` format that is future-proof and fully compatible with [kfserving dataplane proposal](https://github.com/kubeflow/kfserving/blob/master/docs/predict-api/v2/required_api.md#model-metadata).
+可为你模型的元数据 inputs/outputs 通过两种格式进行定义：
+- `v1` 格式，与当前 `SeldonMessage` 格式相近。
+- `v2` 格式，是面向未来的，完全与 [kfserving dataplane proposal](https://github.com/kubeflow/kfserving/blob/master/docs/predict-api/v2/required_api.md#model-metadata) 兼容。
 
-Though most fields that you can specify on model metadata follows [kfserving dataplane proposal](https://github.com/kubeflow/kfserving/blob/master/docs/predict-api/v2/required_api.md#model-metadata) you can also specify extra one called `custom` that allows you define any custom metadata you may find useful. The `custom` field is meant to hold dict-like structure with both keys and values being `string`.
+通常大多数字段可通过 [kfserving dataplane proposal](https://github.com/kubeflow/kfserving/blob/master/docs/predict-api/v2/required_api.md#model-metadata) 来定义模型元数据，你也可以定义额外的 `custom` 参数，它允许你定义任何你觉得有价值的内容。`custom` 字段是以字符串 `string` 保存的 kv 结构的字典。
 
-See also: [Metadata Schema and Validation](../../examples/metadata_schema.html) notebook.
+查看 [元数据架构和验证](../../examples/metadata_schema.html) notebook。
 
-### SeldonMessage metadata
+### SeldonMessage 元数据
 
-#### ndarray input/output
+#### ndarray 输入/输出
 ```YAML
 name: my-model-name
 versions: [ my-model-version-01 ]
@@ -214,12 +211,12 @@ custom:
   extra: information
 ```
 
-This metadata would mean that following two input is valid for this model:
+这个元数据标识模型需要按照以下两种输入是可验证的：
 ```JSON
 {"data": {"names": ["a", "b"], "ndarray": [[1, 2], [3, 4]]}}
 ```
 
-Note: similar format is valid for messagetype of `tensor` and `tftensor`.
+注意：针对 `tensor` 和 `tftensor` 消息类型的格式相同。
 
 #### jsonData input/output
 ```YAML
@@ -249,16 +246,16 @@ custom:
   extra: information
 ```
 
-Example model input:
+模型输入示例：
 ```JSON
 {"jsonData": {"my-names": ["a", "b", "c"], "my-data": [1.0, 4.2, 3.14]}}
 ```
 
-The `schema` field is optional and can leaves user total freedom over its structure.
+`schema` 字段可选，并再结构上是自由的。
 
-Note: as you can see you can mix inputs and outputs of different types!
+注意：正如您所看到的，您可以混合不同类型的输入和输出！
 
-#### strData input/output
+#### strData 输入/输出
 ```YAML
 name: my-model-name
 versions: [ my-model-version-01 ]
@@ -272,15 +269,14 @@ custom:
   extra: information
 ```
 
-Example model input:
+示例模型输入：
 ```JSON
 {"strData": "some test input"}
 ```
 
-#### custom input/output format
+#### 自定义输入/输出格式
 
-You can also specify your custom `messagetype`. In this case there are no restrictions
-on keys that you define under the `schema` field. This may be useful for `raw` methods.
+您还可以指定您的自定义 `messagetype`。在这种情况下，您在 `schema` 下定义的字段没有限制。这对 `raw` 方法可能有用。
 
 ```YAML
 name: my-model-name
@@ -300,9 +296,9 @@ custom:
 ```
 
 
-### V2 TensorMetadata
+### kfserving TensorMetadata
 
-You can easily define metadata for your models that is compatible with [kfserving V2 dataplane proposal](https://github.com/kubeflow/kfserving/blob/master/docs/predict-api/v2/required_api.md#model-metadata) specification.
+你可以轻易的为模型定义与 [kfserving dataplane proposal](https://github.com/kubeflow/kfserving/blob/master/docs/predict-api/v2/required_api.md#model-metadata) 兼容的元数据。
 ```javascript
 $metadata_model_response =
 {
@@ -313,7 +309,7 @@ $metadata_model_response =
   "outputs" : [ $metadata_tensor, ... ]
 }
 ```
-with
+与
 ```javascript
 $metadata_tensor =
 {
@@ -323,7 +319,7 @@ $metadata_tensor =
 }
 ```
 
-Example definition
+示例定义
 ```YAML
 name: my-model-name
 versions: [ my-model-version-01 ]

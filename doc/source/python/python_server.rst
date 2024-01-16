@@ -1,26 +1,26 @@
-Seldon Python Server Configuration
+Seldon Python 服务配置
 ==================================
 
-To serve your component, Seldon's Python wrapper will use
-`Gunicorn <https://gunicorn.org/>`__ under the hood by default. Gunicorn
-is a high-performing HTTP server for Unix which allows you to easily
-scale your model across multiple worker processes and threads.
+要部署组件，Seldon Python 封装将会默认使用
+`Gunicorn <https://gunicorn.org/>`__。 Gunicorn
+是一个 Unix 下的高性能 HTTP 服务器。他允许你轻易的
+通过多个处理器和进程来缩放你的模型。
 
 .. Note:: 
-  Gunicorn will only handle the horizontal scaling of your model
-  **within the same pod and container**. To learn more about how to scale
-  your model across multiple pod replicas see
-  `this section <../graph/scaling>`_ of the docs.
+  Gunicorn 只能处理纵向缩放模型
+  **在同一个 pod 容器中**。要学习更多
+  通过多个 pod 副本缩放模型查看
+  `次章节 <../graph/scaling>`_ 文档。
 
 Workers
 -------
 
-By default, Seldon will only use a **single worker process**. However,
-it's possible to increase this number through the ``GUNICORN_WORKERS``
-env var for REST and the ``GRPC_WORKERS`` env var for GRPC. 
-This variable can be controlled directly through the ``SeldonDeployment`` CRD.
+通常，Seldon 使用 **单个 worker 处理**。然而，
+可通过增加 ``GUNICORN_WORKERS``
+环境变量调整 REST 以及 ``GRPC_WORKERS`` 环境变量调整 GRPC。
+变量可直接通过 ``SeldonDeployment`` CRD 控制。
 
-For example, to run your model under 8 processes (4 RESt and 4 GRPC), you could do:
+例如，使用 8 个处理模型 (4 RESt and 4 GRPC)，你可以这么做：
 
 .. code:: yaml
     :emphasize-lines: 14-17
@@ -55,16 +55,16 @@ For example, to run your model under 8 processes (4 RESt and 4 GRPC), you could 
         replicas: 1
 
 
-Running only REST server by disabling GRPC server
+通过禁用 GRPC 服务器仅运行 REST 服务器
 -------------------------------------------------------
 
-By default the Seldon models run a REST and GRPC server with a single process each.
-If the machine learning model is loaded in each process, this can result in a large 
-overhead in cases where the model artifacts are very large as there would be an instance
-of the model loaded for each worker. For this case, it is possible to disable the GRPC
-server by setting ``GRPC_WORKERS`` to ``0``, which would end up not starting a GRPC server.
-It is important to note that the GRPC endpoint will still be available in the service 
-orchestrator so GRPC requests would no longer work. An example of this would be as follows:
+默认 Seldon 为 REST 和 GRPC 服务都运行一个单独的处理器。
+如果在每个进程中加载​​机器学习模型，则在模型工件非常大的
+情况下，这可能会导致大量开销，因为
+将为每个工作人员加载模型的实例。对于这种情况，可以通过
+设置 ``GRPC_WORKERS`` 为 ``0``为 来禁用 GRPC 服务器，这最终不会启动 GRPC 服务器。
+需要注意的是，GRPC 端点在服务编排器中仍然可用，
+因此 GRPC 请求将不再有效。这方面的一个例子如下：
 
 .. code:: yaml
     :emphasize-lines: 14-15
@@ -97,15 +97,15 @@ orchestrator so GRPC requests would no longer work. An example of this would be 
         replicas: 1
 
 
-Threads
+线程
 -------
 
-By default, Seldon will process your model's incoming requests using a
-pool of **10 threads per worker process**. You can increase this number
-through the ``GUNICORN_THREADS`` environment variable. This variable can
-be controlled directly through the ``SeldonDeployment`` CRD.
+默认情况下，Seldon 将使用
+**每个工作进程 10 个线程池**来处理模型的传入请求。你可以通过
+设置 ``GUNICORN_THREADS`` 环境变量增加这个数字。这个环境变量可以
+直接通过 ``SeldonDeployment`` CRD 进行控制。
 
-For example, to run your model with 5 threads per worker, you could do:
+例如，要使用每个工作线程 5 个线程运行您的模型，您可以执行以下操作：
 
 .. code:: yaml
     :emphasize-lines: 14-15
@@ -138,15 +138,15 @@ For example, to run your model with 5 threads per worker, you could do:
         name: example
         replicas: 1
 
-Disable multithreading
+禁用多线程
 ~~~~~~~~~~~~~~~~~~~~~~
 
-In some cases, you may want to completely disable multithreading. To
-serve your model within a single thread, set the environment variable
-``FLASK_SINGLE_THREADED`` to 1. This is not the most optimal setup for
-most models, but can be useful when your model cannot be made
-thread-safe like many GPU-based models that deadlock when accessed from
-multiple threads.
+在某些情况下，您可能希望完全禁用多线程。要在
+单个线程中服务您的模型，请将环境变量设置 
+``FLASK_SINGLE_THREADED`` 为 1。对于大多数模型
+来说，这不是最佳设置，但当您的模型无法像许多基于 GPU 的模型
+那样在访问时因线程安全出现死锁时
+将非常有用。
 
 .. code:: yaml
     :emphasize-lines: 14-15
@@ -178,12 +178,12 @@ multiple threads.
         name: example
         replicas: 1
 
-Development server
+开发服务器
 ------------------
 
-While Gunicorn is recommended for production workloads, it's also
-possible to use Flask's built-in development server. To enable the
-development server, you can set the ``SELDON_DEBUG`` variable to ``1``.
+虽然建议将 Gunicorn 用于生产工作负载，
+但也可以使用 Flask 的内置开发服务器。要启用开发服务器，
+您可以将 ``SELDON_DEBUG`` 为 ``1``。
 
 .. code:: yaml
     :emphasize-lines: 14-15
@@ -215,52 +215,53 @@ development server, you can set the ``SELDON_DEBUG`` variable to ``1``.
         name: example
         replicas: 1
 
-Configuration
+配置
 -------------
 
-Python Server can be configured using environmental variables or command
-line flags.
+Python Server 可以使用环境变量或
+命令行进行配置。
+
 
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| CLI Flags                   | Environment Variable                       | Default         | Notes                                                                                                                                                                            |
+| CLI 标识                    | 环境变量                                   | 默认            | 笔记                                                                                                                                                                             |
 +=============================+============================================+=================+==================================================================================================================================================================================+
-| ``interface_name``          | N/A                                        | N/A             | First positional argument. Required. If contains ``.`` first part is interpreted as module name.                                                                                 |
+| ``interface_name``          | N/A                                        | N/A             | 第一个必须的选项。如果包含 ``.`` 第一部分将作为模块名。                                                                                                                          |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--http-port``             | ``PREDICTIVE_UNIT_HTTP_SERVICE_PORT``      | ``9000``        | Http port of Seldon service. In k8s this is controlled by Seldon Core Operator.                                                                                                  |
+| ``--http-port``             | ``PREDICTIVE_UNIT_HTTP_SERVICE_PORT``      | ``9000``        | Seldon 服务的 Http 端口。在 k8s 中由 Seldon Core Operator 控制。                                                                                                                 |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--grpc-port``             | ``PREDICTIVE_UNIT_GRPC_SERVICE_PORT``      | ``5000``        | Grpc port of Seldon service. In k8s this is controlled by Seldon Core Operator.                                                                                                  |
+| ``--grpc-port``             | ``PREDICTIVE_UNIT_GRPC_SERVICE_PORT``      | ``5000``        | Seldon 服务的 Grpc 端口。在 k8s 中由 Seldon Core Operator 控制。                                                                                                                 |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--metrics-port``          | ``PREDICTIVE_UNIT_METRICS_SERVICE_PORT``   | ``6000``        | Metrics port of Seldon service. In k8s this is controlled by Seldon Core Operator.                                                                                               |
+| ``--metrics-port``          | ``PREDICTIVE_UNIT_METRICS_SERVICE_PORT``   | ``6000``        | Seldon 服务的 指标 端口。在 k8s 中由 Seldon Core Operator 控制。                                                                                                                 |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--service-type``          | N/A                                        | ``MODEL``       | Service type of model. Can be ``MODEL``, ``ROUTER``, ``TRANSFORMER``, ``COMBINER`` or ``OUTLIER_DETECTOR``.                                                                      |
+| ``--service-type``          | N/A                                        | ``MODEL``       | 模型服务类型。可能是 ``MODEL``、``ROUTER``、``TRANSFORMER``、``COMBINER`` 或 ``OUTLIER_DETECTOR``。                                                                              |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--parameters``            | N/A                                        | ``[]``          | List of parameters to be passed to Model class.                                                                                                                                  |
+| ``--parameters``            | N/A                                        | ``[]``          | 传入模型类的参数列表                                                                                                                                                             |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--log-level``             | ``LOG_LEVEL_ENV``                          | ``INFO``        | Python log level. Can be ``DEBUG``, ``INFO``, ``WARNING`` or ``ERROR``.                                                                                                          |
+| ``--log-level``             | ``LOG_LEVEL_ENV``                          | ``INFO``        | Python 日志等级，可能是 ``DEBUG``、 ``INFO``、 ``WARNING`` 或 ``ERROR``。                                                                                                        |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--debug``                 | ``SELDON_DEBUG``                           | ``false``       | Enable debug mode that enables ``flask`` development server and sets logging to ``DEBUG``. Values ``1``, ``true`` or ``t`` (case insensitive) will be interpreted as ``True``.   |
+| ``--debug``                 | ``SELDON_DEBUG``                           | ``false``       | 开启 ``flask`` 开发者服务模式并且设置日志为 ``DEBUG``。值为 ``1``、 ``true`` 或 ``t`` (大小写不敏感) 将视作 ``True``。                                                           |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--tracing``               | ``TRACING``                                | ``0``           | Enable tracing. Can be ``0`` or ``1``.                                                                                                                                           |
+| ``--tracing``               | ``TRACING``                                | ``0``           | 开启追踪。可能是 ``0`` 或 ``1``。                                                                                                                                                |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--workers``               | ``GUNICORN_WORKERS``                       | ``1``           | Number of Gunicorn workers for handling requests.                                                                                                                                |
+| ``--workers``               | ``GUNICORN_WORKERS``                       | ``1``           | 处理请求的 Gunicorn workers 数量。                                                                                                                                               |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--threads``               | ``GUNICORN_THREADS``                       | ``10``          | Number of threads to run per Gunicorn worker.                                                                                                                                    |
+| ``--threads``               | ``GUNICORN_THREADS``                       | ``10``          | 处理请求的 Gunicorn 线程数量。                                                                                                                                                   |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--max-requests``          | ``GUNICORN_MAX_REQUESTS``                  | ``0``           | Maximum number of requests gunicorn worker will process before restarting.                                                                                                       |
+| ``--max-requests``          | ``GUNICORN_MAX_REQUESTS``                  | ``0``           | gunicorn worker 重启前处理的最大请求量                                                                                                                                           |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--max-requests-jitter``   | ``GUNICORN_MAX_REQUESTS_JITTER``           | ``0``           | Maximum random jitter to add to max-requests.                                                                                                                                    |
+| ``--max-requests-jitter``   | ``GUNICORN_MAX_REQUESTS_JITTER``           | ``0``           | 要添加到 max-request 的最大随机抖动                                                                                                                                              |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--keepalive``             | ``GUNICORN_KEEPALIVE``                     | ``2``           | The number of seconds to wait for requests on a Keep-Alive connection.                                                                                                           |
+| ``--keepalive``             | ``GUNICORN_KEEPALIVE``                     | ``2``           | 在 Keep-Alive 连接上等待请求的秒数。                                                                                                                                             |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--access-log``            | ``GUNICORN_ACCESS_LOG``                    | ``false``       | Enable gunicorn access log.                                                                                                                                                      |
+| ``--access-log``            | ``GUNICORN_ACCESS_LOG``                    | ``false``       | 启用 gunicorn 访问日志。                                                                                                                                                         |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--pidfile``               | N/A                                        | None            | A file path to use for the Gunicorn PID file.                                                                                                                                    |
+| ``--pidfile``               | N/A                                        | None            | 用于 Gunicorn PID 文件的文件路径。                                                                                                                                               |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--single-threaded``       | ``FLASK_SINGLE_THREADED``                  | ``0``           | Force the Flask app to run single-threaded. Also applies to Gunicorn. Can be ``0`` or ``1``.                                                                                     |
+| ``--single-threaded``       | ``FLASK_SINGLE_THREADED``                  | ``0``           | 强制 Flask 应用程序运行单线程。也适用于 Gunicorn。可以是 ``0`` 或 ``1``.                                                                                                         |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| N/A                         | ``FILTER_METRICS_ACCESS_LOGS``             | ``not debug``   | Filter out logs related to Prometheus accessing the metrics port. By default enabled in production and disabled in debug mode.                                                   |
+| N/A                         | ``FILTER_METRICS_ACCESS_LOGS``             | ``not debug``   | 过滤掉与 Prometheus 访问指标端口相关的日志。默认情况下在生产中启用并在调试模式下禁用。                                                                                           |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| N/A                         | ``PREDICTIVE_UNIT_METRICS_ENDPOINT``       | ``/metrics``    | Endpoint name for Prometheus metrics. In k8s deployment default is ``/prometheus``.                                                                                              |
+| N/A                         | ``PREDICTIVE_UNIT_METRICS_ENDPOINT``       | ``/metrics``    | Prometheus 指标的端点名称。在 k8s 部署中默认为 ``/prometheus``。                                                                                                                 |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| N/A                         | ``PAYLOAD_PASSTHROUGH``                    | ``false``       | Skip decoding of payloads.                                                                                                                                                       |
+| N/A                         | ``PAYLOAD_PASSTHROUGH``                    | ``false``       | 跳过有效载荷的解码。                                                                                                                                                             |
 +-----------------------------+--------------------------------------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

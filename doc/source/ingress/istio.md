@@ -1,16 +1,16 @@
-# Ingress with Istio
+# Istio 入口
 
-Seldon Core can be used in conjunction with [istio](https://istio.io/). Istio provides an [ingress gateway](https://istio.io/docs/tasks/traffic-management/ingress/) which Seldon Core can automatically wire up new deployments to. The steps to using istio are described below.
+Seldon Core 可关联 [istio](https://istio.io/) 使用。Istio 提供了一个 [入口网关](https://istio.io/docs/tasks/traffic-management/ingress/)，Seldon Core 可以将新的部署自动关联到该网关。下面描述了使用 istio 的步骤。
 
-## Install Seldon Core Operator
+## 安装 Seldon Core Operator
 
-Ensure when you install the seldon-core operator via Helm that you enabled istio. For example:
+请确保通过 Helm 安装 seldon-core operator 时开启 istio 支持。例如：
 
 ```bash 
 helm install seldon-core seldon-core-operator --set istio.enabled=true --repo https://storage.googleapis.com/seldon-charts --set usageMetrics.enabled=true
 ```
 
-You need an istio gateway installed in the `istio-system` namespace. By default we assume one called seldon-gateway. For example you can create this with the following yaml:
+你需要将 istio 网关安装在 `istio-system` 命名空间。默认情况，我们假设网关叫 seldon-gateway。比如可通过以下 yaml 创建：
 
 ```
 apiVersion: networking.istio.io/v1alpha3
@@ -30,20 +30,20 @@ spec:
     - "*"
 ```
 
-If you want to want to create SSL based gateway, create your signed certificate or actual signed certificate (for example named fullchain.pem), key (privkey.pem) and then run follwing commands to get SSL gateway. Assuming we're not using [cert-manager](https://istio.io/latest/docs/ops/integrations/certmanager/) then create self-signed certificate with
+如果向创建 SSL 网关，请创建签名证书或者一个存在的签名证书（比如：fullchain.pem），key （privkey.pem）然后运行以下命令获取 SSL 网关。假设我们没有使用 [cert-manager](https://istio.io/latest/docs/ops/integrations/certmanager/)，然后我们自己进行签名证书创建：
 
 
 ```bash
 openssl req -nodes -x509 -newkey rsa:4096 -keyout privkey.pem -out fullchain.pem -days 365 -subj "/C=GB/ST=GreaterLondon/L=London/O=SeldonSerra/OU=MLOps/CN=localhost"
 ```
 
-Import certificate and key as a secret into istio-system namespace
+导入 key 和证书到 istio-system 命名空间。
 
 ```bash
 kubectl create -n istio-system secret tls seldon-ssl-cert --key=privkey.pem --cert=fullchain.pem
 ```
 
-and create SSL Istio Gateway using following YAML file
+使用 YAML 文件创建 SSL Istio 网关。
 
 ```
 apiVersion: networking.istio.io/v1alpha3
@@ -67,56 +67,56 @@ spec:
 ```
 
 
-If you have your own gateway you will use then you can provide the name when installing the seldon operator. For example if your gateway is called `mygateway` you can install the operator with:
+如果有使用自己的网关，可在安装 seldon operator 时提供名称。比如你的网关名时 `mygateway` ，可通过以下命令安装 operator：
 
 ```bash 
 helm install seldon-core seldon-core-operator --set istio.enabled=true --set istio.gateway=mygateway --repo https://storage.googleapis.com/seldon-charts --set usageMetrics.enabled=true
 ```
 
-You can also provide the gateway on a per Seldon Deployment resource basis by providing it with the annotation `seldon.io/istio-gateway`.
+你可以为每个 Seldon Deploy 通过使用 `seldon.io/istio-gateway` 配置不同的网关。
 
-## Istio Configuration Annotation Reference
+## Istio 配置注释参考
 
-| Annotation | Default |Description |
+| Annotation | 默认 | 描述 |
 |------------|---------|------------|
-|`seldon.io/istio-gateway:<gateway name>`| istio-system/seldon-gateway | The gateway to use for this deployment. If no namespace prefix is applied it will refer to the namespace of the Seldon Deployment. |
-| `seldon.io/istio-retries` | None | The number of istio retries |
-| `seldon.io/istio-retries-timeout` | None | The per try timeout if istio retries is set |
-| `seldon.io/istio-host` | `*` | The Host for istio Virtual Service |
+|`seldon.io/istio-gateway:<gateway name>`| istio-system/seldon-gateway | 用此网关的部署。如果未提供应用名称空间，将指向 Seldon Delpoyment 的命名空间。 |
+| `seldon.io/istio-retries` | None | istio 尝试次数 |
+| `seldon.io/istio-retries-timeout` | None | 如果设置了 istio retries，每次请求多长事件超时 |
+| `seldon.io/istio-host` | `*` | istio 虚拟服务的 Host |
 
-All annotations should be placed in `spec.annotations` or `metadata.annotations`. `spec.annotations` will take precedence.
+所有注解均可放在 `spec.annotations` 或 `metadata.annotations`。将优先使用放在 `spec.annotations` 的配置。
 
 
-## Traffic Routing
+## 流量路由
 
-Istio has the capability for fine grained traffic routing to your deployments. This allows:
+Istio 具备细化分配流量到部署中的能力。这将允许：
 
- * canary updates
- * green-blue deployments
- * A/B testing
- * shadow deployments
+ * canary 更新
+ * green-blue 发布
+ * A/B 测试
+ * 影子部署
 
-More information can be found in our [examples](../examples/istio_examples.html), including [canary updates](../examples/istio_canary.html).
+更多信息请查看 [示例](../examples/istio_examples.html)，其中包括 [canary 更新](../examples/istio_canary.html)。
 
-## Configuring Authentication/Authorization
-To force clients to authenticate/authorize themselves in order to access the seldon model deployments, you can leverage Istio's 
-`RequestAuthentication` and `AuthorizationPolicy`. This will deny or accept requests to the model depending on specified conditions that you designated in the policies. 
-More information can be found [here](https://istio.io/latest/docs/reference/config/security/authorization-policy/).
+## 配置身份验证/授权
+要强制客户端对 seldon 模型发布的访问进行验证/授权，可配置 Istio 的 `RequestAuthentication` 和 `AuthorizationPolicy`。
+这将根据你的策略设计接受或拒绝对模型的请求。
+更多信息请查看[这里](https://istio.io/latest/docs/reference/config/security/authorization-policy/)。
 
-You can set the policies to target all the models belonging to a specific namespace, but you must be using istio sidecar proxy, 
-and ensure your seldon operator configuration has the following:
+你可以设置指向特定命名空间的所有模型的策略，但必须使用 istio sidecar 代理，
+并确保 seldon operator 按如下配置：
 ```
 istio:
   enabled: true
   tlsMode: STRICT
 ```
 
-When you've set up an `AuthorizationPolicy`, this will disrupt Prometheus from scraping metrics. Two proposed options to 
-resolve this issue are: 
-- You can specify that you want to allow GET requests to the prometheus endpoint in the `AuthorizationPolicy`
+如果设置了 `AuthorizationPolicy`，将破坏 Prometheus 指标抓取，
+两种可能的选项可以解决此问题：
+- 在 `AuthorizationPolicy` 中指定允许 GET 请求
 
-Example:
-```
+示例：
+```yaml
   - to:
     - operation:
         methods: ["GET"]
@@ -124,8 +124,8 @@ Example:
         ports: ["6000", "8000", "6001"]
 ```
 
-- You can also exclude ports in your Istio Operator configuration
-```
+- 也可在 Istio Operator 配置中 排除端口：
+```yaml
   proxy:
         autoInject: enabled
         clusterDomain: cluster.local
@@ -135,10 +135,10 @@ Example:
         excludeOutboundPorts: "15021"
 ```
 
-## Troubleshoot
-If you saw errors like `Failed to generate bootstrap config: mkdir ./etc/istio/proxy: permission denied`, it's probably because you are running istio version <= 1.6.
-Istio proxy sidecar by default needs to run as root (This changed in version >= 1.7, non-root is the default)
-You can fix this by changing `defaultUserID=0` in your helm chart, or add the following `securityContext` to your istio proxy sidecar.
+## 问题解决
+如果看到类似 `Failed to generate bootstrap config: mkdir ./etc/istio/proxy: permission denied` 问题，它可能时因为你的 istio 版本 <= 1.6。
+Istio 代理 sidecar 默认以 root 运行（在版本 >= 1.7，默认时非 root）。
+可通过在 helm chart 中修改 `defaultUserID=0` 修复，或者添加 `securityContext` 到 istio 的 sidecar 代理。
 
 ```
 securityContext:
@@ -146,14 +146,14 @@ securityContext:
 ```
 
 
-# Using the Istio Service Mesh
-Istio can also be used to direct traffic internal to the cluster, rather than using it as an ingress (traffic from outside the cluster). 
+# 使用 Istio 服务网格
+Istio 也可以直接用于集群内部的导流，而不是将其作为入口（导流集群外部流量）。
 
-To do this, the Virutal Services Seldon will create need to be attached to the "special" Gateway named `mesh`. This applies the routing rules to traffic inside the mesh without needing to route through a Gateway.
+为此，虚拟服务 Seldon 会创建附加到名为 `mesh` 的“特殊”网关。这会将路由规则应用于网格内的流量，而无需通过网关进行路由。
 
-Due to limitations in Istio (as of v1.11.3), virtual services in the local mesh can only apply to one Host. (see their docs [here](https://istio.io/latest/docs/ops/best-practices/traffic-management/#split-virtual-services)). Therefor, a unique service is required for each Graph, which can be achieved by setting the `seldon.io/svc-name` annotation in the main predictor. 
+由于 Istio 的限制（从 v1.11.3 开始），本地网格中的虚拟服务只能应用于一个主机。(在[此处](https://istio.io/latest/docs/ops/best-practices/traffic-management/#split-virtual-services)查看他们的文档)。因此，每个 Graph 都需要一个唯一的服务，这可以通过在主预测器中设置 `seldon.io/svc-name` 注解。
 
-Here's an example `SeldonDeployment` that will utilize the internal mesh networking to split traffic between two predictors, 75% to the first, 25% to the second: 
+这是一个 `SeldonDeployment` 示例，它将利用内部网状网络在两个预测器之间分配流量，第一个预测器为 75%，第二个预测器为 25%：
 ``` yaml
 apiVersion: machinelearning.seldon.io/v1
 kind: SeldonDeployment
@@ -208,12 +208,12 @@ spec:
     traffic: 25
 ```
 
-A few key things to point out:  
-1. A unique service is created for the main (first) predictor named `canary-example-1`. This service cannot collide with any other services in the namespace. This service could be a service _not_ created via the SeldonDeployment, but also must match the necessary Istio routing rules. 
-2. The above service is referenced in the annotations in `spec` by specify ing the host as follows:  `seldon.io/istio-host: canary-example-1`. This will set the host in the Istio Virutal Service to be the newly created service. 
-3. The gateway is specified as `seldon.io/istio-gateway: mesh` to utilize this routing in the Istio Mesh. NOTE: In order to call this service, and have the appropriate routing take place, the Client _must_ also be _inside_ the mesh. This is accomplished by injecting the Istio Sidecar into the pod of the client. 
+需要指出的几个关键点：
+1. 为主要的 (第一个) 预测器创建名为 `canary-example-1` 的唯一服务。此服务不能与命名空间中的任何其他服务发生冲突。该服务可以_不是_通过 SeldonDeployment 创建的服务，但也必须匹配必要的 Istio 路由规则。
+2. 以上服务参考 `spec` 注解的 host 如下： `seldon.io/istio-host: canary-example-1`。浙江会设置 host 到 Istio Virutal Service 来创建新的服务。
+3. 网关指定为 `seldon.io/istio-gateway: mesh` 以在 Istio Mesh 利用这个路由。注意：为了调用所有服务，并进行适当的路由，客户端_必须_同样_处在_网格中。这是通过将 Istio Sidecar 注入客户端的 pod 来实现的。
 
-From within the cluster, and inside a pod that is inside the mesh, a call like the following will work, as well as split traffic between the two predictors:
+从集群内部和网格内部的 pod 内部，可以进行如下调用，并在两个预测器之间拆分流量：
 ``` shell
 curl -X POST -H 'Content-Type: application/json' \
   -d '{"data": { "names": ["a", "b"], "ndarray": [[1,2]]}}' \

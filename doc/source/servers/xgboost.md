@@ -1,30 +1,24 @@
-# XGBoost Server
+# XGBoost 服务
 
-If you have a trained XGBoost model saved you can deploy it simply using
-Seldon's prepackaged XGBoost server.
+你可通过 Seldon 预封装 XGBoost 服务部署训练好的 XGBoost 模型。
 
-## Prerequisites
+## 要求
 
-Seldon expects that your model has been saved as `model.bst`, using XGBoost's
-`bst.save_model()` method.
-Note that this is the [recommended approach to serialise
-models](https://xgboost.readthedocs.io/en/latest/tutorials/saving_model.html).
+Seldon 预期训练模型是 `model.bst` 格式并使用 XGBoost 的
+`bst.save_model()` 方法。
+注意，这是 [推荐的序列化模型方法](https://xgboost.readthedocs.io/en/latest/tutorials/saving_model.html)。
 
-To maximise compatibility between the serialised model and the serving runtime,
-it's recommended to use the same toolkit versions at both training and
-inference time. 
-The expected dependency versions in the latest XGBoost pre-packaged server are
-as follows:
+为了最大限度的提高模型序列化和服务运行时的兼容性，推荐在训练和预估时使用相同版本的工具集。
+最新的 XGBoost 预封装服务以来版本如下：
 
 | Package | Version |
 | ------ | ----- |
 | `xgboost` | `1.4.2` |
 
-## Usage
+## 用法
 
-To use the pre-packaged XGBoost server, it's enough to declare `XGBOOST_SERVER`
-as the `implementation` for your model.
-For example, for a saved Iris model, you could consider the following config:
+使用 XGBoost 预封装服务，需在模型配置中设置 `XGBOOST_SERVER` 为 `implementation` 的值。
+例如，针对保存的 Iris 模型，可参考如下配置：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -43,19 +37,22 @@ spec:
     replicas: 1
 ```
 
-You can try out a [worked notebook](../examples/server_examples.html) with a
-similar example.
+查看相似的 [可工作 notebook](../examples/server_examples.html) 示例。
 
-## V2 protocol
+## V2 KFServing 协议 [孵化中]
 
-The XGBoost server can also be used to expose an API compatible with the [V2
-protocol](../graph/protocols.md#v2-protocol).
-Note that, under the hood, it will use the [Seldon
-MLServer](https://github.com/SeldonIO/MLServer) runtime.
+.. Warning:: 
+  V2 KFServing 协议支持被考虑在孵化特性中。
+  这意味着 Seldon Core 的某些特性仍未得到支持（比如：tracing, graphs等）。
 
-In order to enable support for the V2 protocol, it's enough to
-specify the `protocol` of the `SeldonDeployment` to use `v2`.
-For example,
+
+
+XGBoost 服务也可用于暴露兼容 [V2
+KFServing 协议](../graph/protocols.md#v2-kfserving-protocol)的 API。
+注意，某些情况下，这会使用到 [Seldon
+MLServer](https://github.com/SeldonIO/MLServer) 运行时。
+
+为了支持 V2 KFServing 协议，设置`SeldonDeployment` 的 `protocol` 使用 `kfserving`，示例如下：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -64,7 +61,7 @@ metadata:
   name: xgboost
 spec:
   name: iris
-  protocol: v2 # Activate the V2 protocol
+  protocol: kfserving # Activate the V2 protocol
   predictors:
   - graph:
       children: []
@@ -75,5 +72,4 @@ spec:
     replicas: 1
 ```
 
-You can try a similar example in [this worked
-notebook](../examples/server_examples.html).
+可参考此 [可工作 notebook](../examples/server_examples.html)示例。

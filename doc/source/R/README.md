@@ -1,36 +1,36 @@
-# Packaging an R model for Seldon Core using s2i (incubating)
+# 使用 s2i 为 Seldon Core 打包 R 模型（孵化）
 
-In this guide, we illustrate the steps needed to wrap your own R model in a docker image ready for deployment with Seldon Core using [source-to-image app s2i](https://github.com/openshift/source-to-image). If you prefer to use plain Docker, see the [Docker instructions](r_wrapping_docker.md).
+本章中，我们说名使用 [source-to-image app s2i](https://github.com/openshift/source-to-image) 为 R 模型构建使用 Seldon Core 部署的 docker 镜像，如果想要使用原生 Docker，查看[Docker 说明](r_wrapping_docker.md)。
 
-If you are not familiar with s2i you can read [general instructions on using s2i](../wrappers/s2i.md) and then follow the steps below.
+如果您不熟悉 s2i，您可以阅读 [使用 s2i 的一般说明](../wrappers/s2i.md)，然后按照以下步骤。
 
-## Step 1 - Install s2i
+## 步骤 1 - 安装 s2i
 
-[Download and install s2i](https://github.com/openshift/source-to-image#installation)
+[下载安装 s2i](https://github.com/openshift/source-to-image#installation)
 
-- Prerequisites for using s2i are:
+- 使用 s2i 准备工作
   - Docker
-  - Git (if building from a remote git repo)
+  - Git（如果使用远程 git 仓库）
 
-To check everything is working you can run
+所有工作就绪，可执行以下
 
 ```bash
 s2i usage seldonio/seldon-core-s2i-r:0.1
 ```
 
-## Step 2 - Create your source code
+## 步骤 2 - 创建源代码
 
-To use our s2i builder image to package your R model you will need:
+要使用 s2i 构建封装 R 模型的镜像，你需要：
 
-- An R file which provides an S3 class for your model via an `initialise_seldon` function and that has appropriate generics for your component, e.g. predict for a model.
-- An optional install.R to be run to install any libraries needed
-- .s2i/environment - model definitions used by the s2i builder to correctly wrap your model
+- 通过 `initialise_seldon` 方法提供一个 S3 类的 R 文件的模型，并为您的组件提供适当的泛型，例如模型预测。
+- 运行的可选 install.R 以安装所需的任何库
+- .s2i/environment - s2i 正确构建模型的配置
 
-We will go into detail for each of these steps:
+我们将详细介绍每个步骤：
 
-### R Runtime Model file
+### R 运行时模型文件
 
-Your source code should contain an R file which defines an S3 class for your model. For example, looking at our skeleton R model file at `incubating/wrappers/s2i/R/test/model-template-app/MyModel.R`:
+源代码需要包含定义了 S3 类的模型的 R 文件。比如，请查看我们的 skeleton R 模型文件在 `incubating/wrappers/s2i/R/test/model-template-app/MyModel.R`：
 
 ```R
 library(methods)
@@ -51,14 +51,14 @@ initialise_seldon <- function(params) {
 }
 ```
 
-- A `seldon_initialise` function creates an S3 class for my model via a constructor `new_mymodel`. This will be called on startup and you can use this to load any parameters your model needs.
-- A generic `predict` function is created for my model class. This will be called with a `newdata` field with the `data.frame` to be predicted.
+- `seldon_initialise` 函数 通过 `new_mymodel` 构造器创建模型 S3 类。这将在启动时调用，您可以使用它来加载模型所需的任何参数。
+- 通用 `predict` 函数是为我们的模型类创建。将使用 `newdata` 字段的 `data.frame` 来进行预估。
 
-There are similar templates for ROUTERS and TRANSFORMERS.
+ROUTERS 和 TRANSFORMERS 有类似的模板。
 
 ### install.R
 
-Populate an `install.R` with any software dependencies your code requires. For example:
+通过任意软件依赖放置 `install.R` 到你的代码：
 
 ```R
 install.packages('rpart')
@@ -66,7 +66,7 @@ install.packages('rpart')
 
 ### .s2i/environment
 
-Define the core parameters needed by our R builder image to wrap your model. An example is:
+定义我们的 R 构建器映像所需的核心参数来封装您的模型。一个例子是：
 
 ```bash
 MODEL_NAME=MyModel.R
@@ -75,32 +75,32 @@ SERVICE_TYPE=MODEL
 PERSISTENCE=0
 ```
 
-These values can also be provided or overridden on the command line when building the image.
+构建映像时，也可以在命令行上提供或覆盖这些值。
 
-## Step 3 - Build your image
+## 步骤 3 - 构建您的映像
 
-Use `s2i build` to create your Docker image from source code. You will need Docker installed on the machine and optionally git if your source code is in a public git repo.
+使用 `s2i build` 从代码构建 Docker 镜像。你需要本地安装 Docker，可选的如果时从公共 git 仓库构建需要安装 git。
 
-Using s2i you can build directly from a git repo or from a local source folder. See the [s2i docs](https://github.com/openshift/source-to-image/blob/master/docs/cli.md#s2i-build) for further details. The general format is:
+使用 s2i 直接从远程仓库或者本地文件夹构建。查看 [s2i 文档](https://github.com/openshift/source-to-image/blob/master/docs/cli.md#s2i-build)获取更多信息，一般格式为：
 
 ```bash
 s2i build <git-repo> seldonio/seldon-core-s2i-r:0.1 <my-image-name>
 s2i build <src-folder> seldonio/seldon-core-s2i-r:0.1 <my-image-name>
 ```
 
-An example invocation using the test template model inside seldon-core:
+在 seldon-core 中使用测试模板模型的示例调用：
 
 ```bash
 s2i build https://github.com/seldonio/seldon-core --context-dir=incubating/wrappers/s2i/R/test/model-template-app seldonio/seldon-core-s2i-r:0.1 seldon-core-template-model
 ```
 
-The above s2i build invocation:
+上面的 s2i 构建调用：
 
-- uses the GitHub repo: https://github.com/seldonio/seldon-core and the directory `incubating/wrappers/s2i/R/test/model-template-app` inside that repo.
-- uses the builder image `seldonio/seldon-core-s2i-r`
-- creates a docker image `seldon-core-template-model`
+- 使用 GitHub repo: https://github.com/seldonio/seldon-core 及 repo 中文件夹 `incubating/wrappers/s2i/R/test/model-template-app`。
+- 使用构建镜像 `seldonio/seldon-core-s2i-r`
+- 创建 docker 镜像 `seldon-core-template-model`
 
-For building from a local source folder, an example where we clone the seldon-core repo:
+对于从本地源文件夹构建，我们克隆 seldon-core 存储库的示例：
 
 ```bash
 git clone https://github.com/seldonio/seldon-core
@@ -108,30 +108,30 @@ cd seldon-core
 s2i build incubating/wrappers/s2i/R/test/model-template-app seldonio/seldon-core-s2i-r:0.1 seldon-core-template-model
 ```
 
-For more help see:
+如需更多帮助，请参阅：
 
 ```bash
 s2i usage seldonio/seldon-core-s2i-r:0.1
 s2i build --help
 ```
 
-## Reference
+## 参考
 
-### Environment Variables
+### 环境变量
 
-The required environment variables understood by the builder image are explained below. You can provide them in the `.s2i/environment` file or on the `s2i build` command line.
+面解释了构建器映像理解的必需环境变量。您可以在 `.s2i/environment` 文件中或在命令行 `s2i build` 中查看它们。
 
 #### MODEL_NAME
 
-The name of the R file containing the model.
+包含模型的 R 文件的名称。
 
 #### API_TYPE
 
-API type to create. Can be REST only at present.
+要创建的 API 类型。目前只能是REST。
 
 #### SERVICE_TYPE
 
-The service type being created. Available options are:
+正在创建的服务类型。可用选项有：
 
 - MODEL
 - ROUTER
@@ -139,18 +139,18 @@ The service type being created. Available options are:
 
 #### PERSISTENCE
 
-Can only by 0 at present. In future, will allow the state of the component to be saved periodically.
+目前只能由0。将来，将允许定期保存组件的状态。
 
-### Creating different service types
+### 创建不同的服务类型
 
 #### MODEL
 
-- [A minimal skeleton for model source code](https://github.com/SeldonIO/seldon-core/tree/master/incubating/wrappers/s2i/R/test/model-template-app)
-- [Example models](../examples/notebooks.html)
+- [模型源代码的最小脚手架](https://github.com/SeldonIO/seldon-core/tree/master/incubating/wrappers/s2i/R/test/model-template-app)
+- [models 示例](../examples/notebooks.html)
 
 #### ROUTER
-- [A minimal skeleton for router source code](https://github.com/SeldonIO/seldon-core/tree/master/incubating/wrappers/s2i/R/test/router-template-app)
+- [路由器源代码的最小框架](https://github.com/SeldonIO/seldon-core/tree/master/incubating/wrappers/s2i/R/test/router-template-app)
 
 #### TRANSFORMER
 
-- [A minimal skeleton for transformer source code](https://github.com/SeldonIO/seldon-core/tree/master/incubating/wrappers/s2i/R/test/transformer-template-app)
+- [transformer 源代码的最小骨架](https://github.com/SeldonIO/seldon-core/tree/master/incubating/wrappers/s2i/R/test/transformer-template-app)

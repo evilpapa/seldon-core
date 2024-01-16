@@ -1,21 +1,21 @@
 # Seldon Core Helm Charts
 
-Helm charts are published to our official repo.
+Helm charts 发布到我们的官方仓库。
 
-## Core Charts
+## 核心 Charts
 
-The core charts for installing Seldon Core are shown below.
+安装 Seldon Core 的核心 charts 如下
 
 .. toctree::
    :maxdepth: 1
 
    seldon-core-operator <../charts/seldon-core-operator>
 
-For further details see [here](../workflow/install.md).
+有关更多详细信息，请参见 [此处](../workflow/install.md).
 
-## Inference Graph Templates
+## 推理图模板
 
-A set of charts to provide example templates for creating particular inference graphs using Seldon Core
+提供了一组使用 Seldon Core 创建特定推理图的示例模板
 
 .. toctree::
    :maxdepth: 1
@@ -26,9 +26,9 @@ A set of charts to provide example templates for creating particular inference g
    seldon-od-model <../charts/seldon-od-model>
    seldon-od-transformer <../charts/seldon-od-transformer>
 
-[A notebook with examples of using the above charts](https://docs.seldon.io/projects/seldon-core/en/latest/examples/helm_examples.html) is provided.
+提供了一个[其中包含使用上述图表的示例笔记](https://docs.seldon.io/projects/seldon-core/en/latest/examples/helm_examples.html)。
 
-## Misc
+## 杂项
 
 .. toctree::
    :maxdepth: 1

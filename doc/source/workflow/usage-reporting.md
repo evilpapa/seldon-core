@@ -1,21 +1,21 @@
-## Usage Reporting with Spartakus
+## Spartakus 使用报告
 
-An important part of the development process is to better understand the real user environment that the application will run in.
+开发过程的一个重要部分是更好地了解应用程序将运行的真实用户环境。
 
-We provide an option to use an anonymous metrics collection tool provided by the Kubernetes project called [Spartakus](https://github.com/kubernetes-incubator/spartakus).
+我们提供了一个选项，使用 K8s 项目提供的一个名为 [Spartakus](https://github.com/kubernetes-incubator/spartakus) 匿名指标收集工具。
 
-### Enable Usage Reporting
+### 开启使用报告
 
-To help support the development of seldon-core, the voluntary reporting of usage data can be enabled whenever the "seldon-core-operator" helm chart is used  by setting the "--set usageMetrics.enabled=true" option.
+为了帮助 seldon-core 的开发支持，任何时候都可通过“seldon-core-operator” helm chart设置 `–set usageMetrics.enabled=true` 选项来自愿开启使用报告回馈。
 
 ```bash
 helm install seldon-core seldon-core-operator \
         --repo https://storage.googleapis.com/seldon-charts --set usageMetrics.enabled=true
 ```
 
-The information that is reported is anonymous and only contains some information about each node in the cluster, including OS version, kubelet version, docker version, and CPU and memory capacity.
+报告的信息是匿名的，只包含有关集群中每个节点的一些信息，包括操作系统版本、kubelet 版本、docker 版本以及CPU 和内存容量信息。
 
-An example of what's reported:
+一个上报信息的示例：
 ```json
 {
     "clusterID": "846db7e9-c861-43d7-8d08-31578af59878",
@@ -57,12 +57,11 @@ An example of what's reported:
 }
 ```
 
-### Disable Usage Reporting
+### 关闭使用报告
 
-Reporting of usage data is disabled by default, just use "seldon-core-operator" as normal.
+正常「seldon-core-operator」使用时，数据报告默认是关闭的。
 
 ```bash
 helm install seldon-core seldon-core-operator \
         --repo https://storage.googleapis.com/seldon-charts
 ```
-

@@ -1,17 +1,17 @@
-# Custom inference servers
+# 自定义预估服务器
 
-Out of the box, Seldon offers support for several [pre-packaged inference
-servers](./overview.md).
-However, there may be cases where it makes sense to rollout your own re-usable
-inference server.
-For example, you may need particular dependencies, specific versions, a custom
-process to download your model weights, etc.
+开箱即用，Seldon 提供一些 [预封装预估
+服务器](./overview.md)。
+然而，但是，在某些情况下，推出您自己的可重复使用的
+推论服务器是有意义的。
+例如，您可能需要特定的依赖关系、特定版本、
+自定义过程来下载模型权重等。
 
-To support these use cases, Seldon allows you to easily build your own
-inference servers, which can then be configured to be used as you would do the
-pre-packaged ones.
-That is, by using the `implementation` key and passing through model parameters
-(e.g. `modelUri`).
+为了支持这些使用案例，Seldon 允许您轻松地构建自己的
+推理服务器，并可以配置使用，
+就像您进行预封装的一样。
+即通过使用 `implementation` 选项并定义模型参数
+（例如 `modelUri`）。
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -29,17 +29,17 @@ spec:
       replicas: 1
 ```
 
-## Building a new inference server
+## 构建一个新的预估服务器
 
-To build a new custom inference server you can follow the same instructions as
-the ones on [how to wrap a model](../wrappers/language_wrappers.md).
-The only difference is that the server will now receive a set of model
-parameters, like `modelUri`.
+要构建自定义服务器可
+查看[如何封装模型](../wrappers/language_wrappers.md)说明。
+唯一区别在于，服务器会接收一些模型参数，
+如：`modelUri`。
 
-As inspiration, you can see how the [SKLearn
+作为灵感，您可以参考 [SKLearn 
 server](https://github.com/SeldonIO/seldon-core/blob/d84b97431c49602d25f6f5397ba540769ec695d9/servers/sklearnserver/sklearnserver/SKLearnServer.py#L16-L23)
-and the [other pre-packaged inference servers](./overview.md) handle these as
-part of their `__init__()` method:
+和 [其他预封装服务器](./overview.md)
+的 `__init__()` 处理方法：
 
 ```python
 def __init__(self, model_uri: str = None,  method: str = "predict_proba"):
@@ -50,16 +50,16 @@ def __init__(self, model_uri: str = None,  method: str = "predict_proba"):
         self.load()
 ```
 
-## Adding a new inference server
+## 添加一个服务器
 
-The list of available inference servers in Seldon Core is maintained in the
-`seldon-config` configmap, which lives in the same namespace as your Seldon
-Core operator.
-In particular, the `predictor_servers` key holds the JSON config for each
-inference server.
+可用预估服务器列表 Seldon Core 存放在
+`seldon-config` 配置中，它同 Seldon 
+Core operator 
+在同一命名空间中。特别是，`predictor_servers` 关键字 为每个
+预估服务器保存着 JSON 配置。
 
-The `predictor_servers` key will hold a JSON dictionary similar to the one
-below:
+`predictor_servers` 关键字保存的 JSON 字典
+如下：
 
 ```json
 {
@@ -76,9 +76,9 @@ below:
 }
 ```
 
-Adding a new inference server is just a matter of adding a new key to the dict
-above.
-For example:
+添加新的预估服务器就像
+上面一样添加一个新的配置到字典中。
+如：
 
 ```json
 {
@@ -105,6 +105,6 @@ For example:
 }
 ```
 
-## Worked Example
+## 可用示例
 
-A worked example to build a LighGBM Model server can be found [here](../examples/custom_server.html)
+一个可工作的构建 LighGBM 模型服务器可在[这里](../examples/custom_server.html)查看。

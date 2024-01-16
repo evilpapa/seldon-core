@@ -1,51 +1,50 @@
-# Seldon Core Language Wrappers
+# Seldon Core 语言封装
 
-When you have a custom use-case where our pre-packaged inference servers cannot cover, you are able to leverage our language wrappers to containerise your machine learning model and logic.
+预封装推理服务器无法覆盖自定义的用例时，可以利用我们的语言封装来将机器学习模型和逻辑容器化。
 
-All our pre-packaged model servers are built using our language wrappers, which means that you can also build your own reusable inference server if required.
+Seldon提供的所有预封装的模型服务器都是使用语言封装构建的，这意味着如果需要，您也可以构建自己的可重复使用的推论服务器。
 
-This page provides a high level overview around the concepts and best practices when using the pre-package model servers.
+本页提供了有关使用预封装模型服务器时的概念和最佳实践概述。
 
-## Language Wrappers Available
+## 可用封装语言
 
-The language wrappers supported, including their current stability are outlined below
+支持的封装语言，包括它们当前的稳定性，如下所述
 
-### Graduated Language Wrappers
+### 已毕业封装语言
 
-Below are languages that are now signed off as stable.
+以下是现在稳定版的封装语言。
 
-#### Python [Graduated]
+#### Python [已毕业]
 
-For any Python based machine learning models, it is possible to use our Python Language wrapper to containerise them and expose any logic through a simple Python class.
+对于任何基于 Python 的机器学习模型，都有可能使用我们的 Python 语言封装将它们装箱，并通过简单的 Python 类暴露任何逻辑。
 
-This it currently the most popular wrapper (followed by the Java Wrapper), and it is currently used across a large number of use-cases, serving custom logic with models trained using [Keras](https://keras.io/), [PyTorch](http://pytorch.org/), [StatsModels](http://www.statsmodels.org/stable/index.html), [XGBoost](https://github.com/dmlc/xgboost), [scikit-learn](http://scikit-learn.org/stable/) and even custom operating system based proprietary engines.
+这是目前最流行的封装（其次是Java封装），目前用于大量的使用案例，可用于使用基于 [Keras](https://keras.io/)，[PyTorch](http://pytorch.org/)，[StatsModels](http://www.statsmodels.org/stable/index.html)，[XGBoost](https://github.com/dmlc/xgboost)，[scikit-learn](http://scikit-learn.org/stable/) 的训练模型，甚至是基于自定义操作系统的专用引擎。
 
-Please check the [Python model wrapping](../python/index.md) section for more information on how to use it.
+请参考 [Python 模型封装](../python/index.xhtml) 章节查看更多使用信息。
 
-### Incubating Language Wrappers
+### 孵化中的封装语言
 
-Below are languages that have not yet been signed off as graduated and stable, but have an active roadmap with a completion strategy towards graduation.
+以下为不稳定或者未毕业的语言，但是已经有了明确的路线图和毕业战略。
 
-#### Java [Incubating]
+#### Java [孵化中]
 
-Currently the Java wrapper is being used across a large amount of critical environments, however we are currently requiring the Java wrapper to have the same level of features as the python wrapper for graduation. You can follow the progress for this [through our GitHub issue #1344](https://github.com/SeldonIO/seldon-core/issues/1344).
+目前，Java 封装正在大量关键环境中使用，但我们要求 Java 封装具有与 Python 封装相同的功能级别才能毕业。 你可以通过 [GitHub 讨论 #1344](https://github.com/SeldonIO/seldon-core/issues/1344) 追踪进展。
 
-Java based models including, [H2O](https://www.h2o.ai/), [Spark](https://spark.apache.org/) (standalone exported models).
+基于Java的模型包括 [H2O](https://www.h2o.ai/)，[Deep Learning 4J](https://deeplearning4j.org/)，[Spark](https://spark.apache.org/)（导出的独立模型）。
 
-Please read the [Java models wrapped using source-to-image](../java/README.md) for further information in regards to how it can be used.
+请参考 [使用 s2i 封装 JAVA 模型](../java/README.xhtml) 获取有关如何进一步使用它的信息。
 
-### Alpha Language Wrappers
+### Alpha封装语言
 
 #### R [Alpha]
 
-- [R models wrapped using source-to-image](../R/README.md)
+- [使用 s2i 封装 R 模型](../R/README.xhtml)
 
 #### NodeJS [Alpha]
 
-- [Javascript models wrapped using source-to-image](../nodejs/README.md)
+- [使用 s2i 封装 Javascript 模型](../nodejs/README.xhtml)
 
 
 #### Go [Alpha]
 
-- [Example Go integration](https://github.com/SeldonIO/seldon-core/blob/master/incubating/wrappers/s2i/go/SeldonGoModel.ipynb)
-
+- [Go 实现示例](https://github.com/SeldonIO/seldon-core/blob/master/incubating/wrappers/s2i/go/SeldonGoModel.ipynb)

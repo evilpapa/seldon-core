@@ -1,16 +1,16 @@
-# Prediction API
+# 预估 API
 
-Seldon Core uses REST and gRPC APIs exposed externally for business applications to connect to and also internally for microservices to implement models, routers, combiners and transformers.
+Seldon Core 对外暴漏公开的 REST 和 gRPC API 供业务应用链接，并在内部使用微服务来实现模型、路由、组合和转换。
 
- - [External Prediction API](external-prediction.md)
-   - Read this if you want to connect external business applications
- - [Internal Prediction API](internal-api.md)
-   - Read this if you want to build a microservice to wrap a model or build another type of component such as a router, combiner or transformer
+ - [外部预估 API](external-prediction.md)
+   - 如果您想连接外部业务应用程序，请阅读此内容
+ - [内部预估 API](internal-api.md)
+   - 如果您想构建一个微服务来封装模型或构建另一种类型的组件，例如路由器、组合器或转换器，请阅读此内容
 
 
-## Proto Buffer and gRPC Definition
+## Proto Buffer 及 gRPC 定义
 
-The proto file can be found [here](https://github.com/SeldonIO/seldon-core/blob/master/proto/prediction.proto) and is reproduced below:
+可以在[此处](https://github.com/SeldonIO/seldon-core/blob/master/proto/prediction.proto)找到原始文件，拷贝份如下：
 
 ```proto
 syntax = "proto3";
@@ -117,7 +117,7 @@ message SeldonMessageMetadata
   string messagetype = 1;
   google.protobuf.Value schema = 2;
 
-  // v2 tensor metadata fields
+  // KFserving tesnor metadata fields
   string name = 3;
   string datatype = 4;
   repeated int64 shape = 5;

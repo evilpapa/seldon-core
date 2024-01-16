@@ -1,14 +1,14 @@
-# Packaging an R model for Seldon Core using Docker
+# 使用 Docker 为 Seldon Core 打包 R 模型
 
-In this guide, we illustrate the steps needed to wrap your own R model in a docker image ready for deployment with Seldon Core using Docker.
+本导航，我们将说明使用 Docker 为 Seldon Core 开发好的 R 模型创建 docker 镜像。
 
-## Step 1 - Create your source code
+## 第 1 步 - 创建源代码
 
-You will need an R file which provides an S3 class for your model via an `initialise_seldon` function and that has appropriate generics for your component, e.g. predict for a model. You will also need to declare any dependencies needed by your code.
+您将需要一个提供 S3 类的 R 文件，该文件通过 `initialise_seldon` 函数为您的模型为您的组件提供适当的泛型，例如预测模型。您还需要声明代码所需的任何依赖项。
 
-### R Runtime Model file
+### R 运行时模型文件
 
-Your source code should contain an R file which defines an S3 class for your model. For example, looking at our skeleton R model file at `incubating/wrappers/s2i/R/test/model-template-app/MyModel.R`:
+您的源代码应包含一个 R 文件，该文件为您的模型定义了一个 S3 类。例如，查看我们的骨架 R 模型文件 `incubating/wrappers/s2i/R/test/model-template-app/MyModel.R`：
 
 ```R
 library(methods)
@@ -29,26 +29,26 @@ initialise_seldon <- function(params) {
 }
 ```
 
-- A `seldon_initialise` function creates an S3 class for my model via a constructor `new_mymodel`. This will be called on startup and you can use this to load any parameters your model needs.
-- A generic `predict` function is created for my model class. This will be called with a `newdata` field with the `data.frame` to be predicted.
+- 一个 `seldon_initialise` 函数通过构造函数 `new_mymodel` 为模型创建一个 S3 类。这将在启动时调用，您可以使用它来加载模型所需的任何参数。
+- 为模型类创建一个 `predict` 函数。这将使用具有要预测的 `newdata` 字段来调用 `data.frame`。
 
-There are similar templates for ROUTERS and TRANSFORMERS.
+ROUTERS 和 TRANSFORMERS 有类似的模板。
 
-### Dependencies
+### 依赖
 
-For running your code outside of docker you can populate an `install.R` with any software dependencies your code requires. For example:
+若在 docker 之外运行您的代码，您可以任何依赖控制软件填充 `install.R`。例如：
 
 ```R
 install.packages('rpart')
 ```
 
-These same dependencies will need to be installed in the docker image, as explained in the next section.
+这些相同的依赖项需要安装在 docker 镜像中，如下一节所述。
 
-## Step 2 - Build your image
+## 第 2 步 - 构建镜像
 
-How you install your dependencies in your docker image depends on the [base image that you choose](https://www.r-bloggers.com/2019/01/docker-images-for-r-r-base-versus-r-apt/) and whether binary versions of the dependencies are available. Using `rocker/r-apt:bionic` as a base image and install dependencies as binaries, if possible, results in a faster and smaller build.
+如何安装依赖取决于[你选择的基础镜像](https://www.r-bloggers.com/2019/01/docker-images-for-r-r-base-versus-r-apt/)，以及依赖的二进制版本是否可用。使用 `rocker/r-apt:bionic` 作为基础镜像，并安装二进制依赖，如果可能，	会生成更快、更小的构建。
 
-An example docker file can be seen in the [seldon kubeflow example](https://github.com/kubeflow/example-seldon/blob/master/models/r_mnist/runtime/Dockerfile):
+docker file 示例可在 [seldon kubeflow 示例](https://github.com/kubeflow/example-seldon/blob/master/models/r_mnist/runtime/Dockerfile)查看：
 
 ```dockerfile
 FROM rocker/r-apt:bionic
@@ -80,31 +80,31 @@ EXPOSE 5000
 CMD Rscript microservice.R --model $MODEL_NAME --api $API_TYPE --service $SERVICE_TYPE --persistence $PERSISTENCE
 ```
 
-Here binary versions of libraries are installed at the top. The dependencies 'plumber', 'jsonlite', 'optparse', 'stringr', 'urltools' and 'caret' are all required for the seldon wrapper - beyond these you can add your own dependencies ('pls' here is part of the example and not needed by the wrapper).
+这里二进制版本的库安装在顶部。seldon 封装器所需依赖项 'plumber', 'jsonlite', 'optparse', 'stringr', 'urltools' 和 'caret' - 除了这些，你可以添加你自己的依赖项（这里的“pls”是示例，封装器不需要）。
 
-Then environment variables are set which will be passed as parameters into the R microservice in CMD at the end. The meaning of the environment variables is explained below.
+然后设置环境变量，最后将作为参数传递给 CMD 中的 R 微服务。下面解释环境变量的含义。
 
-A directory is created and the local source code is coped into the directory, which is then set as the working directory. The seldon microservice wrapper file is then copied into this directory. This wraps the model to run as a seldon microservice. The expose command sets 5000 as the port for the service.
+创建一个目录并将本地源代码处理到该目录中，然后将其设置为工作目录。然后将 seldon 微服务封装器文件复制到此目录中。将模型封装为作为微服务运行。暴露命令将 5000 设置为服务的端口。
 
-The image can then be built with `docker build . -t $ORG/$MODEL_NAME:$TAG` to create your Docker image from source code. A simple name can be used but convention is to use the ORG/IMAGE:TAG format.
+然后使用 `docker build . -t $ORG/$MODEL_NAME:$TAG` 命令从源代码创建 Docker 映像。可以使用一个简单的名称，但约定是使用 ORG/IMAGE:TAG 格式。
 
-## Reference
+## 参考
 
-### Environment Variables
+### 环境变量
 
-The required environment variables understood by the builder image are explained below. You can provide them in the Dockerfile or as `-e` parameters to `docker run`.
+下面解释了构建器映像所需环境变量。您可以在 Dockerfile 中或作为`docker run` 的 `-e` 参数提供。
 
 #### MODEL_NAME
 
-The name of the R file containing the model.
+包含模型的 R 文件的名称。
 
 #### API_TYPE
 
-API type to create. Can be REST only at present.
+要创建的 API 类型。目前只能是REST。
 
 #### SERVICE_TYPE
 
-The service type being created. Available options are:
+创建的服务类型。可用选项有：
 
 - MODEL
 - ROUTER
@@ -112,18 +112,18 @@ The service type being created. Available options are:
 
 #### PERSISTENCE
 
-Can only by 0 at present. In future, will allow the state of the component to be saved periodically.
+目前只能是 0。将来，将允许定期保存组件的状态。
 
 ### Creating different service types
 
 #### MODEL
 
-- [A minimal skeleton for model source code](https://github.com/SeldonIO/seldon-core/tree/master/incubating/wrappers/s2i/R/test/model-template-app)
-- [Example models](../examples/notebooks.html)
+- [模型源代码的最小骨架](https://github.com/SeldonIO/seldon-core/tree/master/incubating/wrappers/s2i/R/test/model-template-app)
+- [示例模型](../examples/notebooks.html)
 
 #### ROUTER
-- [A minimal skeleton for router source code](https://github.com/seldonio/seldon-core/tree/master/incubating/wrappers/s2i/R/test/router-template-app)
+- [路由器源代码的最小框架](https://github.com/seldonio/seldon-core/tree/master/incubating/wrappers/s2i/R/test/router-template-app)
 
 #### TRANSFORMER
 
-- [A minimal skeleton for transformer source code](https://github.com/seldonio/seldon-core/tree/master/incubating/wrappers/s2i/R/test/transformer-template-app)
+- [转换器源代码的最小骨架](https://github.com/seldonio/seldon-core/tree/master/incubating/wrappers/s2i/R/test/transformer-template-app)

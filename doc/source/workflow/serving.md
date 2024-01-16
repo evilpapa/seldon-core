@@ -1,23 +1,23 @@
-# Testing Your Model Endpoints
+# 模型Endpoints测试
 
-In order to test your components you are able to send the requests directly using CURL/grpCURL or a similar utility, as well as by using our Python SeldonClient SDK.
+为了测试组件，可使用 CURL/grpCURL 或者相似工具，或者我们的 Python SeldonClient SDK。
 
-## Testing options
+## Testing 选项
 
-There are several options for testing your model before deploying it.
+在部署模型之前，有几个选项用于测试模型。
 
-* Running your model directly with the Python Client
-* Running your model as a Docker container
-    * This can be used for all Language Wrappers (but not prepackaged inference servers)
-* Run your SeldonDeployment in a Kubernetes Dev client such as KIND
-    * This can be used for any models
-    * You can send requests through the generated Documentation UI, Python Client or CLI tools 
+* 直接用 Python 客户端运行模型
+* 以 Docker 容器方式运行模型
+    * 此法可用于所有封装语言（除却预封装推理服务）
+* 在K8s开发环境运行 SeldonDeployment，比如 KIND，或者 minikube
+    * 此法可用于所有模型
+    * 可通过生成的文档 UI, Python 客户端或者 CLI 工具发送请求
 
-### Running your model directly with the Python Client
+### 直接用 Python 客户端运行您的模型
 
-* This can be used for Python Language Wrapped Models only
+* 只能用于使用 Python 封装语言的模型
 
-When you create your Python model, such as a file called `MyModel.py` with the contents:
+创建带有逻辑的 Python 模型文件 `MyModel.py`：
 
 ```python
 class MyModel:
@@ -28,9 +28,9 @@ class MyModel:
         return ["hello", "world"]
 ```
 
-You are able to test your model by running the microservice CLI that is provided by the [Python module](../python/python_module.md)
+您可以通过运行 Python 模块提供的微服务 CLI 来测试您的模型 [Python 模块](../python/python_module.xhtml)
 
-Once you install the Python seldon-core module you will be able to run the model above with the following command:
+安装 Python seldon-core 模块后，可通过命令运行：
 
 ```console
 > seldon-core-microservice MyModel REST --service-type MODEL
@@ -50,7 +50,7 @@ hello world
 2020-03-23 16:59:17,366 - werkzeug:_log:122 - INFO:   * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
 ```
 
-Now that our model microservice is running, we can send a request using curl:
+现在，我们的模型微服务正在运行，我们可以使用curl发送请求：
 
 ```console
 > curl -X POST \
@@ -61,21 +61,21 @@ Now that our model microservice is running, we can send a request using curl:
 {"data":{"names":[],"ndarray":["hello","world"]},"meta":{}}
 ```
 
-We can see that the output of the model is returned through the API.
+我们可以看到模型通过 API 返回的输出。
 
-You can also send requests using the [Python Client](../python/seldon_client.md).
+您也可以使用 [Python 客户端](../python/seldon_client.xhtml)发送请求。 
 
-### Running your model as a Docker container
+### 以 Docker 容器方式运行模型
 
-If you are building language models with other wrappers, you are able to run the containers [you build using S2I](../wrappers/language_wrappers.md) in your local docker client.
+如果以其他封装语言创建模型，可在本地 Docker 客户端运行 [S2I](../wrappers/language_wrappers.xhtml) 构建的模型。
 
-For this you just have to run the docker client with the following command:
+为此，您只需使用以下命令运行 Docker 客户端：
 
-```console
+```
 docker run --rm --name mymodel -p 5000:5000 mymodel:0.1
 ```
 
-This will run the model and export it on port 5000, so we can now send a request using CURL:
+模型将运行在端口 5000 上，因此我们可以使用 CURL 发送请求：
 
 ```console
 > curl -X POST \
@@ -86,68 +86,68 @@ This will run the model and export it on port 5000, so we can now send a request
 {"data":{"names":[],"ndarray":["hello","world"]},"meta":{}}
 ```
 
-You can also send requests using the [Python Client](../python/seldon_client.md).
+您也可以使用 [Python 客户端](../python/seldon_client.xhtml)发送请求。 
 
-## Testing your model on Kubernetes
+## 在K8s中测试模型
 
-For Kubernetes you can set up a cluster as provided in the install section of the documentation.
+对于 Kubernetes，您可以按照文档的安装部分设置一个集群。
 
-However you can also run Seldon using local client providers such as KIND (we use KIND for our development and e2e tests).
+您也可以使用本地客户端（如 KIND，我们使用Kind开发并进行 e2e 测试）来运行 Seldon。
 
-Once you set up KIND or your kubernetes cluster of your choice, and you've set up your cluster with one of the supported [Ingress (as outlined in installation docs)](../workflow/install.md), you can now send requests to your models.
+一旦通过 Kind 或自建 k8s 集群完成，你需要为集群创建 [Ingress (as outlined in installation docs)](install.xhtml)支持，只会，可以向模型发送请求。
 
-Depending on whether you deployed Seldon Core with Ambassador or the API Gateway you can access your models as discussed below:
+根据你 Seldon Core 设定的 Ambassador 或 API 网关，可以通过以下讨论方式访问模型：
 
-### Generated Documentation Swagger UI
+### 生成的 Swagger UI
 
-Every model deployed behind a Kubernetes cluster and an Ingress exposes a standardised User Interface to send requests using our OpenAPI schema.
+每个部署在 K8s 集群后的模型都会暴露标准化的用户界面，以便使用我们的 OpenAPI 模式发送请求。
 
-This can be accessed through the endpoint `http://<ingress_url>/seldon/<namespace>/<model-name>/api/v1.0/doc/` which will allow you to send requests directly through your browser.
+通过浏览器访问`http://<ingress_url>/seldon/<namespace>/<model-name>/api/v1.0/doc/` 节点来发送请求。
 
-![](https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/rest-openapi.jpg)
+![](https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/rest-openapi.jpg) 
 
 
 ### Ambassador
 
 #### Ambassador REST
 
-Assuming Ambassador is exposed at `<ambassadorEndpoint>` and with a Seldon deployment name `<deploymentName>`  in namespace `<namespace>`::
+假设 名为 `<deploymentName>` 的 Seldon deployment 在命名空间 `<namespace>` 通过 Ambassador 中暴露在 `<ambassadorEndpoint>` 节点：
 
- * A REST endpoint will be exposed at : `http://<ambassadorEndpoint>/seldon/<namespace>/<deploymentName>/api/v1.0/predictions`
+ * REST节点暴露为 : `http://<ambassadorEndpoint>/seldon/<namespace>/<deploymentName>/api/v1.0/predictions`
 
 #### Ambassador gRPC
 
-Assuming Ambassador is exposed at `<ambassadorEndpoint>` and with a Seldon deployment name `<deploymentName>`:
+假设名为 `<deploymentName>` 的 Seldon deployment 通过 Ambassador 暴露在 `<ambassadorEndpoint>`：
 
-  * A gRPC endpoint will be exposed at `<ambassadorEndpoint>` and you should send header metadata in your request with:
-    * key `seldon` and value `<deploymentName>`.
-    * key `namespace` and value `<namespace>`.
+  * gRPC 节点暴露为 `<ambassadorEndpoint>` ，你需要在请求中设置 metadata 头信息
+    * `seldon` 参数和 `<deploymentName>` 值
+    * `namespace` 参数和 `<namespace>` 值
 
 ### Istio
 
 #### Istio REST
 
-Assuming the istio gateway is at `<istioGateway>` and with a Seldon deployment name `<deploymentName>` in namespace `<namespace>`:
+假设名为 `<deploymentName>` 的 Seldon deployment，通过命名空间 `<namespace>` 通过暴露在 istio 网关 `<istioGateway>`：
 
- * A REST endpoint will be exposed at : `http://<istioGateway>/seldon/<namespace>/<deploymentName>/api/v1.0/predictions`
+ * REST 节点暴露为: `http://<istioGateway>/seldon/<namespace>/<deploymentName>/api/v1.0/predictions`
 
 
 #### Istio gRPC
 
-Assuming the istio gateway is at `<istioGateway>` and with a Seldon deployment name `<deploymentName>` in namespace `<namespace>`:
+假设名为 `<deploymentName>` 的 Seldon deployment 在命名空间`<namespace>` 通过 istio 网关 `<istioGateway>` 暴露:
 
-  * A gRPC endpoint will be exposed at `<istioGateway>` and you should send header metadata in your request with:
-    * key `seldon` and value `<deploymentName>`.
-    * key `namespace` and value `<namespace>`.
+  * gRPC 节点暴露为 `<istioGateway>` ，你需要在请求中设置 metadata 头信息
+    * `seldon` 参数和 `<deploymentName>` 值
+    * `namespace` 参数和 `<namespace>` 值
 
 
-### Client Implementations
+### 客户端实现
 
-#### Curl Examples
+#### Curl 示例
 
 ##### Ambassador REST
 
-Assuming a SeldonDeployment `mymodel` with Ambassador exposed on 0.0.0.0:8003:
+假设 SeldonDeployment `mymodel` 通过 Ambassador 暴露 0.0.0.0:8003:
 
 ```bash
 curl -v 0.0.0.0:8003/seldon/mymodel/api/v1.0/predictions -d '{"data":{"names":["a","b"],"tensor":{"shape":[2,2],"values":[0,0,1,1]}}}' -H "Content-Type: application/json"
@@ -155,13 +155,12 @@ curl -v 0.0.0.0:8003/seldon/mymodel/api/v1.0/predictions -d '{"data":{"names":["
 
 #### OpenAPI REST
 
-Use Swagger to generate a client for you from the [OpenAPI specifications](../reference/apis/openapi.html).
+使用 Swagger 信息请参考 [OpenAPI 定义](../reference/apis/openapi.html).
 
 #### gRPC
 
-Use [gRPC](https://grpc.io/) tools in your desired language from the [proto buffer specifications](../reference/apis/prediction.md).
+使用 [gRPC](https://grpc.io/) 工具在你所选的语言中，请参考 [proto buffer 定义](../reference/apis/prediction.xhtml)
 
-##### Reference Python Client
+##### PYTHON 客户端参考
 
-Use our [reference python client](../python/python_module.md) which is part of the `seldon-core` module.
-
+使用我们的 [python 客户端参考](../python/python_module.xhtml)，他是 `seldon-core` 模块的一部分。

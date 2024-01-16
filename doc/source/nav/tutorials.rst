@@ -1,9 +1,9 @@
 ============================
-Tutorials
+教程
 ============================
 
 .. toctree::
     :maxdepth: 1
 
-    Notebooks </examples/notebooks.rst>
+    笔记本 </examples/notebooks.rst>
 

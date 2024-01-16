@@ -1,5 +1,5 @@
 ========
-Open API
+开放 API
 ========
 
 .. mdinclude:: ../../../../openapi/README.md

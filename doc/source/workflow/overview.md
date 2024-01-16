@@ -1,79 +1,78 @@
-# Overview of Seldon Core Components
+ # Seldon Core 组件概览
 
-Seldon core converts your ML models into production ready REST/gRPC microservices.
+Seldon 将您的机器学习模型转换为 REST/gRPC 微服务。
 
-These are Seldon Core main components:
-- Reusable and non-reusable [model servers](./overview.html#e2e-serving-with-model-servers)
-- [Language Wrappers](./overview.html#language-wrappers) to containerise models
-- [SeldonDeployment](./overview.html#seldondeployment-crd) CRD and [Seldon Core Operator](./overview.html#seldon-core-operator)
-- [Service Orchestrator](./overview.html#service-orchestrator) for advanced inference graphs
+以下为 seldon 主要组件：
+- 可复用、不可复用 [模型服务](./overview.html#model-servers)
+- [语言封装](./overview.html#language-wrappers) 容器化模型
+- [SeldonDeployment](./overview.html#seldondeployment-crd) CRD 以及 [Seldon Core Operator](./overview.html#seldon-core-operator)
+- 高级推理图 [服务治理](./overview.html#service-orchestrator) 
 
-as well as integration with third-party systems:
-- Kubernetes Ingress integration with [Ambassador](https://www.getambassador.io/) and [Istio](https://istio.io/)
-- [Metrics](./overview.html#metrics-with-prometheus) with [Prometheus](https://prometheus.io/)
-- [Tracing](./overview.html#distributed-tracing-with-jaeger) with [Jaeger](https://www.jaegertracing.io/)
-- [Endpoint Documentation](./overview.html#endpoint-documentation) with [OpenApi](https://swagger.io/docs/specification/about/)
+以及三方系统实现：
+- 基于 [Ambassador](https://www.getambassador.io/) 和 [Istio](https://istio.io/) 实现的 Kubernetes Ingress 
+- 基于 [Prometheus](https://prometheus.io/) 的 [指标](./overview.html#metrics-with-prometheus)
+- 基于 [Jaeger](https://www.jaegertracing.io/) 的 [链路追踪](./overview.html#distributed-tracing-with-jaeger) 
+- 基于 [OpenApi](https://swagger.io/docs/specification/about/) 的 [Endpoint 文档](./overview.html#endpoint-documentation)
 
-Keep reading to learn more!
+保持阅读以学习更多内容
 
 
 ## E2E Serving with Model Servers
 
-With `Seldon Core` you can take your model and put it directly into the production using our flexible `Model Servers`.
+使用 `Seldon Core` 你可以非常灵活的将 `Model Servers` 直接用于生产环境。
 
 ![](../images/e2e-model-serving.svg)
 
-Using the so-called `Reusable Model Servers` you can deploy your models into Kubernetes cluster in just a few steps:
+使用所谓的 `Reusable Model Servers` 你可以在短短几步将模型部署到 Kubernetes 集群：
 
-1. *Data Scientist* prepares ML `model` using state of the art libraries (mlflow, dvc, xgboost, scikit-learn just to name a few).
-2. Trained model is uploaded to the central repository (e.g. S3 storage).
-3. *Software Engineer* prepares a `Reusable Model Server` using `Seldon Core` which is uploaded as Docker Image to the Image Registry.
-4. Deployment manifest (`Seldon Deployment` CRD) is created and applied to the Kubernetes cluster.
-5. Seldon Core `Operator` creates all required Kubernetes resources.
-6. Inference requests sent to the `Seldon Deployment` are passed to all internal models by the `Service Orchestrator`.
-7. Metrics and tracing data can be collected by leveraging our integrations with third party frameworks.
+1. *数据科学家* 使用先进的类库如（mlflow, dvc, xgboost, scikit-learn 等）准备机器学习 `model` 。
+2. 训练后的模型上传到中心化的存储库（比如S3存储）。
+3. *软件工程师* 使用上传到镜像仓库的使用 `Seldon Core` 的 `Reusable Model Server`。
+4. 使用发布单（`Seldon Deployment` CRD）创建并应用到 k8s 集群。
+5. Seldon Core `Operator` 创建所有依赖的 Kubernetes 资源。
+6. 发送到 `Seldon Deployment` 的所有推理请求会通过 `Service Orchestrator` 转发到内部模型。
+7. 以通过利用我们与第三方框架的集成来收集指标和跟踪数据。
 
-If you would be to use the `Non-Reusable Model Servers` in steps 2. and 3. you would prepare a Docker image with your ML Model embedded.
-We discuss difference between these two approaches in the next section.
+如果在步骤 2 和 3 中使用了`Non-Reusable Model Servers`，你需要准备一个 Docker 镜像来实现机器学习模型的嵌入，我们将在后续章节进行讨论两种方法的区别。
 
-## Two Types of Model Servers
+## 2 种类型的模型服务器
 
-With Seldon Core you can build two type of servers: reusable and non-reusable ones.
-Each of these are useful depending on the context and the actual use case.
+使用 Seldon Core，您可以构建两种类型的服务器：可复用和不可复用的服务器。
+根据上下文和实际使用案例，每一个都很有用。
 
-- **Reusable Model Servers**: Often referred to as prepackaged model servers.
-  Allow to deploy a family of similar models without the need to build a new server each time.
-  They often fetch models from a central repository (like your company's S3 storage)
-- **Non-Reusable Model Servers**: Specialised server meant to serve a single model.
-  Does not require the central repository but requires a build of a new image for every model.
+- **可复用模型服务**: 通常称为预封装模型服务器。
+  允许部署每次无需重新打包新服务器的相似模型。
+  他们经常从中心化仓库存储获取模型（比容公司的s3存储）。
+- **不可复用模型服务**: 专用服务，旨在为单一特殊模型服务。
+  不需要中央存储库，但需要为每个模型构建新镜像。
 
 
 ![](../images/model-servers.svg)
 
-Read more about our pre-packaged `Model Servers` on their dedicated documentation pages:
-- [MLflow Server](../servers/mlflow.html)
-- [SKLearn Server](../servers/sklearn.html)
-- [Tensorflow Server](../servers/tensorflow.html)
-- [XGBoost Server](../servers/xgboost.html)
+在相关文档页阅读更多关于预封装 `Model Servers`：
+- [MLflow 服务](../servers/mlflow.html)
+- [SKLearn 服务](../servers/sklearn.html)
+- [Tensorflow 服务](../servers/tensorflow.html)
+- [XGBoost 服务](../servers/xgboost.html)
 
-Read how to build your own pre-packaged model server [here](../servers/custom.html).
+从[这里](../servers/custom.html)阅读如何创建自己的预封装模型服务。
 
-## Language Wrappers
+## 语言封装
 
-Language wrappers allows Seldon Core users to build `Reusable` and `Non-Reusable` model servers.
-As you will see, the whole process is very simple and requires user to only define logic that
-loads models and perform inference prediction as well as the required runtime dependencies.
+语言封装允许 Seldon 用户创建构建 `Reusable` 和 `Non-Reusable` 模型服务。
+如你所见，整个过程非常简单，
+仅要求用户定义模型加载逻辑和推理预测的执行以来。
 
 ![](../images/language-wrappers-1.svg)
 
 
-Model loading and inference logic is defined in `Model.py` file:
+模型加载和推理逻辑在 `Model.py` 文件进行定义：
 ```python
 class Model:
   def __init__(self, ...):
     """Custom logic that prepares model.
 
-    - Reusable servers: your_loader downloads model from remote repository.
+    - Reusable servers: your_loader 从远程仓库加载模型
     - Non-Reusable servers: your_loader loads model from a file embedded in the image.
     """
     self._model = your_loader(...)
@@ -83,15 +82,15 @@ class Model:
     return self._model.predict(...)
 ```
 
-Main difference between `Reusable` and `Non-Reusable` model servers is if the model is loaded dynamically
-or embedded in the image itself.
+`Reusable` 和 `Non-Reusable` 模型服务的主要区别在于
+模型是否动态加载或者内嵌于镜像。
 
-The `seldon-core-microservice` Python wrapper can be used to turn `Model.py` into a fully operational microservice:
+`seldon-core-microservice` Python 封装器可将 `Model.py` 转成完全可操作的微服务：
 ```bash
 $ seldon-core-microservice Model --service-type MODEL
 ```
 
-That serves the inference requests on its endpoint (default: 9000):
+这将在节点中启动服务（默认: 9000）:
 ```bash
 $ curl http://localhost:9000/api/v1.0/predictions \
     -H 'Content-Type: application/json' \
@@ -105,127 +104,124 @@ $ curl http://localhost:9000/api/v1.0/predictions \
 
 ![](../images/language-wrappers-2.svg)
 
-To complete containerisation process you need two more components:
-- `requirements.txt` file that describes your runtime dependencies
-- `.s2/environment` file that describes your microservice (api and model type)
+要实现完全的容器化处理仍需两步：
+- 描述运行时依赖的 `requirements.txt`
+- 描述微服务的 `.s2/environment` (接口和模型类型）
 
-Once these are in place you can use a simple s2i command
+一旦这些就位，您可以使用一个简单的 s2i 命令
 ```bash
-s2i build . seldonio/seldon-core-s2i-python3:1.14.0 model:0.1
+s2i build . seldonio/seldon-core-s2i-python3:1.9.1 model:0.1
 ```
-to create ready to use Docker image.
+来准备创建 Docker 镜像。
 
-Read more about Python [Language Wrapper on its dedicated documentation page](../python/index.html).
+请在专门的文档页阅读 Python [语言封装资料](../python/index.html)。
 
 
 ## Seldon Deployment CRD
 
-Seldon Deployment CRD (Custom Resource Definition) is the real strength of Seldon Core.
-It allows you to easily deploy your inference model to the Kubernetes cluster and handle some real production traffic!
+Seldon Deployment CRD （自定义资源）是 Seldon Core 的真正优势所在。
+它允许您轻松地将推理模型部署到 Kubernetes 集群并处理一些真正的生产流量！
 
-[Custom Resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) are basically extensions of the Kubernetes API.
-They allow one to create a custom combination of basic Kubernetes objects that acts together.
-In Seldon Core we use CRDs to define the inference graph through the manifest yaml files.
+[自定义资源](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)  是 Kubernetes API 的基础扩展。
+它们允许你创建基本的 Kubernetes 对象的自定义组合并协同工作。
+在 Seldon Core 我们通过 yaml 清单文件使用 CRDs 来定义推理图。
 
-The manifest file that you write is very powerful yet simple.
-You can easily define what models do you want in your deployment and how they are connected in the inference graph.
+你编写的清单文件非常强大但简单。
+您可以轻松地定义部署中所需的模型以及它们在推理图中的连接方式。
 
 ![](../images/seldondeployment-crd.svg)
 
-You can think about the CRD as an abstraction around the actual deployment and services that are created in the cluster.
-Once the manifest is applied to the cluster, Seldon Core `Operator` creates all Kubernetes objects required to serve the inference requests.
+您可以将 CRD 视为围绕集群中创建的实际部署和服务的抽象。
+一旦将清单应用于集群，Seldon Core `Operator` 将创建所有为推理请求服务所需的 Kubernetes 对象。
 
-Read more about [Seldon Deployment CRD on its dedicated documentation page](../reference/seldon-deployment.html).
+阅读更多 [Seldon Deployment CRD 资料文档](../reference/seldon-deployment.html).
 
 
 ## Seldon Core Operator
 
-The Seldon Core `Operator` is what controls your `Seldon Deployments` in the `Kubernetes` cluster.
-It reads the CRD definition of `Seldon Deployment` resources applied to the cluster and takes
-care that all required components like `Pods` and `Services` are created.
+Seldon Core `Operator` 通过 [Kubebuilder](https://github.com/kubernetes-sigs/kubebuilder) 创建，
+他将在 `Kubernetes` 集群控制 `Seldon Deployments`。
+它会读取 `Seldon Deployment` CRD 资源定义并应用于集群，并自动创建所需 `Pods` 和 `Services` 组建。
 
-It works according to the common Kubernetes operator pattern - in a continues loop it:
-- `observe` current state of the cluster
-- `diff` against desired state
-- if necessary `act` to apply desired state
+它根据常见的 Kubernetes operator 模式运行 - 循环模式：
+- `observe` 当前集群的状态
+- `diff` 分配的状态
+- 如果有必要，应用状态到 `act` 
 
 ![](../images/operator.svg)
 
 
-## Service Orchestrator
+## 服务编排
 
-`Service Orchestrator` is responsible for managing intra-graph traffic.
-It reads the inference graph structure from the `CRD` and when inference request is received it makes sure that it is passed to each node of the graph in the right order.
+`Service Orchestrator` 负责管理图内流量。
+当推理请求到达时，它从 `CRD` 中读取推理图结构，并保以正确的顺序将其传递到图的每个节点。
 
-It is because of the presence of `Service Orchestrator` that complex graph components like `routers`, `combiners` and output/input `transformers` are available in the `Seldon` world.
+`Service Orchestrator` 因 `Seldon` 体系负责的图组件如：`routers`, `combiners` 以及输入输出 `transformers` 的可用性而存在。
 
 ![](../images/orchestrator.svg)
 
-`Service Orchestrator` is also responsible for providing many advance features out of the box:
-- `Jaeger` tracing
-- `Prometheus` metrics
-- request payload logging
+`Service Orchestrator` 还负责提供许多开箱即用的高级特性：
+- `Jaeger` 追踪
+- `Prometheus` 指标
+- 请求负载日志
 
-to just name a few.
+仅举几例。
 
-Read more about [Service Orchestrator on its dedicated documentation page](../graph/svcorch.html).
+阅读更多 [Service Orchestrator 文档资料](../graph/svcorch.html).
 
 
-## Metadata Provenance
+## 元数据来源
 
-In `Seldon` we understand the importance of the Model Metadata.
-You can easily version your model and describe its expected inputs and outputs.
+在 `Seldon` 我们了解模型元数据的重要性。
+您可以轻松地管理您的模型版本，并确定其输入和输出预期。
 
-These allow you to make connection to the platform you trained your model with (DVC, Pachyderm, ...)
-and know what inputs / outputs you can expect from your inference graph.
+这些允许您通过 （DVC, Pachyderm 等）连接到您训练模型的平台，并确切的知道从推理图中得到预期的输入输出结果。
 
 ![](../images/metadata.svg)
 
-Read more about [metadata provenance on its dedicated documentation page](../reference/apis/metadata.html).
+阅读更多有关[元数据来源的资料](../reference/apis/metadata.html).
 
 
-## Metrics with Prometheus
+## Prometheus指标
 
-Metrics is important aspect of serving ML inference models in production.
-Out of the box Seldon Core deployments expose standard metrics to [Prometheus](https://prometheus.io/) on the `Service Orchestrator`.
+指标是生产中 ML 推理模型的重要一面。
+Seldon Core 通过 `Service Orchestrator` 暴露标准的指标给 [Prometheus](https://prometheus.io/)。
 
-![](../images/metrics.png)
+![](../images/metrics.svg)
 
-Read more about [metrics on its dedicated documentation page](../analytics/analytics.html).
+阅读更多有关 [指标资料](../analytics/analytics.html).
 
+## 使用 Jaeger 进行分布式跟踪
 
-## Distributed Tracing with Jaeger
-
-By default, we support [Jaeger](https://www.jaegertracing.io/) for Distributed Tracing.
+您可以使用 Open Tracing 来跟踪对 Seldon Core 的 API 调用。默认我们使用 [Jaeger](https://www.jaegertracing.io/) 进行分布式跟踪，这将允许您深入了解 Seldon 部署中每个微服务跃点的延迟和性能。
 
 ![](../images/tracing.svg)
 
-Read more about [tracing on its dedicated documentation page](../graph/distributed-tracing.html).
+阅读更多有关[追踪资料文档](../graph/distributed-tracing.html).
+
+## 所以，为什么不要 Flask 封装我的模型？
+
+你可能会问：为什么我不简单地用 [Flask](https://flask.palletsprojects.com/) 封装我们的模型？
+
+以下是选择 Seldon Core 的一些好处：
+- 所有艰苦的工作都已经完成
+- 开箱即用的复杂推理图
+- 可重用的模型服务器（一次构建，多次部署）
+- 与指标和跟踪解决方案的集成
+- 自动配置入口
+- Seldon Core 经过广泛的开源和商业用户社区的考验
 
 
-## So.... Why just not wrap my model with Flask?
 
-You may ask yourself: why wouldn't I just simply wrap my model with [Flask](https://flask.palletsprojects.com/)?
+## Seldon Core 的其他特性？
 
-Here are some benefits of choosing Seldon Core:
-- all hard work is already done
-- complex inference graphs possible out of the box
-- reusable model servers (build once, deploy many)
-- integration with metrics and tracing solutions
-- automated ingress configuration
-- Seldon Core is battle-tested by wide community of both open-source and commercial users
+Seldon Core 的安装量超过 2M，跨组织用于管理机器学习模型的大规模部署，主要优势包括：
 
-
-
-## Other features of Seldon Core?
-
-With over 2M installs, Seldon Core is used across organisations to manage large scale deployment of machine learning models, and key benefits include:
-
- * Easy way to containerise ML models using our language wrappers or pre-packaged inference servers.
- * Out of the box endpoints which can be tested through Swagger UI, Seldon Python Client or Curl / GRPCurl
- * Cloud agnostic and tested on AWS EKS, Azure AKS, Google GKE, Alicloud, Digital Ocean and Openshift.
- * Powerful and rich inference graphs made out of predictors, transformers, routers, combiners, and more.
- * A standardised serving layer across models from heterogeneous toolkits and languages.
- * Advanced and customisable metrics with integration to Prometheus and Grafana.
- * Full auditability through model input-output request logging integration with Elasticsearch.
- * Microservice tracing through integration to Jaeger for insights on latency across microservice hops.
+ * 使用我们的语言封装或预封装推理服务器将ML模型容器化部署简单化
+ * 开箱即用，通过 Swagger UI, Seldon Python 客户端或 Curl / GRPCurl 进行测试
+ * 云存储并通过 AWS EKS, Azure AKS, Google GKE, Alicloud, Digital Ocean 与 Openshift 测试
+ * 由预测器、变压器、路由器、组合器等组成的强大而丰富的推理图。
+ * 跨异构工具包和语言的模型的标准化服务层。
+ * 与 Prometheus 和 Grafana 集成的高级和可自定义指标。
+ * 通过模型输入-输出请求日志记录与 Elasticsearch 集成实现完全可审计性。
+ * 通过与 Jaeger 集成进行微服务跟踪，以深入了解微服务节点之间的延迟。

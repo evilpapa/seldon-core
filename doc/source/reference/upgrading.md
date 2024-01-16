@@ -1,209 +1,131 @@
-# Upgrading Seldon Core
+ # 升级 Seldon Core
 
-This page provides with instructions on how to upgrade from previous versions. Each of these have to be run sequentially if it's expected for previous running models to be upgraded without disruption (i.e if you are running version 0.4.2, you will first have to upgrade to 0.5.2 and then to 1.1, etc).
+此页面提供了如何从以前的版本升级的说明。如果预期运行中的模型在不中断的情况下升级（即如果运行版本为 0.4.2，则首先必须升级到 0.5.2，然后升级到 1.1 等），则必须按顺序运行上述每个模型。
 
-If you were running our Openshift 0.4.2 certified operator and are looking to upgrade to our 1.1 certified operator, you will also need to follow the "upgrading process" steps in the "Upgrading to 0.5.2 from previous versions" section.
-
-Make sure you also [read the CHANGELOG](./changelog.html) to see the detailed features and bug-fixes in each version.
-
-## Upgrading to 1.14
-
-### CRD V1
-
-Only the v1 versions of the CRD will be supported moving forward. The v1beta1 versions will remain in the Helm chart but will be not updated. Allowing the operator to create the CRDs will result in the v1 CRD being created so will only work on Kubernetes clusters >= 1.18.
-
-### Model Health Checks
-
-We have updated the health checks done by Seldon for the model nodes in your inference graph. If `executor.fullHealthChecks` is set to true then:
- * For Seldon protocol each node will be probed with `/api/v1.0/health/status`.
- * For the v2 protocol each node will be probed with `/v2/health/ready`.
- * For tensorflow just TCP checks will be run on the http endpoint.
-
-By default we have set `executor.fullHealthChecks` to false for 1.14 release as users would need to rebuild their custom python models if they have not implemented the `health_status` method. In future we will default to `true`.
-
-### Request Logger
-
-The Python request logger component example has been deprecated and removed as part of [#4013](https://github.com/SeldonIO/seldon-core/issues/4013).
-
-### Seldon Core Analytics
-
-In this release we change status of [Seldon Core Analytics](../charts/seldon-core-analytics.html) Helm Chart to example only.
-**This chart will not be further updated.** We recommend to install and configure metrics monitoring using [Prometheus Operator](../analytics/analytics.html#metrics-with-prometheus-operator).
-
-## Upgrading to 1.13
-
-### Seldon Inference Payload Logging Changes
-
-The seldon executor logs the prediction request and respose payload to a configured URL post during the inference at each stage of a inference graph. These request/response pairs are now matched correctly to reflect the component's input/output at each node level as compared to pairing based on the tree structure of the inference graph previously. See [relevant issue](https://github.com/SeldonIO/seldon-core/issues/3873) for more details.
-
-### Alibi Detect Server Event Update
-
-The cloud event data that the alibi detect server sends to a configured replyURL post the outlier/drift detection was a JSON string. This is now updated to reflect the content type as JSON correctly.
-
-## Upgrading to 1.12
-
-### Support for Kubernetes 1.22
-
-Seldon Core adds support for Kubernetes 1.22 by upgrading all ValidatingWebhookConfiguration resources to v1 intead of v1beta1. There are no specific breaking steps that were identified when upgrading using the helm charts for each respective version, but you need to make sure to check that this works as expected.
+如果您运行我们的 Openshift 0.4.2 认证 operator，并希望升级到我们的 1.1 认证 operator，您还需要按照「从以前的版本升级到 0.5.2」部分中的「升级过程」步骤。
 
 
-### Updated Python wrapper folder configurations
+确保您已阅读 [CHANGELOG](./changelog.html) 来查看每个版本的特性改动和 bug 修复。
 
-  * The default running user in Seldon Core is 8888
-  * Some servers like the MLFlow Server v1 installs installations in runtime
-  * Access required to modify files in the local folder are required so the application folder should be writable
-  * The default base image now changes the owner of the /microservice folder to user 8888
+## 升级到 1.10
 
-### Updated executor request logger settings
+### 服务器更新
 
-The request logging from the executor now has a configurable queue size and write timeout. This will allow a tradeoff between pending request memory usage and failing requests when sending to various logging endpoints that may be slow. The write timeout will mean logging of requests will fail if waiting for more than the given time to be added to the work queue. The two settings are:
+SKLearn 服务器升级到 sklearn 0.24.2
 
-  * `executor.requestLogger.workQueueSize` (default 10000)
-  * `executor.requestLogger.writeTimeoutMs` (default 2000)
+XGBoost 服务器升级到 xgboost 1.4.2
 
-It is also possible to update these values on a per SeldonDeployment basis with the annotations:
+### Alibi 服务升级
 
- * `seldon.io/executor-logger-queue-size`
- * `seldon.io/executor-logger-write-timeout-ms`
+Alibi 升级到 to 0.6.0
 
-## Upgrading to 1.11
-
-### Python S2I Wrapper
-
-  * The default wrapper `seldonio/seldon-core-s2i-python3` is now Python 3.8
-  * Python 3.7 wrapper is still available as `seldonio/seldon-core-s2i-python37`
+Alibi 服务器 python 升级到 3.7.10
 
 
-## Upgrading to 1.10
-
-### Seldon Core Wrapper
-
- * With introduction of multi-processing in gRPC module the `SO_REUSEPORT` socket option is required. On certain Python distributions you may see `AttributeError: module 'socket' has no attribute 'SO_REUSEPORT'` error which would render gRPC endpoint non-operational. For Anaconda Python distributions we confirmed that upgrading to Python 3.7.10 or 3.8.10 removes the problem.
-
-### Server Updates
-
- * SKLearn server has been updated to use sklearn 0.24.2
- * XGBoost server has been updated to use xgboost 1.4.2
-
-### Alibi Server Updates
-
- * Alibi has been updated to 0.6.0
- * Alibi server python has been updated to 3.7.10
-
-## Upgrading to 1.8
+## 升级到 to 1.8
 
 ### Rclone Storage Initailizer
-In Seldon Core 1.8 the rclone-based [storage initializer](https://github.com/SeldonIO/seldon-core/tree/master/components/rclone-storage-initializer) becomes the default one.
 
-The storage initailizer image that is being used is controlled by the helm value:
-```yaml
+在 1.8 版本 rclone-based [storage initalizer](https://github.com/SeldonIO/seldon-core/tree/master/components/rclone-storage-initializer) 变为默认使用
+
+controller 通过 helm 值设置相关镜像：
+
+```
 storageInitializer:
-  image: seldonio/rclone-storage-initializer:1.14.0
+  image: seldonio/rclone-storage-initializer:1.9.1
 ```
-and can be customised on per-deployment basis as described in [Prepackaged Model Servers](../servers/overview.md) documentation by setting value of `storageInitializerImage` variable in the graph definition.
 
-This transition requires **creation of the new secrets** for the prepackaged model servers that will be compatible with the rclone configuration format as described [here](../servers/overview.md#handling-credentials). Read more:
 
-- [How to test new secret format](../examples/rclone-upgrade.html)
-- [Example cluster upgrade for AWS/MinIO configuration](../examples/global-rclone-upgrade.html)
 
-If you do not wish to configure these secrets now and wish to preserve prior behaviour you can opt for usage of previous storage initializer by using following helm value:
-```yaml
+可通过设置图定义 `storageInitializerImage` 变量值来为每个发布的[Prepackaged Model Servers](../servers/overview.xhtml) 自定义存储加载器。
+
+此过度需要为打包模型服务器 **创建新的 secrets** 来兼容 rclone 配置格式，[参见](../servers/overview.xhtml#handling-credentials)。
+
+如果您现在不想配置这些 secrets 并想保留之前的存储加载实例，可设置 helm value 如下：
+
+```
 storageInitializer:
-  image: kfserving/storage-initializer:v0.6.1
-```
-See further documentation [here](../servers/kfserving-storage-initializer.md).
-
-
-### Request Logger
-
-In Seldon Core 1.9 we will be moving [seldon-request-logger](https://github.com/SeldonIO/seldon-core/tree/v1.8.0/components/seldon-request-logger) to separate repository.
-
-
-### Legacy Java Engine Orchestrator
-
-In Seldon Core 1.9 final deprecation of Java Engine will happen with removal of all the related code from the repository.
-
-
-## Upgrading to 1.7
-
-### Python Dependency Updates
-
-Various CVEs were resolved via #2970, which included several packages upgrades which may affect applications that install packages which may not be compatible. This also includes the installation of pip==20.2, however this version of pip still uses the older resolver.
-
-## Upgrading to 1.6
-
-### Webhook Removal
-
-As part of the 1.6.0 release we are removing the Seldon Core Mutating Webhook. This won't cause any noticeable changes, but it is recommended that you manually remove the webhook once you upgrade to version 1.6.0
-
-
-## Upgrading to 1.5
-
-### REST and gRPC
-
-To take advantage of the ability to handle both REST and gRPC on any deployed model python model images will need to be recreated using the 1.5 python wrapper. If they are not updated they will only expose the protocol they were originally wrapped for.
-
-You can use and extend the [backwards compatibility notebook](../examples/backwards_compatibility.html) to check your deployments will work if you do not intend to upgrade them.
-
-## Upgrading to Kubernetes version >= 1.18
-
-If you have a Kubernetes cluster with Seldon Core installed, and you want to upgrade the Kubernetes cluster, you have to carry out a set of manual steps due to the more strict validation that this version of Kubernetes introduced.
-
-To be more specific, we had to provide two versions of the CRD as part of the seldon core install helm chart. Similarly the CRD for Seldon Core in Kubernetes post-1.18 is actually differnt - namely, you can actually see that in version 1.3.0 we introduced new CRD changes in the helm chart via an IF statement to use a different CRD depending on the k8s version. Due to this, the path to upgrade from pre-1.18 to post-1.18 requires the following manual steps to be carried out:
-
-1. Start with kubernetes cluster pre 1.18 with seldon core pre-1.3.0
-2. Upgrade Kubernetes cluster to post 1.18 (seldon core CRD is now "invalid" but still installed as still in etcd)
-3. Manually add "spec.preserveUnknownFields", to helm chart and install CRD (so it ignores invalid fields of now invalid CRD)
-4. Remove the "spec.preserveUnknownFields", from helm chart manually again, and re-install now the current CRD
-
-## Upgrading to 1.3
-
-### Breaking Changes
-
-The version of sklearn used by the default sklearn server will be 0.23.2. To use a different version you will need to follow the steps described in the [sklearn server documentation](../servers/sklearn.html).
-
-## Upgrading to 1.2.1
-
-*[NOTE]* 1.2.0 has issue where all Seldon Deployments are marked as "NotReady" as there is a [bug caused by a volumeName update](https://github.com/SeldonIO/seldon-core/issues/2017). This can be resolved by following the 1.2.0 volume patch [as outlined by this example](../examples/patch_1_2.html). It is recommended to upgrade to version 1.2.1 directly instead.
-
-All seldon-managed pods will be subject to a rolling update as part of this upgrade.
-
-### New Features / Breaking Changes
-
- * The helm value `createResources` has been renamed `managerCreateResources`.
- * To allow CRDs to be created by the manager. If `managerCreateResources` is true then extra RBAC to `create` CRDs is added from the previous versions RBAC which was to just list and get.
- * If upgrading the analytics helm chart then a `kubectl delete deployment -n seldon-system -l app=grafana` should be [run first](https://github.com/SeldonIO/seldon-core/pull/1917)
- * All the prepackaged model servers are now created with RedHat UBI images. One consequence of this is that they will all run as non-root as it best practice.
-
-### Request Logger
-
-The values.yaml for the seldon-core-operator helm chart has changed. The field `defaultRequestLoggerEndpointPrefix` is replaced by:
-
-```yaml
-  requestLogger:
-    defaultEndpoint: 'http://default-broker'
+  image: gcr.io/kfserving/storage-initializer:v0.4.0
 ```
 
-This default value will find a broker in the model's namespace. To point to another namespace it would be `default-broker.anothernamespace`.
 
-## Upgrading to 1.1 from previous versions
+请参与[此处](../servers/kfserving-storage-initializer.xhtml)获取更多信息。
 
-As we moved to 1.x+ there are several breaking changes that need to be considered. These are outlined below
+### 请求日志
 
-### New Features / Breaking Changes
+Seldon Core 1.9 我们将[seldon-request-logger](https://github.com/SeldonIO/seldon-core/tree/master/components/seldon-request-logger) 移动到独立的仓库。
 
-#### Deployment Naming and Rolling Updates
+### 传统 Java Engine 编排
 
-The deployments created by Seldon Core have been changed to follow a fixed scheme. It will now be:
+Seldon Core 1.9 最终废弃 Java Engine，并移除了相关仓库代码。
 
-```text
+## 升级到 1.7
+
+### Python 以来升级
+
+各种 CVEs 通过 #2970 解决，其中包括几个包升级，这些升级可能会影响安装可能不兼容的包的应用程序。这也包括安装 pip=20.2，此版本的 pip 仍使用较旧的解析器。
+
+## 升级到 1.6
+
+### Webhook 移除
+
+作为 1.6.0 版本的一部分，我们删除了 Seldon Core Mutating Webhook。这不会导致任何明显的更改，但建议您在升级到版本 1.6.0 后手动删除 webhook
+
+## 升级到 1.5
+
+### REST 和 gRPC
+
+为了实现 REST 和 gRPC 的高级处理能力来发布 python 模型和镜像，需要升级到 1.5 python wrapper。如果不升级则只能使用原始封装的协议支持。
+
+果您不打算升级部署，您可以使用并扩展[向后兼容 notebook](../examples/backwards_compatibility.html) 来检查部署是否有效。
+
+## 升级到 1.3
+
+### 重大变化
+
+默认 sklearn 服务器使用的 sklearn 版本为 0.23.2。要使用不同的版本，您需要按照[ sklearn 服务器文档](../servers/sklearn.html)描述的步骤进行。
+
+## 升级到 1.2.1
+
+*\[NOTE\]* 1.2.0 有一个问题，所有 Seldon 部署都被标记为「NotReady」，因为有一个[ volumeName 更新 bug](https://github.com/SeldonIO/seldon-core/issues/2017)造成。可通过 1.2.0 volume patch [示例概述](../examples/patch_1_2.html)来解决。建议直接升级到1.2.1版本。
+
+作为此升级的一部分，所有 seldon-managed 的 Pod 都将进行滚动更新。
+
+### 新特性 / 重大变化
+
+- helm 值 `createResources` 更名为 `managerCreateResources`。
+- 允许管理员创建 CRD。如果 `managerCreateResources` 为 true 时，针对 `create` CRDs 之前版本的 RBAC 会添加额外的 RBAC，它只能被获取和列出。
+- 如果更新 analytics helm chart 需[先执行](https://github.com/SeldonIO/seldon-core/pull/1917)命令 `kubectl delete deployment -n seldon-system -l app=grafana`
+- 所有预先打包的模型服务器现在都使用 RedHat UBI 映像创建。这样做的一个后果是，它们都将按照最佳实践以非 root 身份运行。
+
+### 请求日志
+
+seldon-core-operator helm chart 的 values.yaml 已更改。该字段 `defaultRequestLoggerEndpointPrefix` 被替换为：
+
+```
+requestLogger:
+  defaultEndpoint: 'http://default-broker'
+```
+
+This default value will find a broker in the model’s namespace. To point to another namespace it would be `default-broker.anothernamespace`.
+
+## 从老版本升级到 1.1
+
+当我们迁移到 1.x+ 时，需要考虑几个重大变化。这些概述如下
+
+### 新功能/重大变化
+
+#### 部署命名和滚动更新
+
+Seldon Core 创建的部署已更改为遵循固定方案。现在将是：
+
+```
 <seldondeployment name>-<predictor name>-<podspec idx>-<container names>
 ```
 
-So for example:
+示例
 
-```yaml
+```
 apiVersion: machinelearning.seldon.io/v1
 kind: SeldonDeployment
 metadata:
@@ -225,112 +147,102 @@ spec:
     replicas: 1
 ```
 
-For the above resource, one Deployment will be created with name:
+对于上述资源，将使用名称创建一个部署：
 
-```text
+```
 rest-seldon-model-0-classifier
 ```
 
-This will change how rolling updates are done. Now any change to the first PodSpec above will be updated via a rolling update as expected if the names of the containers are not changed. If however you changed "classifier" to "classifier2" you would get a new deployment created which would replace the old deployment when running.
+这将改变滚动更新的完成方式。现在，如果容器的名称未更改，则对上述第一个 PodSpec 的任何更改都将按预期通过滚动更新进行更新。但是，如果您将「classifier」更改为「classifier2」，则会创建一个新部署，该部署将在运行时替换旧部署。
+
+#### 新的服务编排
+
+从 1.1 版开始，Seldon Core 带有一个用 Go 编写的新服务编排器，它取代了以前的 Java 引擎。存在一些重大变化：
+
+- 不再添加 Seldon 协议中的元数据字段。任何自定义元数据都需要通过图中的各个组件添加并公开给 Prometheus 指标
+- 图中的所有组件都必须是 REST 或 gRPC，并且只有给定的协议对外公开。
+- Prometheus 中的指标名称已更改为包含 `executor` 名称而不是 `engine`：查看[分析文档](../analytics/analytics.html)
+
+新的服务编排器具有多项优势，包括能够处理 Tensorflow REST 和 gRPC 协议以及对 REST 和 gRPC 的完整指标和跟踪支持。
+
+对于那些希望使用已弃用的 Java 引擎服务编排器的人，请参阅[服务编排器](../graph/svcorch.xhtml)文档以了解详细信息。
+
+#### Ambassador 重试
+
+重试次数已从之前的硬编码值 3 中删除。现在可通过[ Ambassador 注解](../ingress/ambassador.html)设置。
+
+### Python 封装标签更新
+
+Python Wrapper 使用格式为 0.1 … 0.18 的命名约定。在此版本中，我们重命名了 Python Wrapper 标签的版本以匹配与 Executor、Operator 等相同的约定。这意味着此版本的 Python Wrapper 标签是 1.1，快照将是 1.1.1-SNAPSHOT。
+
+### 过期的快照
+
+每当一个新的 PR 被合并到 master 时，我们都会设置我们的 CI 来构建一个「SNAPSHOT」版本，该版本将包含该特定开发/主分支代码的 Docker 镜像。
+
+以前，我们总是让 SNAPSHOT 标签被最新的标签覆盖。这并不能让我们知道在使用 master 时有人可能会尝试什么版本，所以我们想引入一种方法来为每个进入 master 的镜像获取唯一标签。
+
+现在，每次将 PR 登陆到 master 时，都会创建一个新的「过时」SNAPSHOT 版本，该版本会推送带有标签 `"<next-version>-SNAPSHOT_<timestamp>"` 的镜像，它包含了各自的 helm charts，请依照特定版本（如版本中的 `version.txt` 所概述）进行安装。
+
+可按照[安装页](../workflow/install.xhtml)说明来安装 snapshot 版本。
+
+### 封装器兼容性表
+
+为了验证 Seldon Core v1.0 和 v.1.1 是否与旧的 s2i 封装器版本兼容，我们使用单节点模型进行了一个简单的测试。该模型已通过 REST 和 GRPC API 以及新的编排器和已弃用的 Java 引擎（仅 v1.0 与 Java 引擎）一起部署。测试验证模型是否可以成功满足推理请求。
+
+**注意:** 只有 Python 封装器版本 0.19 才能使用新的编排器完全支持自定义指标和标签。如果您需要使用旧版本的 Python 封装器，您可以继续使用上述 Java 引擎，直到下一个版本。
+
+| 语言封装 | 版本 | API类型 | 新编排 | 废弃Java引擎 | 备注 |
+| --- | --- | --- | --- | --- | --- |
+| Python | 0.19  | both | yes | yes | 完整的自定义指标和标签支持 |
+| Python | 0.11 ... 0.18  | both | yes | yes | . |
+| Python | 0.10  | REST | no | yes | . |
+| Python | 0.10  | GRPC| yes | yes | . |
 
 
-#### New Service Orchestrator
+使用 REST API 部署的 Java 封装器的请求格式差异示例：
 
-From version 1.1 Seldon Core comes with a new service orchestrator written in Go which replaces the previous Java engine. Some breaking changes are present:
+1. 使用新的编排器：
+  
+  ```
+  curl -s -X POST \
+   -d 'json={"data": {"names": ["a", "b"], "ndarray": [[1.0, 2.0]]}}' \
+   localhost:8003/seldon/seldon/compat-rest-java-02-executor/api/v1.0/predictions
+  ```
+2. 使用已弃用的 Java 引擎：
+  
+  ```
+  curl -s -X POST -H 'Content-Type: application/json' \
+   -d '{"data": {"names": ["a", "b"], "ndarray": [[1.0, 2.0]]}}' \
+   localhost:8003/seldon/seldon/compat-rest-java-02-engine/api/v1.0/predictions
+  ```
 
- * Metadata fields in the Seldon Protocol are no longer added. Any custom metata data will need to be added and exposed to Prometheus metrics by the individual components in the graph
- * All components in the graph must either be REST or gRPC and only the given protocol is exposed externally.
- * The metric names placed in Prometheus have changed to include the `executor` name rather than `engine` : see the [analytics docs](../analytics/analytics.html)
+## 升级到 0.5.2 
 
-The new service orchestrator comes with several advantages including ability to handle Tensorflow REST and gRPC protocols and full metrics and tracing support for both REST and gRPC.
+此版本包括重大改进和功能，包括添加预先打包的模型服务器，修复了几个关键错误。
 
-For those wishing to use the deprecated Java engine service orchestrator see [the service orchestrator docs](../graph/svcorch.md) for details.
+这个版本也放弃了对 kubernetes 1.11 的支持，并在变异和验证 webhook 中添加了更改，您需要确保按照下面概述的方式进行转换。
 
-#### Ambassador Retries
+### 升级过程
 
-Ambassador retries has been removed from the previous hardwired value of 3. Retries is now available via an [annotation for Ambassador](../ingress/ambassador.html).
+为了升级，主要要求是确保 Kubernetes 集群更新到 1.12 或更高版本。
 
+完成此操作后，有必要删除旧的 webhook。这可以通过以下命令完成（您需要确保在安装了 seldon 核心的命名空间中执行这些命令）。
 
-### Python Wrapper Tag Update
+## 升级到 0.2.8 
 
-The Python Wrapper was using naming convention in the format 0.1 ... 0.18. In this release we have renamed the version of the Python Wrapper tag to match the same convention as the Executor, Operator, etc. This means that the Python Wrapper tag for this release is 1.1, and the snapshot would be 1.1.1-SNAPSHOT
+### 升级过程
 
-### Dated SNAPSHOTS
+#### 安装流程现在替换为 Helm
 
-Whenever a new PR was merged to master, we have set up our CI to build a "SNAPSHOT" version, which would contain the Docker images for that specific development / master-branch code.
+通过 helm charts 安装 Seldon Core 已更改。现在只有一个简单的 Helm chart `seldon-core-operator` 来安装 CRD 和 controller。 Ingress 现已独立，可在选项中设置：
 
-Previously, we always had the SNAPSHOT tag being overridden with the latest. This didn't allow us to know what version someone may be trying out when using master, so we wanted to introduce a way to actually get unique tags for every image that gets landed into master.
+- Ambassador - 通过官方 Helm chart
+- Istio
 
-Now every time that a PR is landed to master, a new "dated" SNAPSHOT version is created, which pushes images with the tag `"<next-version>-SNAPSHOT_<timestamp>"`. A new branch is also created with the name `"v<next-version>-SNAPSHOT_<timestamp>"`, which contains the respective helm charts, and allows for the specific version (as outlined by the version in `version.txt`) to be installed.
+更多信息参考 [安装文档](../workflow/install.xhtml).
 
-You can follow the instructions in the [installation page](../workflow/install.md) to install the snapshot version.
+Helm chart `seldon-core-operator` 需要集群层面的 RBAC 并以集群管理员进行安装。
 
-### Wrapper compatibility table
+##### 放弃对 KSonnet 的支持
 
-To verify if Seldon Core v1.0 and v.1.1 is compatible with older s2i wrapper versions we conducted a simple test with a one-node model.
-The model has been deployed both with REST and GRPC API with both new orchestrator and the deprecated Java engine (v1.0 only with Java Engine).
-Test verifies if model can successfully serve inference requests.
-
-**NOTE:** Full support of custom metrics and tags with new orchestrator is only available from Python wrapper version 0.19.
-If you need to use older version of Python wrapper you can continue to use Java engine as described above until the next release.
-
-
-| Language Wrapper |     Version   | API Type | New Orchestrator  | Deprecated Java engine | Notes                                   |
-|------------------|---------------|----------|-------------------|------------------------|-----------------------------------------|
-| Python           | 0.19          | both     | yes               | yes                    | full support of custom metrics and tags |
-| Python           | 0.11 ... 0.18 | both     | yes               | yes                    |                .                        |
-| Python           | 0.10          | REST     | no                | yes                    |                .                        |
-| Python           | 0.10          | GRPC     | yes               | yes                    |                .                        |
-| Python           | < 0.10        | GRPC     | ?                 | ?                      |                .                        |
-| Java             | 0.2 & 0.1     | REST     | yes               | yes                    |   minor difference in request format    |
-| Java             | 0.2 & 0.1     | GRPC     | yes               | yes                    |                .                        |
-
-
-
-Example of request format difference with Java wrapper deployed with REST API:
-
-1. Using new orchestrator:
-```bash
-curl -s -X POST \
-    -d 'json={"data": {"names": ["a", "b"], "ndarray": [[1.0, 2.0]]}}' \
-    localhost:8003/seldon/seldon/compat-rest-java-02-executor/api/v1.0/predictions
-```
-
-2. Using deprecated Java engine:
-```bash
-curl -s -X POST -H 'Content-Type: application/json' \
-    -d '{"data": {"names": ["a", "b"], "ndarray": [[1.0, 2.0]]}}' \
-    localhost:8003/seldon/seldon/compat-rest-java-02-engine/api/v1.0/predictions
-```
-
-
-## Upgrading to 0.5.2 from previous versions
-
-This version included significant improvements and features, including the addition of pre-packaged model servers, fixing several critical bugs.
-
-This was the version that also dropped support for kubernetes 1.11, and added changes in the mutating and validating webhooks that you need to make sure are transitioned as outlined below.
-
-### Upgrading process
-
-In order to upgrade, the main requirement is to make sure that the Kubernetes cluster is updated to 1.12 or higher.
-
-Once this is done, it's necessary to delete the old webhooks. This can be done with the following commands (you need to make sure that the commands are executed in the namespace in which seldon core was installed).
-
-## Upgrading to 0.2.8 from previous versions.
-
-### Upgrading process
-
-#### Installation process now with Helm
-
-The helm charts to install Seldon Core have changed. There is now a single Helm chart `seldon-core-operator` that installs the CRD and its controller. Ingress options are now separate and you need to choose between the available options which are at present:
-
- * Ambassador - via its official Helm chart
- * Istio
-
-For more details see the [install docs](../workflow/install.md).
-
-The Helm chart `seldon-core-operator` will require clusterwide RBAC and should be installed by a cluster admin.
-
-##### Dropping support for KSonnet
-
-Ksonnet is now deprecated. You should convert to using Helm to install Seldon Core.
+Ksonnet 现已启用。你需要通过 Helm 安装 Seldon Core.

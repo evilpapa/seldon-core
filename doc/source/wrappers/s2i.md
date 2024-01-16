@@ -1,28 +1,28 @@
 # Source to Image (s2i)
 
-[Source to image](https://github.com/openshift/source-to-image) is a RedHat supported tool to create docker images from source code. We provide builder images to allow you to easily wrap your data science models so they can be managed by seldon-core.
+[Source to image](https://github.com/openshift/source-to-image) 是一个 supported 支持的工具来为源码创建 docker 镜像。 我们提供映像构建器，让您可以轻松地封装数据模型，以便它们可以由 seldon-core 进行管理。
 
-The general work flow is:
+一般的工作流程是：
 
- 1. [Download and install s2i](https://github.com/openshift/source-to-image#installation)
+ 1. [下载安装 s2i](https://github.com/openshift/source-to-image#installation)
 
- 1. Choose the builder image that is most appropriate for your code and get usage instructions, for example:
+ 1. 选择最适合您的代码的构建器映像并获取使用说明，例如：
 
     ```bash
     s2i usage seldonio/seldon-core-s2i-python3
     ```
 
- 1. Create a source code repo in the form acceptable for the builder image and build your docker container from it. Below we show an example using our seldon-core git repo which has some template examples for python models.
+ 1. 以镜像构建器可接受的形式创建源代码存储库，并从中构建您的 docker 容器。 下面我们展示了一个使用我们的 seldon-core git repo 的示例，其中包含一些 Python 模型的模板示例。
 
     ```bash
     s2i build https://github.com/seldonio/seldon-core.git \
-        --context-dir=wrappers/s2i/python/test/model-template-app seldonio/seldon-core-s2i-python3:1.14.0 \
+        --context-dir=wrappers/s2i/python/test/model-template-app seldonio/seldon-core-s2i-python3 \
         seldon-core-template-model
     ```
 
-At present we have s2i builder images for
+目前我们有 s2i builder 镜像
 
- * [Python (Python3)](../python/README.md) : use this for Tensorflow, Keras, PyTorch or sklearn models.
+ * [Python (Python3)](../python/README.md) : 为 Tensorflow，Keras，PyTorch 或 sklearn 模型使用此镜像。
  * [R](../R/README.md)
  * [Java](../java/README.md)
  * [NodeJS](../nodejs/README.md)

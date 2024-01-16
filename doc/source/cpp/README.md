@@ -1,42 +1,42 @@
-# Packaging a C++ Framework/Model for Seldon Core
+# 为 Seldon Core 封装 C++ 框架/模型
 
-In this guide we cover how you can wrap your CPP models using the Seldon CPP wrapper.
+本章中，我们使用 Seldon CPP 封装你的 CPP 模型。
 
-For a quick start you can try out the following two examples:
+快速开始请参考：
 
-* [Simple CPP Single File Example](../examples/cpp_simple)
-* [Advanced CPP Build System Override Example](../examples/cpp_advanced)
+* [简单的 CPP 单文件示例](../examples/cpp_simple)
+* [高级 CPP 构建系统示例](../examples/cpp_advanced)
 
-The CPP Wrapper leverages the [Python Inference Server](../python) together with C++ bindings to communicate to the core CPP components natively.
+CPP 封装通过 C++ 打包利用 [Python Inference Server](../python)进行核心 CPP 原生组件通信。
 
-If you are not familiar with s2i you can read [general instructions on using s2i](../wrappers/s2i.md) and then follow the steps below.
+如果你对 s2i 不熟悉，请参考 [s2i 使用说明](../wrappers/s2i.md)并跟随下面的步骤。
 
-## Step 1 - Install s2i
+## 步骤 1 - 安装 s2i
 
-[Download and install s2i](https://github.com/openshift/source-to-image#installation)
+[下载安装 s2i](https://github.com/openshift/source-to-image#installation)
 
- * Prerequisites for using s2i are:
+ * 使用 s2i 准备工作
    * Docker
-   * Git (if building from a remote git repo)
+   * Git（如果使用远程 git 仓库）
 
-To check everything is working you can run
+所有工作就绪，可执行以下
 
 ```bash
 s2i usage seldonio/s2i-cpp-build:0.0.1
 ```
 
-## Step 2 (Optional) - Install Seldon Core C++ Package
+## 步骤 2（可选） - 安装 Seldon Core C++ 包
 
-For this step you have two options:
+本步骤有两点：
 
-* Install Seldon Core C++ package for easier development
-* Don't install package but import subdirectory via your CMakeLists.txt file
+* 安装 Seldon Core C++ 包便于开发
+* 不要安装包，而是通过 CMakeLists.txt 文件导入子目录
 
-### (Option 1) Install C++ Package
+### （可选 1） 安装 C++ 包
 
-For the first option, you just have to go to `incubating/wrappers/s2i/wrappers/cpp/` and install using CMAKE.
+针对此可选项，切到 `incubating/wrappers/s2i/wrappers/cpp/` 使用 CMAKE 进行安装。
 
-As you would with cmake, you will be able to build the respective build components for your OS - for linux you can do:
+与 cmake 一样，您能够为操作系统构建相应的构建组件 - 对于 Linux：
 
 ```bash
 cmake . -Bbuild
@@ -46,15 +46,15 @@ make
 make install
 ```
 
-Now in your CMakeLists.txt you are able to just add:
+在 CMakeLists.txt 你可以添加
 
 ```
 find_package(seldon REQUIRED)
 ```
 
-### (Option 2) Import as subdirectory
+### （可选 1）以子目录导入
 
-With CMAKE you are able to import a subdirectory as project. For this you can just import using:
+通过 CMAKE 你可以导入子目录作为工程。像这样：
 
 ```
 add_subdirectory(
@@ -62,15 +62,15 @@ add_subdirectory(
     ${CMAKE_CURRENT_BINARY_DIR}/seldon_dir})
 ```
 
-Now you have imported the directory. If you do take this approach you need to remember that when you run the s2i command, this will perform the build in the image, which means that you should still add the find_package command under a if(...) guard.
+现在，导入了目录。如果您确实采用此方法，您需要记住，当您运行 s2i 命令时，这将执行图构建，这意味着你仍需要在 if(...) 判断中添加 find_package 命令。
 
-### Step 3 - Add your source code
+### 步骤 3 - 添加源码
 
-The core interface between your C++ code and Seldon is a wrapper class with the respective interface functions such as `predict`.
+在 C++ 代码和 Seldon 间的核心接口是一个具有 `predict` 接口功能的封装类。
 
-To simplify the interaction with Seldon, we provide a C++ module that contains relevant utilities, such as a parent wrapper class to inherit from, as well as the protobuf types.
+为了简化与 Seldon 的交互，我们提供了一个包含相关实用程序的 C++ 模块，例如要继承的父封装类以及 protobuf 类型。
 
-The examples above provide insights on the structure of the classes that can be created. Below is a sample class with all the core elements.
+上面的示例提供了有关可以创建的类的结构的注解。下面是一个包含所有核心元素的示例类。
 
 ```cpp
 #include "seldon/SeldonModel.hpp"
@@ -85,25 +85,25 @@ class ModelClass : public seldon::SeldonModelBase {
 SELDON_DEFAULT_BIND_MODULE()
 ```
 
-We'll break down each of the sections and provide further insights on the extensions and options available as alternatives.
+我们将分解每个部分，并提供有关可用作替代品的扩展和选项的进一步见解。
 
-#### Seldon C++ module include
+#### Seldon C++ 包含模块
 
-The main include of the file `seldon/SeldonModel.hpp` provides a set of core utilities.
+主要包含文件 `seldon/SeldonModel.hpp` 提供了一组核心实用程序。
 
 ```cpp
 #include "seldon/SeldonModel.hpp"
 ```
 
-The core components that are imported are:
+导入的核心组件是：
 
-* The SeldonModel<proto> and SeldonModelBase class
-* The SELDON_{X}_BIND_MODULE(...) macros
-* The seldon::protos::SeldonMessage
+* SeldonModel<proto> 和 SeldonModelBase 类
+* SELDON_{X}_BIND_MODULE(...) 宏定义
+* seldon::protos::SeldonMessage
 
-#### SeldonModel class base
+#### SeldonModel 基础类
 
-The next component is the SeldonModel class. As you saw in the sample above, we inherited the class as follows:
+下一个组件是 SeldonModel 类。正如你在上面的例子中看到的，我们继承了这个类，如下所示：
 
 ```cpp
 class ModelClass : public seldon::SeldonModelBase {
@@ -114,69 +114,69 @@ class ModelClass : public seldon::SeldonModelBase {
 };
 ```
 
-The SeldonModel class provides two key components:
+SeldonModel 类提供了两个关键组件：
 
-* It provides a `public virtual abstract` function `predict(proto)` which users are able to overide to add their custom logic
-* Under the hood, SeldonModel also implements a `public virtual` method `predictRaw(py::bytes)` which basically receives the raw bytes, converts them into the relevant proto and passes it to the `predict(proto)` function
+* 它提供了一个 `public virtual abstract` 方法 `predict(proto)` 用户可以覆盖添加自己的逻辑
+* 在幕后，SeldonModel 还实现了一个 `public virtual` 方法`predictRaw(py::bytes)`，该方法基本上接收原始字节，将它们转换为相关的 proto 并将其传递给函数 `predict(proto)`。
 
-It's worth mentioning that SeldonModel<proto> is actually a template class, which enables for any protos to be provided. This of course is restricted through the service orchestrator but provides further flexibility.
+值得一提的是， SeldonModel<proto> 实际上提供了一个可以启用任何 protos 的模板类。这当然受到服务编排器的限制，但提供了进一步的灵活性。
 
-More specifically, the SeldonModelBase class we use above is actually a template implementation as `using SeldonModelBase = SeldonModel<seldon::protos::SeldonMessage>;`.
+更具体地说，我们上面使用的 SeldonModelBase 类实际上是一个模板实现 `using SeldonModelBase = SeldonModel<seldon::protos::SeldonMessage>;`。
 
-#### BIND Macro
+#### 绑定宏
 
-Finally we have the last step which is our binding macro. This is what tells Seldon to use our class provided above. By default, Selon expects the naming conventions `ModelClass` for the name of the class, and `SeldonPackage` for the name of the package itself.
+最后我们有最后一步，即我们的绑定宏。这就是告诉 Seldon 使用我们上面提供的类。默认情况下，Selon 需要 `ModelClass` 类名转换和 `SeldonPackage` 包名本身。
 
-Above we used the default binding, which was the following line:
+上面我们使用了默认绑定，即以下行：
 
 ```cpp
 SELDON_DEFAULT_BIND_MODULE()
 ```
 
-The macro above is equivalent to defining the following macro:
+上面的宏相当于定义了下面的宏：
 
 ```cpp
 SELDON_BIND_MODULE(SeldonPackage, ModelClass)
 ```
 
-If you change either of the names, you will need to make sure you do the relevant overrides. To be more specific the changes required are below.
+如果更改任何一个名称，则需要确保执行相关覆盖。更具体地说，所需的更改如下。
 
-If you change the name of your ModelClass:
+如果您更改 ModelClass 的名称：
 
-* Register it with the macro SELDON_BIND_MODULE
-* Specify it in the MODEL env var to your s2i params (more on this in the optional steps below)
+* 使用宏 SELDON_BIND_MODULE 注册它
+* 在 MODEL env var 中将其指定为您的 s2i 参数（在下面的可选步骤中有更多相关信息）
 
-If you change the name of your SeldonPackage:
-* Register it with the macro SELDON_BIND_MODULE
-* Specify it in the MODEL env var to your s2i params (more on this in the next step)
-* Override the package name in the buildsystem  (more on this in the optional steps below)
+如果您更改 SeldonPackage 的名称：
+* 使用宏 SELDON_BIND_MODULE 注册它
+* 在 MODEL env var 中将其指定为您的 s2i 参数（下一步将详细介绍）
+* 覆盖构建系统中的包名称（在下面的可选步骤中有更多内容）
 
-## Optional Steps
+## 可选步骤
 
-The steps above are optional, and are only required if you need the more advanced functionality, or alternatively if you want to change the naming convention.
+上述步骤是可选的，仅当您需要更高级的功能或想要更改命名约定时才需要。
 
-### Step 4 (Optional) - Specify your seldon env variables
+### 步骤 4 (可选) - 指定您的 seldon 环境变量
 
-In order to specify your seldon environment variables, you are able to do so by one of the following:
+为了指定您的 seldon 环境变量，您可以通过以下方式之一进行：
 
-* Provide them inside the `.s2i/environment` file where you run your `s2i` component
-* Pass them as parameter values `-E` to your `s2i` command
+* 当运行 `s2i` 组件时在 `.s2i/environment` 文件指定
+* 通过 `-E` 指定变量值到 `s2i` 命令
 
-The main variable that you may override would be:
+您可以覆盖的主要变量是：
 
 * MODEL=SeldonPackage.ModelClass
 
-As you can assume, this is the env variable that you'll need to make sure is set correctly for the Seldon wrapper to find your C++ package/class.
+正如您可以假设的那样，这是确保为 Seldon 封装器正确设置并能相关 C++ 包/类的环境变量。
 
-### Step 5 (Optional) - Overried Buildsystem
+### 步骤 5 (可选) - 覆盖构建系统
 
-Finally you are also able to overide the buildsystem if you wish to do so for advanced configurations.
+最后，您还可以通过高级配置覆盖构建系统。
 
-The build system we use is CMAKE, primarily as it enables for flexible and modular development.
+我们使用的构建系统是 CMAKE，主要是因为它支持灵活和模块化的开发。
 
-This means that you will be able to add a CMakeLists.txt file to your project folder. 
+这意味着您将能够将 CMakeLists.txt 文件添加到您的项目文件夹中。
 
-The contents of the file would be the following:
+该文件的内容如下：
 
 ```
 cmake_minimum_required(VERSION 3.4.1)
@@ -196,16 +196,16 @@ target_link_libraries(
     seldon::seldon)
 ```
 
-The outline above is the simplest cmake file that you could create. It has the following components:
+上面的大纲是您可以创建的最简单的 cmake 文件。它具有以下组件：
 
-* find_package(seldon,...) - This fetches the seldon package
-* find_package(pybind11, ...) - This fetches the required bindings
-* pybind11_add_module(SeldonPackage, ModelClass.cpp) - This creates your module with the name of your package, and all the relevant C++ source files.
-* target_link_libraries(CustomSeldonPackage PRIVATE seldon::seldon) binds the Seldon shared/static library
+* find_package(seldon,...) - 获取 seldon 包
+* find_package(pybind11, ...) - 这会获取所需的绑定
+* pybind11_add_module(SeldonPackage, ModelClass.cpp) - 这将使用所需包名和所有相关的 C++ 源文件创建您的模块。
+* target_link_libraries(CustomSeldonPackage PRIVATE seldon::seldon) 绑定 Seldon 共享/静态库
 
-Beyond this you are able to configure anything you wish for your environment. 
+除此之外，您还可以为您的环境配置任何您想要的东西。
 
-Further requirements can also be set by extending the docker imagebase, which is found in the module repo `incubating/wrappers/s2i/cpp/`.
+还可以通过扩展 docker 镜像库来进一步设置，可查看仓库模块 `incubating/wrappers/s2i/cpp/`。
 
 
 

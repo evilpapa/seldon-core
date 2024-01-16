@@ -1,12 +1,12 @@
 # Tensorflow Serving
 
-If you have a trained Tensorflow model you can deploy this directly via REST or gRPC servers. 
+如果有基于 Tensorflow 的训练模型，可以直接发布未 REST or gRPC 微服务。
 
-## MNIST Example
+## 最小示例
 
-### REST MNIST Example
+### REST 最小示例
 
-For REST you need to specify parameters for:
+REST 需要指定参数：
 
  * signature_name
  * model_name
@@ -36,9 +36,9 @@ spec:
 
 ```
 
-### gRPC MNIST Example
+### gRPC 最小示例
 
-For gRPC you need to specify the following parameters:
+gRPC 需要指定参数：
 
  * signature_name
  * model_name
@@ -79,12 +79,12 @@ spec:
 ```
 
 
-Try out a [worked notebook](../examples/server_examples.html)
+查看 [可工作 notebook](../examples/server_examples.html)
 
 
-## Multi-Model Serving
+## 多模型服务
 
-You can utilize Tensorflow Serving's functionality to load multiple models from one model repository as shown in this [example notebook](../examples/protocol_examples.html). You should follow the configuration details as disucussed in the [Tensorflow Serving documentation on advanced configuration](https://www.tensorflow.org/tfx/serving/serving_config).
+如 [示例 notebook](../examples/protocol_examples.html)所示，您可以利用 Tensorflow 服务的功能从存储库加载多个模型。请按照一下进行配置 [Tensorflow Serving 高级配置文档](https://www.tensorflow.org/tfx/serving/serving_config)。
 
 ```
 apiVersion: machinelearning.seldon.io/v1

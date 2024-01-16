@@ -1,9 +1,9 @@
-Pre-Packaged Model Servers
+预包装模型服务端
 ==========================
 
 
 .. toctree::
     :maxdepth: 1
 
-    Configuration with rclone-based storage initializer <overview.md>
-    Configuration with kfserving/storage-initializer <kfserving-storage-initializer.md>
+    配置 rclone-based 存储初始化器 <overview.md>
+    配置 kfserving/storage-initializer <kfserving-storage-initializer.md>

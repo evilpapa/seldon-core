@@ -1,14 +1,14 @@
-# Graph Deployment Options
+# 图部署选项
 
-In Seldon core there is the capability to have different mode of scopes in containerizing models and Seldon core components in the inference graph.
-Each node of the inference graph will be a container in the Kubernetes cluster. Inference graph nodes containers could be encapsulated in a 
-single or multiple kubernetes pods. The outer component of Seldon core are predictors which could contain one or more componentes that are referred 
-by their name in constructing the inference graph in `spec.componentSpecs.graph`.
+在 Seldon core 中不同模式范围的不同容器化模型和 Seldon core 组件的推理图有着不同的能力。
+推理图的每个节点都是 Kubernetes 集群中的一个容器。推理图节点可以封装在
+单个或者多个 kubernetes pods中。Seldon core 的外部组件是那些包含一个或多个组件并且
+定义在推理图 `spec.componentSpecs.graph` 中构建的多个预估器。
 
-## Mode One: Single pod deployment
+## 模式一: 单 pod 部署
 
-The following is an example of a Seldon core inference graph with a 
-single predictor.
+以下示例是 Seldon core 推理图仅有 
+一个预估。
 ```bash
 apiVersion: machinelearning.seldon.io/v1
 kind: SeldonDeployment
@@ -39,7 +39,7 @@ spec:
     name: example
 ```
 
-This will result in deploying all the graph nodes in a single pod:
+所有图部署的节点都是在一个单独的pod：
 
 ```bash
 kubectl get pods
@@ -48,10 +48,10 @@ NAME                                                       READY   STATUS    RES
 seldon-c71cc2d950d44db1bc6afbeb0194c1da-5d8dddb8cb-xx4gv   5/5     Running   0          6m59s
 ```
 
-## Mode Two: Separate pod deployment
+## 模式二： 单独的pod部署
 
-Another way of deployment is to implement the each node of inference graph in a seperate predictor which will result in having separate pods for 
-each inference graph node.
+另一种部署方式是在单独的预测器中实现推理图的每个节点，这将导致每个推理图节点都
+有单独的 pod。
 
 ```bash
 apiVersion: machinelearning.seldon.io/v1
@@ -92,7 +92,7 @@ spec:
     name: example
 ```
 
-This time it will result in having separate pods for each container.
+这一次它将导致每个容器都有单独的 pod。
 
 ```bash
 kubectl get pods
@@ -102,8 +102,8 @@ linear-pipeline-separate-pods-example-1-node-two-c4f55f689gxkkr   1/1     Runnin
 linear-pipeline-separate-pods-example-2-node-three-99667dcmg9kg   1/1     Running   0          4m33s
 linear-pipeline-separate-pods-example-svc-orch-656c6bdf59-6m6nc   1/1     Running   0          4m33s
 ```
-The most basic unit in Kubernetes are pods. This model will enable [scaling](scaling.md) at model level. In other words, you can 
-scale each model separately while on the other hand having them in a single pod will change the granulity of scaling to the entire graph. However, 
-on the other hand single pod deployment will need only a single [sidecar istio container](../ingress/istio.md)
-that needs less resource request from the sidecar containers. Another potential difference is the less communication overhead in the single pod mode as
-they will always be schduled on the same Kubernetes node.
+Kubernetes 中最基本的单元是 Pod。该模型将支持模型界别的[缩放](scaling.md)。换言之，你可以
+您可以单独缩放每个模型，而另一方面将它们放在一个 pod 中会改变缩放到整个图的粒度。然而，
+另一方面，单个 pod 部署将只需要一个[边车 istio 容器](../ingress/istio.md)
+它需要更少的来自 sidecar 容器的资源请求。另一个潜在的区别是单 pod 模式下的通信开销更少，因为它们总是
+被调度在同一个 Kubernetes 节点上。

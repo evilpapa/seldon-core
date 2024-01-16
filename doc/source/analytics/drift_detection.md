@@ -1,10 +1,10 @@
-# Drift Detection in Seldon Core
+# Seldon Core 的漂移检测
 
-Machine learning models do not extrapolate well outside of the training data distribution. In order to trust and reliably act on model predictions, it is crucial to monitor the distribution of incoming requests via different types of detectors.  Drift detectors check when the distribution of the incoming requests is diverging from a reference distribution such as that of the training data. If data drift occurs, the model performance can deteriorate and it should be retrained.
+机器学习模型在训练数据分布之外不能很好地进行预测。为了信任并采用模型预估，通过不同类型的检测器监控传入请求的分布至关重要。异常值检测器旨在标记不遵循原始训练分布的单个实例。
 
 
-[Drift Detection example using CIFAR10](../examples/drift_cifar10.html).
+[使用 CIFAR10 任务的工作示例](../examples/drift_cifar10.html).
 
-The general framework shown in this example is to use the Seldon Core payload logger to pass requests to components that process them asynchronously. The results can be passed onwards to alterting systems.
+此示例中显示的通用框架是使用 Seldon Core 负载记录器将请求传递给异步处理它们的组件。结果可以继续传递到警报系统。
 
-![Example architecture](analytics.png)
+![架构示例](analytics.png)

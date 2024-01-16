@@ -1,18 +1,18 @@
-# Scaling Seldon Core Deployments with CI / CD
+# Seldon Core Deployments 通过 CI / CD 扩容
 
-When integrating Seldon Core into your enterprise stack, it is common practice to introduce Continuous Integration and Continuous Delivery methodology into the deployment workflows.
+将 Seldon Core 集成到您的企业堆栈中时，将持续集成和持续交付方法引入部署工作流程是常见做法。
 
-## MLOps for Scale
+## MLOps 扩缩容
 
-Seldon Core has been built with this in mind, and is currently used in enterprises to support the containerisation, deployment and management of machine learning at massive scale.
+Seldon Core 是考虑到这一点而构建的，目前用于企业大规模支持机器学习的容器化、部署和管理。
 
-This page contains a high level overview on the concepts that Seldon Core uses to enable continuous deployment of machine learning through the concept of "MLOps".
+本页包含 Seldon Core 用于通过「MLOps」概念持续部署机器学习的概念的高水平概述。
 
 ![](../images/cicd-seldon.jpg)
 
-## Hands on Examples
+## 示例手册
 
-We have put together a set of examples that showcase how to integrate Seldon Core with Jenkins Classic, ArgoCD and/or Jenkins X:
+我们汇集了一组示例，展示了 Seldon Core 如何与 Jenkins Classic、ArgoCD、Jenkins X 集成：
 
-* [CI / CD with Jenkins Classic](../examples/jenkins_classic.html)
-* [CI / CD with Jenkins X](../examples/jenkins_x.html)
+* [CI / CD 集成 Jenkins Classic](../examples/jenkins_classic.html)
+* [CI / CD 集成 Jenkins X](../examples/jenkins_x.html)

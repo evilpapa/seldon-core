@@ -1,48 +1,49 @@
-# Seldon Core Concepts
+# Seldon Core 核心概念
 
-This page is a work in progress to provide concepts related to Seldon Core.
-This work is ongoing and we welcome feedback.
+此页面是一个正在进行的工作，提供 Seldon Core 的核心理念。
+这项工作正在进行中，我们欢迎反馈。
 
-## Machine Learning Deployment / Inference Graph
+## 机器学习发布 / 推理图
 
-### Conceptual overview of machine learning deployments / inference graphs
+### 机器学习部署/推理图的概念概述
 
-A machine learning deployment (or inference graph) refers to a group of components in the Seldon ecosystem of a type associated with Seldon (Seldon Deployments). It represents a workflow, grouping the components of a machine learning system into a logical pipeline. The ML Deployment contains the configuration of the components and the definitions of the inputs and outputs of the system, and of each component.
+机器学习部署（或推理图）是指 Seldon 系统下 Seldon（Seldon Deployments）相关的一组组件。它表示工作流程，将机器学习系统的组件分组到逻辑管道中。ML 部署包含组件的配置、系统输入和输出的定义以及每个组件的定义。
 
-## Component / Inference server
+## 组件/推理服务器
 
-### Conceptual overview of components / inference servers
+### 组件/推理服务器的概念概述
 
-A component (or inference server) is one of:
--   Model
+组件（或推理服务器）是：
+-   模型
     
--   Router
+-   路由
     
--   Combiner
+-   合并器
     
--   Transformer
+-   转换器
     
--   Output Transformer
+-   输出转换器
 
-A program that performs one step in the workflow.
+一个程序提供工作流中的一个步骤。
 
-## Model
+## 模型
 
-### Conceptual overview of models
+### 模型的概念概述
 
-A component within a machine learning deployment which holds the representation of learned information from the training data.
+机器学习部署中的组件，从训练数据中获取的训练模型。
 
-## Language Wrapper
+## 语言封装
 
-### Conceptual overview of language wrappers
+### 语言封装的概念概述
 
+语言封装一种针对特定编程语言
 A language wrapper is a model which enables cross language and/or runtime interoperability with a particular programming language.
 
-## Pre-packaged Inference Server
+## 预封装推理服务器
 
-### Conceptual overview of pre-packaged inference servers
+### 预封装推理服务器的概念概述
 
-A pre-packaged inference server is one of:
+预封装推理服务器包含如下：
 
 -   SKLearn Server
     
@@ -52,52 +53,52 @@ A pre-packaged inference server is one of:
     
 -   MLflow Server
     
-Servers which can be used to deploy a trained model.
+可以发布训练模型的服务。
 
-Pre-packaged inference servers come built into Seldon Core, to allow users to go easily from artifact (i.e. serialised model) to ML deployment regardless of toolkit. Please see the following docs pages for users looking for instructions on how to create their own "pre-packaged" inference servers:
+Seldon Core 中内置了预封装的推理服务器，允许用户轻松地从 artifact (即序列化模型) 到 ML 部署而无需考虑工具包。请参阅以下文档页面，供用户查找有关如何创建自己的“预封装”推理服务器的说明：
 - [https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html](https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html)
 - [https://docs.seldon.io/projects/seldon-core/en/latest/servers/custom.html](https://docs.seldon.io/projects/seldon-core/en/latest/servers/custom.html)
 
-## Graph
+## 图
 
-### Conceptual overview of graphs
+### 图的概念简述
 
-A graph represents machine learning components as nodes with edges representing the inputs and outputs of an operation being passed from one component to the next.
+图将机器学习组件表示为节点，其表示从一个组件到下一个组件的传递输入和输出的操作。
 
-## Request
+## 请求
 
-### Conceptual overview of requests
+### 请求的概念概述
 
-A request represents a single call to a model for a prediction. The request will be a payload which holds prediction data (often in the form of an array) passed over a particular protocol. It is expected to follow a particular format.
+请求代表对模型的单个调用以进行预测。该请求附加一个有效负载，其中包含通过特定协议传递的预测数据（通常以数组的形式）。它需遵循特定格式。
 
-## Request Logging
+## Request 日志
 
-### Conceptual overview of request logging
+### 请求日志的概念描述
 
-Request logging is a feature of Seldon to be able to track the requests that have been submitted to a model. In the default setup requests are logged and stored in Elasticsearch.
+请求日志记录是 Seldon 的一项功能，能够跟踪已提交给模型的请求。在默认设置中，请求被记录并存储在 Elasticsearch 中。
 
-## Useful Links
+## 有用的链接
 
-### Kubeflow pipelines concepts
+### Kubeflow pipelines 概念
 
 [https://www.kubeflow.org/docs/pipelines/overview/concepts/](https://www.kubeflow.org/docs/pipelines/overview/concepts/)
 
-### Google machine learning glossary
+### Google machine learning 词汇表
 
 [https://developers.google.com/machine-learning/glossary](https://developers.google.com/machine-learning/glossary)
 
-### Kubernetes standardized glossary
+### Kubernetes standardized 词汇表
 
 [https://kubernetes.io/docs/reference/glossary/?fundamental=true](https://kubernetes.io/docs/reference/glossary/?fundamental=true)
 
-### Helm glossary
+### Helm 词汇表
 
 [https://helm.sh/docs/glossary/](https://helm.sh/docs/glossary/)
 
-### Jaeger terminology
+### Jaeger 术语
 
 [https://www.jaegertracing.io/docs/1.18/architecture/#terminology](https://www.jaegertracing.io/docs/1.18/architecture/#terminology)
 
-### Elastic search terminology
+### Elastic search 术语
 
 [https://www.elastic.co/guide/en/elastic-stack-glossary/current/terms.html](https://www.elastic.co/guide/en/elastic-stack-glossary/current/terms.html)

@@ -1,4 +1,4 @@
-## Model with REST and gRPC Settings
+##  基于 REST and gRPC 设置的模型
 
 ```json
 {
@@ -30,8 +30,8 @@
                     "children": [],
                     "name": "classifier",
                     "endpoint": {
-			"type" : "GRPC"
-		    },
+						"type" : "GRPC"
+		   			},
                     "type": "MODEL"
                 },
                 "name": "grpc-size",

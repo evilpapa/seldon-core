@@ -1,6 +1,6 @@
-# KFserving Storage Initializer (Deprecated)
+# KFserving Storage Initializer（已弃用）
 
-Prior to Seldon Core 1.8 seldon core was using by default `kfserving/storage-initializer` for its pre-packaged model servers. This can be still used by configuring a following helm value:
+Seldon Core 1.8 版本之前，预封装模型服务器默认使用 `kfserving/storage-initializer`。这些仍可以通过配置 helm 来使用：
 
 
 ```yaml
@@ -8,39 +8,39 @@ storageInitializer:
   image: kfserving/storage-initializer:v0.6.1
 ```
 
-> :warning: **NOTE:** Current default storage initializer is `seldonio/rclone-storage-initializer:1.14.0` is described [here](./overview.md).
+> :warning: **NOTE:** 当前默认存储加载器是 `seldonio/rclone-storage-initializer:1.10.0-dev` 可参考[这里](./overview.md).
 
 
-When `kfserving/storage-initializer` is used `modeluri` supports the following four object storage providers:
+当 `kfserving/storage-initializer` 使用 `modeluri` 时支持以下对象存储提供方：
 
 - Google Cloud Storage (using `gs://`)
 - S3-compatible (using `s3://`)
 - Minio-compatible (using `s3://`)
 - Azure Blob storage (using `https://(.+?).blob.core.windows.net/(.+)`)
 
-A Kubernetes PersistentVolume [can be used](../examples/pvc-tfjob.html) instead of a bucket using `pvc://`.
+Kubernetes PersistentVolume [也可被用来](../examples/pvc-tfjob.html) 替代存储桶 `pvc://`.
 
 
-## Handling Credentials
+## 处理凭证
 
-In order to handle credentials you must make available a secret with the environment variables that will be added into the `Init Containers`. For this you need to perform the following actions:
+为了处理凭据，您必须将密钥作为环境变量添加到 `Init Containers`。您需要执行以下操作：
 
-1. Understand which environment variables you need to set
-2. Create a secret containing the environment variables
-3. Provide the Seldon Core Controller or Seldon Deployment with the name of the secret
+1. 了解需要设置哪些环境变量
+2. 创建一个包含环境变量的密钥
+3. 为 Seldon Core Controller 或 Seldon Core 提供密钥名称
 
-### 1. Understand which Environment Variables you need to set
+### 1. 了解需要设置哪些环境变量
 
-In order to understand what are the environment variables required, you can have a look directly into our [Storage.py library](https://github.com/SeldonIO/seldon-core/blob/master/python/seldon_core/storage.py) that we use in our `Init Containers`.
+要了解所需的环境变量是什么，您可以直接查看我们在 `Init Containers` 使用的 [Storage.py 类库](https://github.com/SeldonIO/seldon-core/blob/master/python/seldon_core/storage.py)。
 
-#### AWS Required Variables
+#### WS 必需变量
 
   RCLONE_CONFIG_S3_PROVIDER: aws
 - RCLONE_CONFIG_S3_ACCESS_KEY_ID
 - RCLONE_CONFIG_S3_SECRET_ACCESS_KEY
 - RCLONE_CONFIG_S3_ENDPOINT
 
-#### Minio Required Variables
+#### Minio 所需变量
 
   RCLONE_CONFIG_S3_PROVIDER: minio
 - RCLONE_CONFIG_S3_ACCESS_KEY_ID
@@ -48,15 +48,15 @@ In order to understand what are the environment variables required, you can have
 - RCLONE_CONFIG_S3_ENDPOINT
 - RCLONE_CONFIG_S3_ENV_AUTH
 
-#### Google Cloud Required Variables
+#### Google Cloud 所需变量
 
-Currently for Google Cloud it is required to follow a slightly more complex method given that it requires the secret to be mounted as a file. For this please follow the example at the Google Cloud Section.
+目前，对于 Google Cloud，它需要遵循一种稍微复杂的方法，因为它需要将密钥作为文件挂载。为此，请按照 Google Cloud 部分的示例进行操作。
 
-If application cretentials are not set, the client will use an Anonymous client.
+如果未设置应用程序凭据，客户端将使用匿名客户端。
 
-### 2. Create a secret containing the environment variables
+### 2. 创建一个包含环境变量的secret
 
-You can now create a secret, below we show what the env variables would look like for the AWS credentials.
+您现在可以创建一个密钥，下面我们将展示 AWS 凭证的环境变量的样子。
 
 ```yaml
 apiVersion: v1
@@ -73,7 +73,7 @@ data:
   RCLONE_CONFIG_S3_ENDPOINT: "<your S3 endpoint here>"
 ```
 
-It is also possible to create a `Secret` object from the command line:
+也可从名两行创建 `Secret` 对象：
 
 ```bash
 kubectl create secret generic seldon-init-container-secret \
@@ -85,26 +85,26 @@ kubectl create secret generic seldon-init-container-secret \
     --from-literal=RCLONE_CONFIG_S3_ENV_AUTH=false
 ```
 
-You can read the [documentation of Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/) to learn more about Kubernetes Secrets.
+阅读 [Kubernetes 文档](https://kubernetes.io/docs/concepts/configuration/secret/)来学习 Kubernetes Secrets。
 
-### 3. Ensure your SeldonDeployment has access to the secret
+### 3. 确保您的 SeldonDeployment 可以访问密钥
 
-In order for your SeldonDeployment to know what is the name of the secret, we have to specify the name of the secret we created - in the example above we named the secret `seldon-init-container-secret`.
+为了让您的 SeldonDeployment 知道密钥的名称是什么，我们必须指定我们创建的密钥名称——上面示例中我们使用的是 `seldon-init-container-secret`。
 
-#### Option 1: Default Seldon Core Manager Controller value
+#### 选项 1：默认 Seldon Core Manager Controller 值
 
-You can set a global default when you install Seldon Core through the Helm chart through the `values.yaml` variable `executor.defaultEnvSecretRefName`. You can see all the variables available in the [Advanced Helm Installation Page](../reference/helm.rst).
+在通过 Helm 图安装 Seldon Core 时可通过 `values.yaml` 变量 `executor.defaultEnvSecretRefName` 设置一个全局默认的。可在 [高级 Helm 安装页](../reference/helm.rst)查看所有选项。
 
 ```yaml
-# ... other variables
+# ... 其他变量
 predictiveUnit:
   defaultEnvSecretRefName: seldon-init-container-secret
-# ... other variables
+# ... 其他变量
 ```
 
-#### Option 2: Override through SeldonDeployment config
+#### 选项 2：通过 SeldonDeployment 配置覆盖
 
-It is also possible to provide an override value when you deploy your model using the SeldonDeploymen YAML. You can do this through the `envSecretRefName` value:
+当您使用 SeldonDeploymen YAML 部署模型时，也可以提供覆盖值。您可以通过以下 `envSecretRefName` 值执行此操作：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -124,39 +124,39 @@ spec:
     replicas: 1
 ```
 
-### Examples
+### 示例
 
-#### MinIO running inside same Kubernetes cluster
-Assuming that you have MinIO instance running on port `9000` avaible at `minio.minio-system.svc.cluster.local` and you want to reference bucket `mymodel` you would set
+#### MinIO 在同一个 Kubernetes 集群中运行
+假设您有 MinIO 实例运行在 `minio.minio-system.svc.cluster.local` 端口 `9000` 上你向关联 `mymodel` 桶你可以设置
 ```bash
 RCLONE_CONFIG_S3_ENDPOINT=http://minio.minio-system.svc.cluster.local:9000
 ```
-with `modelUri` being set as `s3://mymodel`.
+使用 `modelUri` 设置为 `s3://mymodel`。
 
-For full example please see this [notebook](../examples/minio-sklearn.html).
+完整示例查看 [笔记本](../examples/minio-sklearn.html)。
 
-## Adding Credentials for Google Cloud
+## 为 Google Cloud 添加凭据
 
-Currently the Google Credentials require a file to be set up so the process required involves creation of a service account as outlined below.
+目前，Google 凭据需要设置一个文件，因此所需的过程涉及创建一个服务帐户，如下所述。
 
-You can also create a `ServiceAccount` and attach a differently formatted `Secret` to it similar to how kfserving does it. See kfserving documentation [on this topic](https://github.com/kubeflow/kfserving/blob/master/docs/samples/storage/s3/README.md). Supported annotation prefix includes `serving.kubeflow.org` and `machinelearning.seldon.io`.
+你可以创建一个`ServiceAccount` 并附加一个不同格式的 `Secret` 的文件，类似于 kfserving 的做法。 在[这个主题](https://github.com/kubeflow/kfserving/blob/master/docs/samples/storage/s3/README.md)查看 tfserving 文档。持的注解前缀包括 `serving.kubeflow.org` 和 `machinelearning.seldon.io`。
 
-For GCP/GKE, you will need create a service-account key and have it as local `json` file.
-First make sure that you have `[SA-NAME]@[PROJECT-ID].iam.gserviceaccount.com` service account created in the gcloud console that have sufficient permissions to access the bucket with your models (i.e. `Storage Object Admin`).
+对于 GCP/GKE，你可能需要创建一个 service-account 键并作为一个本地 `json` 文件。
+首先确保 `[SA-NAME]@[PROJECT-ID].iam.gserviceaccount.com` 服务账号在 gcloud 终端创建，该帐户具有足够的权限来使用您的模型（即）访问存储桶 (例如 `Storage Object Admin`)。
 
-Now, generate `keys` locally using the `gcloud` tool
+现在，使用 `gcloud` 本地工具生成 `keys`
 ```bash
 gcloud iam service-accounts keys create gcloud-application-credentials.json --iam-account [SA-NAME]@[PROJECT-ID].iam.gserviceaccount.com
 ```
 
-Once you have `gcloud-application-credentials.json` file locally create the k8s `secret` with:
+一旦文件 `gcloud-application-credentials.json` 在本地创建完，使用下面的命令创建创建 k8s `secret`：
 ```bash
 kubectl create secret generic user-gcp-sa --from-file=gcloud-application-credentials.json=<LOCALFILE JSON FILE>
 ```
 
-The file in the secret needs to be called `gcloud-application-credentials.json` (the name can be configured in the seldon configmap, visible in `kubectl get cm -n seldon-system seldon-config -o yaml`).
+在密钥中的文件需要为 `gcloud-application-credentials.json` (名称可在 seldon configmap 设置，`kubectl get cm -n seldon-system seldon-config -o yaml` 可见)。
 
-Then create a service account to reference the secret:
+然后创建一个服务账户关联到密钥：
 
 ```yaml
 apiVersion: v1
@@ -167,7 +167,7 @@ secrets:
   - name: user-gcp-sa
 ```
 
-This can then be referenced in the SeldonDeployment manifest by setting `serviceAccountName: user-gcp-sa` at the same level as `m̀odelUri` e.g.
+这些可在 SeldonDeployment 中设置 `serviceAccountName: user-gcp-sa` 进行引用，他和 `m̀odelUri` 同级例如
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2

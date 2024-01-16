@@ -1,23 +1,23 @@
 # HuggingFace Server
 
-Thanks to our collaboration with the HuggingFace team you can now easily deploy your models from the [HuggingFace Hub](https://huggingface.co/models) with Seldon Core.
+感谢我们的合作伙伴 HuggingFace 团队，你可以轻易的使用 [HuggingFace Hub](https://huggingface.co/models) 部署模型到 Seldon Core。
 
-We also support the high performance optimizations provided by the [Transformer Optimum framework](https://huggingface.co/docs/optimum/index).
+我们还支持 [Transformer Optimum 框架](https://huggingface.co/docs/optimum/index) 提供的高性能优化。
 
-## Pipeline parameters
+## Pipeline 参数
 
-The parameters that are available for you to configure include:
+可供您配置的参数包括：
 
-| Name | Description |
+| 名称 | 描述 |
 | ---- | ----------- |
-| `task` | The transformer pipeline task |
-| `pretrained_model` | The name of the pretrained model in the Hub |
-| `pretrained_tokenizer` | Transformer name in Hub if different to the one provided with model |
-| `optimum_model` | Boolean to enable loading model with Optimum framework |
+| `task` | 传输管道任务 |
+| `pretrained_model` | Hub 中预训练模型的名称 |
+| `pretrained_tokenizer` | Hub 中的传输名称（如果与模型提供的名称不同） |
+| `optimum_model` | 使用 Optimum 框架启用加载模型的布尔值 |
 
-## Simple Example
+## 简单示例
 
-You can deploy a HuggingFace model by providing parameters to your [pipeline](https://huggingface.co/docs/transformers/main_classes/pipelines).
+你可以发布一个 HuggingFace 模型通过提供参数到 [pipeline](https://huggingface.co/docs/transformers/main_classes/pipelines)。
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -41,9 +41,9 @@ spec:
     replicas: 1
 ```
 
-## Quantized & Optimized Models with Optimum
+## 使用 Optimum 量化及优化的模型
 
-You can deploy a HuggingFace model loaded using the Optimum library by using the `optimum_model` parameter
+您可以使用 `optimum_model` 参数部署使用 Optimum 库加载的 HuggingFace 模型
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2

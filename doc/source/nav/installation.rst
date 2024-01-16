@@ -1,5 +1,5 @@
 ==============
-Installation
+安装
 ==============
 
 .. panels::
@@ -13,7 +13,7 @@ Installation
 
     +++
     .. link-button:: ../workflow/install.rst
-        :text: Install on Kubernetes
+        :text: Kubernetes 安装
         :classes: stretched-link
 
     ---
@@ -21,7 +21,7 @@ Installation
 
     +++
     .. link-button:: ../install/kind.rst
-        :text: Install Locally
+        :text: 本地安装
         :classes: stretched-link
         
 
@@ -30,7 +30,7 @@ Installation
 
     +++
     .. link-button:: ../install/gcp.rst
-        :text: Install on GCP
+        :text: GCP 安装
         :classes: stretched-link
 
 .. panels::
@@ -43,8 +43,8 @@ Installation
     :img-top: ../_static/aws_logo.png
 
     +++
-    .. link-button:: #
-        :text: Install on AWS (Coming Soon)
+    .. link-button:: ../install/aws.rst
+        :text: AWS 安装
         :classes: stretched-link
 
     ---
@@ -52,7 +52,7 @@ Installation
 
     +++
     .. link-button:: ../install/azure.rst
-        :text: Install on Azure
+        :text: Azure 安装
         :classes: stretched-link
 
     ---
@@ -60,7 +60,7 @@ Installation
 
     +++
     .. link-button:: ../ingress/openshift.md
-        :text: Install on OpenShift
+        :text: OpenShift 安装
         :classes: stretched-link
 
 
@@ -69,7 +69,8 @@ Installation
     :titlesonly:
     :hidden:
 
-    Install on Kubernetes </workflow/install.rst>
-    Install Locally </install/kind.rst>
-    Install on Google Cloud</install/gcp.rst>
-    Install on Azure </install/azure.rst>
+    Kubernetes 安装 </workflow/install.rst>
+    本地安装 </install/kind.rst>
+    Google Cloud 安装 </install/gcp.rst>
+    Azure 安装 </install/azure.rst>
+    AWS 安装 </install/aws.rst>

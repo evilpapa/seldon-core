@@ -1,4 +1,4 @@
-## Model with Separate Service Orchestrator Pod
+## 指定服务编排 Pod 的模型
 
 ```json
 {
@@ -28,8 +28,8 @@
                     "children": [],
                     "name": "classifier",
                     "endpoint": {
-			"type" : "REST"
-		    },
+						"type" : "REST"
+		    		},
                     "type": "MODEL"
                 },
                 "name": "example",

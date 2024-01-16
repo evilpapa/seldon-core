@@ -1,42 +1,42 @@
-# Quickstart
+# 快速开始
 
-In this page we have put together a very containerised example that will get you up and running with your first Seldon Core model.
+在本页面中，我们汇总了一些容器化的示例，来帮助您启动并运行第一个 Seldon Core 模型。
 
-We will show you how to deploy your model using a pre-packaged model server, as well as a language wrapper for more custom servers.
+我们将向您展示如何使用预先打包的模型服务器及用于更多自定义服务器的封装器来部署您的模型。
 
-You can dive into a deeper dive of each of the components and stages of the [Seldon Core Workflow](../workflow/index.html).
+您可以深入了解 [Seldon Core 工作流](../workflow/index.html) 的每个组件和阶段。
 
-## Seldon Core Workflow
+## Seldon Core 工作流
 
-Once you've [installed Seldon Core](install.md), you can productionise your model with the following three steps:
+一旦完成 [Seldon Core 安装](install.md)，你可以使用一下三个步骤来完成模型的生产化：
 
- 1. Wrap your model using our prepackaged inference servers or language wrappers
- 1. Define and deploy your Seldon Core inference graph
- 1. Send predictions and monitor performance
+ 1. 使用我们的预封装推理服务器或者语言封装器来封装模型
+ 1. 定义 Seldon Core 推理图
+ 1. 发布预估并监控性能
 
-### 1. Wrap Your Model
+### 1. 封装模型
 
-The components you want to run in production need to be wrapped as Docker containers that respect the [Seldon microservice API](../reference/apis/internal-api.md). You can create models that serve predictions, routers that decide on where requests go, such as A-B Tests, Combiners that combine responses and transformers that provide generic components that can transform requests and/or responses.
+想要在生产中运行的组件需要封装为 [Seldon API 微服务](../reference/apis/internal-api.md)规范的 Docker 容器。 你可以创建提供预估服务的模型，定义请求去向的路由，A-B 测试，合并响应的组合器，以及可以传输请求或响应的转换器等一种组件。
 
-To allow users to easily wrap machine learning components built using different languages and toolkits we provide wrappers that allow you easily to build a docker container from your code that can be run inside seldon-core. Our current recommended tool is RedHat's Source-to-Image. More detail can be found in [Wrapping your models docs](../wrappers/language_wrappers.md).
+为了让用户能够轻松地封装使用不同语言和工具包构建的机器学习组件，我们提供了封装器，使您可以轻松地构建在 seldon-core 内运行代码的 docker 容器。我们目前推荐的工具是 RedHat 的 Source-to-Image。更多细节可以在 [模型封装文档](../wrappers/language_wrappers.md)找到。
 
-### 2. Define Runtime Service Graph
+### 2. 定义运行时服务图
 
-To run your machine learning graph on Kubernetes you need to define how the components you created in the last step fit together to represent a service graph. This is defined inside a `SeldonDeployment` Kubernetes Custom resource. A [guide to constructing this inference graph is provided](../graph/inference-graph.md).
+要在 Kubernetes 上运行机器学习图，您需要在最后一步中创建一个服务图来定义所创建的组件如何组合运行。这是在 `SeldonDeployment` Kubernetes 自定义资源中定义的。这里提供了[推理图构建指南](../graph/inference-graph.md)。
 
 ![graph](./graph.png)
 
-### 3. Deploy and Serve Predictions
+### 3. 部署发布预估服务
 
-You can use `kubectl` to deploy your ML service like any other Kubernetes resource. This is discussed [here](deploying.md). Once deployed you can get predictions by [calling the exposed API](serving.md).
-
-
-## Hands on Example of Seldon Core Workflow
+像其他 Kubernetes 资源一样，你可以使用 `kubectl` 来部署 ML 服务。可在[这里](deploying.md)参与讨论。部署后，可通过[调用公开 API ](serving.md)来获取预估。
 
 
-### Install Seldon Core in your Cluster
+## Seldon Core 工作流示例
 
-**Install using Helm 3 (you can also use Kustomize)**
+
+### 在集群安装 Seldon Core
+
+**使用 Helm 3 安装（同样可以使用 Kustomize）**
 
 ```bash
 kubectl create namespace seldon-system
@@ -49,24 +49,24 @@ helm install seldon-core seldon-core-operator \
     # You can set ambassador instead with --set ambassador.enabled=true
 ```
 
-For a more advanced guide that shows you how to install Seldon Core with many different options and parameters you can dive further in our [detailed installation guide](./install.html).
+有关展示如何使用不同参数和选项安装 Seldon Core 的高级指南，可在我们的[详细安装指南](./install.html)中进一步了解。
 
-### Productionise your first Model with Seldon Core
+### 使用 Seldon Core 制作您的第一个模型
 
-There are two main ways you can productionise using Seldon Core:
+通过两种主要方式使用 Seldon Core 进行产品化：
 
-* Wrap your model with our pre-packaged inference servers
-* Wrap your model with our language wrappers
+* 使用我们预先封装的推理服务器封装您的模型
+* 使用我们的语言封装器封装您的模型
 
-#### Wrap your model with our pre-packaged inference servers
+#### 用我们预先封装的推理服务器封装您的模型
 
-You can use our pre-packaged inference servers which are optimized for popular machine learning frameworks and languages, and allow for simplified workflows that can be scaled across large number of usecases.
+您可以使用我们针对主流机器学习框架和编程语言进行了优化的预封装推理服务器，并允许以简化的工作流扩展大量用例部署。
 
-A typical workflow would normally be programmatic (triggered through CI/CD), however below we show the commands you would normally carry out.
+典型的工作流程通常是程序化的（通过 CI/CD 触发），但下面我们将展示您通常会执行的命令。
 
-**1. Export your model binaries / artifacts**
+**1. 导出模型二进制文件/制品**
 
-Export your model binaries using the instructions provided in the requirements outlined in the respective [pre-packaged model server](../servers/overview.html) you are planning to use.
+使用您计划使用的[预封装模型服务器](../servers/overview.html)，按照提供的概述说明导出模型二进制文件。
 
 ```python
 >>my_sklearn_model.train(...)
@@ -75,21 +75,21 @@ Export your model binaries using the instructions provided in the requirements o
 [Created file at /mypath/model.joblib]
 ```
 
-**2. Upload your model to an object store**
+**2. 上传模型到对象存储**
 
-You can upload your models into any of the object stores supported by our pre-package model server file downloader, or alternatively add your custom file downloader.
+您可以将模型上传到我们封装的模型文件下载服务支持的任何对象存储服务，或者添加自定义的文件下载器。
 
-For simplicity we have already uploaded it to the bucket so you can just proceed to the next step and run your model on Seldon Core.
+为简单起见，我们已经将其上传到存储桶，因此您可以继续下一步并在 Seldon Core 上运行您的模型。
 
 ```console
-$ gsutil cp model.joblib gs://seldon-models/v1.14.0/sklearn/iris/model.joblib
+$ gsutil cp model.joblib gs://seldon-models/v1.10.0-dev/sklearn/iris/model.joblib
 
-[ Saved into gs://seldon-models/v1.14.0/sklearn/iris/model.joblib ]
+[ Saved into gs://seldon-models/v1.10.0-dev/sklearn/iris/model.joblib ]
 ```
 
-**3. Deploy to Seldon Core in Kubernetes**
+**3. 部署到 Kubernetes 中的 Seldon Core**
 
-Finally you can just deploy your model by loading the binaries/artifacts using the pre-packaged model server of your choice. You can build [complex inference graphs](../graph/inference-graph.html) that use multiple components for inference.
+最后，您可以通过使用选择的预封装模型服务器加载二进制文件/制品来部署您的模型。您可以构建使用多个组件进行推理的[复杂推理图](../graph/inference-graph.html)。
 
 ```yaml
 $ kubectl apply -f - << END
@@ -110,15 +110,15 @@ spec:
 END
 ```
 
-**4. Send a request in Kubernetes cluster**
+**4. 在 Kubernetes 集群中发送请求**
 
-Every model deployed exposes a standardised User Interface to send requests using our OpenAPI schema.
+部署的每个模型都公开了一个标准化的用户界面，以使用 OpenAPI 模式发送请求。
 
-This can be accessed through the endpoint `http://<ingress_url>/seldon/<namespace>/<model-name>/api/v1.0/doc/` which will allow you to send requests directly through your browser.
+可以直接通过访问 `http://<ingress_url>/seldon/<namespace>/<model-name>/api/v1.0/doc/` 在浏览器直接发送请求。
 
 ![](../images/rest-openapi.jpg)
 
-Or alternatively you can send requests programmatically using our [Seldon Python Client](../python/seldon_client.html) or another Linux CLI:
+或者，您可以使用我们的 [Seldon Python 客户端](../python/seldon_client.html)或其他 Linux CLI 工具发送请求：
 
 ```console
 $ curl -X POST http://<ingress>/seldon/model-namespace/iris-model/api/v1.0/predictions \
@@ -144,15 +144,15 @@ $ curl -X POST http://<ingress>/seldon/model-namespace/iris-model/api/v1.0/predi
 }
 ```
 
-#### Wrap your model with our language wrappers
+#### 使用我们的语言封装器封装您的模型
 
-Below are the high level steps required to containerise your model using Seldon Core's Language Wrappers.
+以下是使用 Seldon Core 语言封装器容器化模型的高级步骤。
 
-Language wrappers are used for more custom use-cases that require dependencies that are not covered by our pre-packaged model servers. Language wrappers can be built using our graduated Python and Java wrappers - for further details check out our [Language Wrappers section](../wrappers/language_wrappers.html).
+语言封装器用于更多我们的预封装模型服务器未涵盖依赖的自定义用例。可以使用我们已孵化的 Python 和 Java 构建语言封装器 - 有关更多详细信息，请查看我们的[语言封装器部分](../wrappers/language_wrappers.html)。
 
-**1. Export your model binaries and/or artifacts:**
+**1. 导出模型二进制文件/制品：**
 
-In this case we are also exporting the model binaries/artifacts, but we will be in charge of the logic to load the models. This means that we can use third party dependencies and even external system calls. Seldon Core is running production use-cases with very heterogeneous models.
+在这种情况下，我们还将导出模型二进制文件/制品，除此之外还需处理加载模型的逻辑。这意味着我们可以使用第三方依赖甚至外部系统调用。Seldon Core 可运行异构模型的生产用例。
 
 ```python
 >> my_sklearn_model.train(...)
@@ -161,11 +161,11 @@ In this case we are also exporting the model binaries/artifacts, but we will be 
 [Created file at /mypath/model.joblib]
 ```
 
-**2. Create a wrapper class Model.py**
+**2. 创建封装类 Model.py**
 
-In this case we're using the Python language wrapper, which allows us to create a custom wrapper file which allows us to expose all functionality through the `predict` method - any HTTP/GRPC requests sent through the API are passed to that function, and the response will contain whatever we return from that function.
+以下示例，我们使用 Python 语言封装器，它允许我们创建一个自定义封装器文件通过 `predict` 方法公开所有功能 - 通过 API 发送 HTTP/GRPC 请求都传递给该函数，并且输出该函数返回的任何内容响应。
 
-The python SDK also allows for other functions such as `load` for loading logic, `metrics` for custom Prometheus metrics, `tags` for metadata, and more.
+Python SDK 还支持其他功能，例如 `load` 加载逻辑、自定义 Prometheus 指标 `metrics`、元数据 `tags` 等。
 
 ```python
 class Model:
@@ -177,9 +177,9 @@ class Model:
         return output
 ```
 
-**3. Test model locally**
+**3. 本地测试模型**
 
-Before we deploy our model to production, we can actually run our model locally using the [Python seldon-core Module](../python/python_module.md) microservice CLI functionality.
+在我们将模型部署到生产环境之前，我们实际上可以使用 [Python seldon-core Module](../python/python_module.md)微服务 CLI 功能在本地运行我们的模型。
 
 ```console
 $ seldon-core-microservice Model REST --service-type MODEL
@@ -210,19 +210,19 @@ $ curl -X POST localhost:5000/api/v1.0/predictions \
 }
 ```
 
-**4. Use the Seldon tools to containerise your model**
+**4. 使用 Seldon 工具来将模型容器化**
 
-Now we can use the Seldon Core utilities to convert our python class into a fully fledged Seldon Core microservice. In this case we are also containerising the model binaries.
+现在我们可以使用 Seldon Core 实用程序将我们的 Python 类转换为一个完全成熟的 Seldon Core 微服务。示例中，我们还将容器化模型二进制文件。
 
-The result below is a container with the name `sklearn_iris` and the tag `0.1` which we will be able to deploy using Seldon Core.
+以下结果生成一个名为 `sklearn_iris` 标签为 `0.1` 的可使用 Seldon Core 部署的容器镜像。
 
 ```console
-s2i build . seldonio/seldon-core-s2i-python3:1.14.0 sklearn_iris:0.1
+s2i build . seldonio/seldon-core-s2i-python3:1.10.0-dev sklearn_iris:0.1
 ```
 
-**5. Deploy to Kubernetes**
+**5. 发布到 Kubernetes**
 
-Similar to what we did with the pre-packaged model server, we define here our deployment structure however we also have to specify the container that we just built, together with any further containerSpec options we may want to add.
+与预先封装的模型服务器类似，在这里我们定义了部署结构，但是我们还须指定我们刚刚构建的镜像，以及我们可能想要进一步添加的任何 containerSpec 选项。
 
 ```yaml
 $ kubectl apply -f - << END
@@ -246,15 +246,15 @@ spec:
 END
 ```
 
-**6. Send a request to your deployed model in Kubernetes**
+**6. 向在 Kubernetes 中部署的模型发送请求**
 
-Every model deployed exposes a standardised User Interface to send requests using our OpenAPI schema.
+每个部署的模型都公开能够使用 OenAPI 发送请求的用户界面。
 
-This can be accessed through the endpoint `http://<ingress_url>/seldon/<namespace>/<model-name>/api/v1.0/doc/` which will allow you to send requests directly through your browser.
+可通过访问 `http://<ingress_url>/seldon/<namespace>/<model-name>/api/v1.0/doc/` 直接在浏览器发送请求。
 
 ![](https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/rest-openapi.jpg)
 
-Or alternatively you can send requests programmatically using our [Seldon Python Client](../python/seldon_client.html) or another Linux CLI:
+或者，您使用我们的 [Seldon Python 客户端](../python/seldon_client.html)或其他 Linux CLI 发送请求：
 
 ```console
 $ curl -X POST http://<ingress>/seldon/model-namespace/iris-model/api/v1.0/predictions \
@@ -280,42 +280,42 @@ $ curl -X POST http://<ingress>/seldon/model-namespace/iris-model/api/v1.0/predi
 }
 ```
 
-## Hands on Examples
+## 动手实例
 
-Below are a set of Jupyter notebooks that you can try out yourself for deploying Seldon Core as well as using some of the more advanced features.
+下面是一组 Jupyter 笔记，您可以自己试用它们来部署 Seldon Core 以及使用一些更高级的功能。
 
-### Prepacked Model Servers
+### 预打包服务器
 
- * [Deploy a Scikit-learn Model Binary](../servers/sklearn.html)
- * [Deploy a Tensorflow Exported Model](../servers/tensorflow.html)
- * [MLflow Pre-packaged Model Server A/B Test](../examples/mlflow_server_ab_test_ambassador.html)
- * [Deploy an XGBoost Model Binary](../servers/xgboost.html)
- * [Deploy Pre-packaged Model Server with Cluster's MinIO](../examples/minio-sklearn.html)
+ * [发布 Scikit-learn 二进制模型](../servers/sklearn.html)
+ * [发布 Tensorflow 导出模型](../servers/tensorflow.html)
+ * [MLflow 预封装模型服务 A/B Test](../examples/mlflow_server_ab_test_ambassador.html)
+ * [发布 XGBoost 二进制模型](../servers/xgboost.html)
+ * [使用集群 MinIO 发布预封装模型服务](../examples/minio-sklearn.html)
 
-### Recommended starter tutorials for custom inference code
+### 自定义推理代码的推荐入门教程
 
-* [Tensorflow Deep MNIST Tutorial](../examples/tfserving_mnist.html) (Try it also in [AWS](../examples/aws_eks_deep_mnist.html), [Azure](../examples/azure_aks_deep_mnist.html), [GKE with GPU](../examples/gpu_tensorflow_deep_mnist.html) and [Alibaba Cloud](../examples/alibaba_ack_deep_mnist.html))
-* [SKlearn SpaCy Reddit Text Classification Tutorial](../examples/sklearn_spacy_text_classifier_example.html)
-* [Deploy your Java models with the H2O example](../examples/h2o_mojo.html)
+* [Tensorflow Deep MNIST 教程](../examples/tfserving_mnist.html) （尝试在 [AWS](../examples/aws_eks_deep_mnist.html)，[Azure](../examples/azure_aks_deep_mnist.html)，[带有GPU 的 GKE](../examples/gpu_tensorflow_deep_mnist.html) 以及 [阿里云](../examples/alibaba_ack_deep_mnist.html)中使用）
+* [SKlearn SpaCy Reddit Text Classification 教程](../examples/sklearn_spacy_text_classifier_example.html)
+* [发布 Java H2O 模型示例](../examples/h2o_mojo.html)
 
-### More complex deployments
+### 更复杂的部署
 
-* [Example Seldon Core Deployments using Helm](../examples/helm_examples.html)
-* [Canary deployment with Seldon and Istio](../examples/istio_canary.html)
-* [Autoscaling Seldon Example](../examples/autoscaling_example.html)
-* [Seldon Model with Custom Metrics](../examples/custom_metrics.html)
+* [使用 Helm 部署 Seldon Core Deployments 示例](../examples/helm_examples.html)
+* [使用 Seldon 和 Istio 进行 Canary 部署](../examples/istio_canary.html)
+* [自动缩放 Seldon 示例](../examples/autoscaling_example.html)
+* [自定义 Seldon 模型指标](../examples/custom_metrics.html)
 
-### End-to-end / use-case tutorials
+### 手把手使用教程
 
-* [End-to-end Reusable ML Pipeline with Seldon and Kubeflow](../examples/kubeflow_seldon_e2e_pipeline.html)
-* [Seldon Deployment of Income Classifier and Alibi Anchor Explainer](../examples/explainer_examples.html)
+* [使用 Seldon 和 Kubeflow 的手把手可服用 ML 管道](../examples/kubeflow_seldon_e2e_pipeline.html)
+* [Seldon 部署 Income Classifier 和 Alibi Anchor Explainer](../examples/explainer_examples.html)
 
-### Integration with other platforms
+### 与其他平台的集成
 
-* [Sagemaker (Seldon SKLearn integration example)](../examples/sagemaker_sklearn.html)
-* [Tensorflow Serving (TFServing) integration example](../examples/tfserving_mnist.html)
-* [MLFlow integration example](../examples/mlflow_server_ab_test_ambassador.html)
+* [Sagemaker (Seldon SKLearn 集成示例)](../examples/sagemaker_sklearn.html)
+* [Tensorflow Serving (TFServing) 集成示例](../examples/tfserving_mnist.html)
+* [MLFlow 集成示例](../examples/mlflow_server_ab_test_ambassador.html)
 
-## About the name "Seldon Core"
+## 关于 "Seldon Core" 这个名字
 
-The name Seldon (ˈSɛldən) Core was inspired from [the Foundation Series (Scifi Novel)](https://en.wikipedia.org/wiki/Foundation_series) where it's premise consists of a mathematician called "Hari Seldon" who spends his life developing a theory of Psychohistory, a new and effective mathematical sociology which allows for the future to be predicted extremely accurate through long periods of time (across hundreds of thousands of years).
+Seldon (ˈSɛldən) Core 这个名字的灵感来自于 [the Foundation Series (Scifi Novel)](https://en.wikipedia.org/wiki/Foundation_series) 它的是由一位名叫 "Hari Seldon" 的数学家组成，他毕生都在发展一种心理历史理论，这是一种新的有效的数学社会学，可以展望未来在很长一段时间内（跨越数十万年）进行极其准确的预测。

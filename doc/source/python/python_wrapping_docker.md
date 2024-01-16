@@ -1,19 +1,19 @@
-# Packaging a Python model for Seldon Core using Docker
+# 使用 Docker 为 Seldon Core 打包 Python 模型
 
 
-In this guide, we illustrate the steps needed to wrap your own python model in a docker image ready for deployment with Seldon Core using Docker.
+在本指南中，我们说明了将您自己的 Python 模型封装在一个 docker 镜像中所需的步骤，该镜像准备使用 Docker 与 Seldon Core 一起部署。
 
-## Step 1 - Create your source code
+## 第 1 步 - 创建源代码
 
-You will need:
+你需要
 
- * A python file with a class that runs your model
- * A requirements.txt with a seldon-core entry
+ * 一个运行模型的 python 类文件按
+ * 带有 seldon-core 选项的 requirements.txt
 
-We will go into detail for each of these steps:
+我们将深入详细步骤：
 
-### Python file
-Your source code should contain a python file which defines a class of the same name as the file. For example, looking at our skeleton python model file at `wrappers/s2i/python/test/model-template-app/MyModel.py`:
+### Python 文件
+你的源代码应该包含一个类型与文件名相同的 python 文件。例如，我们的 python 模型脚手架 `wrappers/s2i/python/test/model-template-app/MyModel.py`：
 
 ```python
 class MyModel(object):
@@ -40,21 +40,21 @@ class MyModel(object):
         return X
 ```
 
- * The file is called MyModel.py and it defines a class MyModel
- * The class contains a predict method that takes an array (numpy) X and feature_names and returns an array of predictions.
- * You can add any required initialization inside the class init method.
- * Your return array should be at least 2-dimensional.
+ * 该文件名为 MyModel.py，它定义了一个类 MyModel
+ * 该类包含一个 predict 方法，该方法采用数组 (numpy) X 和 feature_names 并返回一个预测数组。
+ * 您可以在类 init 方法中添加任何必需的初始化。
+ * 您的返回数组应该至少是二维的。
 
 ### requirements.txt
-Populate a requirements.txt with any software dependencies your code requires. At a minimum the file should contain:
+填充您的代码所需的任何软件依赖项到 requirements.txt。该文件至少应包含：
 
 ```text
 seldon-core
 ```
 
-## Step 2 - Define the Dockerfile
+## 第 2 步 - 定义 Dockerfile
 
-Define a Dockerfile in the same directory as your source code and requirements.txt. It will define the core parameters needed by our python builder image to wrap your model as env vars. An example is:
+在与源代码和 requirements.txt 相同的目录中定义一个 Dockerfile。它将定义我们的 python 构建镜像所需的核心参数，以将您的模型封装为 env vars。一个例子是：
 
 ```dockerfile
 FROM python:3.7-slim
@@ -83,23 +83,23 @@ CMD exec seldon-core-microservice $MODEL_NAME --service-type $SERVICE_TYPE
 ```
 
 
-## Step 3 - Build your image
-Use `docker build . -t $ORG/$MODEL_NAME:$TAG` to create your Docker image from source code. A simple name can be used but convention is to use the ORG/IMAGE:TAG format.
+## 第 3 步 - 构建您的镜像
+使用 `docker build . -t $ORG/$MODEL_NAME:$TAG` 创建 Docker 镜像。可以使用一个简单的名称，但约定是使用 ORG/IMAGE:TAG 格式。
 
-## Using with Keras/Tensorflow Models
+## 与 Keras/Tensorflow 模型一起使用
 
-To ensure Keras models with the Tensorflow backend work correctly you may need to call `_make_predict_function()` on your model after it is loaded. This is because Flask may call the prediction request in a separate thread from the one that initialised your model. See the [keras issue](https://github.com/keras-team/keras/issues/6462) for further discussion.
+为了确保带有 Tensorflow 后端的 Keras 模型正常工作，您可能需要在加载模型后调用 `_make_predict_function()`。这是因为 Flask 可能会在与初始化模型的进程不同的线程中调用预测请求。请参阅 [keras 问题](https://github.com/keras-team/keras/issues/6462)以进行进一步讨论。
 
-## Environment Variables
-The required environment variables understood by the builder image are explained below. You can provide them in the Dockerfile or as `-e` parameters to `docker run`.
+## 环境变量
+下面解释了构建器映像所需的环境变量。可在 Dockerfile 或  `docker run` 用 `-e` 指定参数。
 
 
 ### MODEL_NAME
-The name of the class containing the model. Also the name of the python file which will be imported.
+包含模型的类的名称。还有将被导入的 python 文件的名称。
 
 ### SERVICE_TYPE
 
-The service type being created. Available options are:
+正在创建的服务类型。可用选项有：
 
  * MODEL
  * ROUTER
@@ -108,9 +108,9 @@ The service type being created. Available options are:
  * OUTLIER_DETECTOR
 
 
-### Flask Settings
+### Flask 设置
 
-See [Flask - Builtin Configuration Values](https://flask.palletsprojects.com/config/#builtin-configuration-values) for possible configurations; the following are configurable when prefixed with the `FLASK_` string (e.g. `FLASK_JSON_SORT_KEYS` translates to `JSON_SORT_KEYS` in Flask):
+查看 [Flask - Builtin Configuration Values](https://flask.palletsprojects.com/config/#builtin-configuration-values) 获取可能的配置；以下参数添加  `FLASK_` 字符串前缀时可设置（例如 `FLASK_JSON_SORT_KEYS` 在 Flask 会转换成 `JSON_SORT_KEYS` in Flask）：
 
  * DEBUG
  * EXPLAIN_TEMPLATE_LOADING
@@ -126,27 +126,27 @@ See [Flask - Builtin Configuration Values](https://flask.palletsprojects.com/con
  * TRAP_HTTP_EXCEPTIONS
  * TRAP_BAD_REQUEST_ERRORS
 
-## Creating different service types
+## 创建不同的服务类型
 
 ### MODEL
 
- * [A minimal skeleton for model source code](https://github.com/SeldonIO/seldon-core/tree/master/wrappers/s2i/python/test/model-template-app)
- * [Example model notebooks](../examples/notebooks.html)
+ * [最小化的模型源码脚手架](https://github.com/SeldonIO/seldon-core/tree/master/wrappers/s2i/python/test/model-template-app)
+ * [模型 notebooks 示例](../examples/notebooks.html)
 
 ### ROUTER
- * [Description of routers in Seldon Core](../analytics/routers.html)
- * [A minimal skeleton for router source code](https://github.com/SeldonIO/seldon-core/tree/master/wrappers/s2i/python/test/router-template-app)
+ * [Seldon Core 中路由定义](../analytics/routers.html)
+ * [最小化的模型路由源码脚手架](https://github.com/SeldonIO/seldon-core/tree/master/wrappers/s2i/python/test/router-template-app)
 
 ### TRANSFORMER
 
- * [A minimal skeleton for transformer source code](https://github.com/SeldonIO/seldon-core/tree/master/wrappers/s2i/python/test/transformer-template-app)
- * [Example transformers](https://github.com/SeldonIO/seldon-core/tree/master/examples/transformers)
+ * [小化的模型转换源码脚手架](https://github.com/SeldonIO/seldon-core/tree/master/wrappers/s2i/python/test/transformer-template-app)
+ * [转换器示例](https://github.com/SeldonIO/seldon-core/tree/master/examples/transformers)
 
 
-## Advanced Usage
+## 高级用法
 
-### Model Class Arguments
-You can add arguments to your component which will be populated from the `parameters` defined in the SeldonDeloyment when you deploy your image on Kubernetes. For example, our [Python TFServing proxy](https://github.com/SeldonIO/seldon-core/tree/master/servers/tfserving) has the class init method signature defined as below:
+### 模型类参数
+当发布镜像到 Kubernetes 时根据 SeldonDeloyment 中定义的内容进行填充 `parameters`。例如，我们的 [Python TFServing proxy](https://github.com/SeldonIO/seldon-core/tree/master/servers/tfserving_proxy) 具有如下定义的类 init 签名方法：
 
 ```python
 class TfServingProxy(object):
@@ -154,7 +154,7 @@ class TfServingProxy(object):
     def __init__(self,rest_endpoint=None,grpc_endpoint=None,model_name=None,signature_name=None,model_input=None,model_output=None):
 ```
 
-These arguments can be set when deploying in a Seldon Deployment. An example can be found in the [MNIST TFServing example](https://github.com/SeldonIO/seldon-core/blob/master/examples/models/tfserving-mnist/tfserving-mnist.ipynb) where the arguments are defined in the [SeldonDeployment](https://github.com/SeldonIO/seldon-core/blob/master/examples/models/tfserving-mnist/mnist_tfserving_deployment.json.template)  which is partly show below:
+当部署 Seldon Deployment 以下参数可设置。可查看示例 [MNIST TFServing example](https://github.com/SeldonIO/seldon-core/blob/master/examples/models/tfserving-mnist/tfserving-mnist.ipynb) 中在 [SeldonDeployment](https://github.com/SeldonIO/seldon-core/blob/master/examples/models/tfserving-mnist/mnist_tfserving_deployment.json.template) 定义的部分参数示例：
 
 ```json
 {
@@ -194,13 +194,13 @@ These arguments can be set when deploying in a Seldon Deployment. An example can
 ```
 
 
-The allowable `type` values for the parameters are defined in the [proto buffer definition](https://github.com/SeldonIO/seldon-core/blob/44f7048efd0f6be80a857875058d23efc4221205/proto/seldon_deployment.proto#L117-L131).
+`type` 参数允许值在 [proto buffer 定义](https://github.com/SeldonIO/seldon-core/blob/44f7048efd0f6be80a857875058d23efc4221205/proto/seldon_deployment.proto#L117-L131)查看。
 
 
-### Custom Metrics
+### 自定义指标
 `from version 0.3`
 
-To add custom metrics to your response you can define an optional method `metrics` in your class that returns a list of metric dicts. An example is shown below:
+要将自定义指标添加到您的响应中，您可以 类中定义一个可选方法 `metrics`，该方法返回一个指标字典列表。例如下所示：
 
 ```python
 class MyModel(object):
@@ -212,14 +212,14 @@ class MyModel(object):
         return [{"type": "COUNTER", "key": "mycounter", "value": 1}]
 ```
 
-For more details on custom metrics and the format of the metric dict see [here](../analytics/analytics.html#custom-metrics).
+有关自定义指标和指标 `dict` 格式的更多详细信息，请参见[此处](../analytics/analytics.html#custom-metrics)。
 
-There is an [example notebook illustrating a model with custom metrics in python](../examples/custom_metrics.html).
+这是一个 [带有自定义指标 python 模型的 notebook 说明示例](../examples/custom_metrics.html)。
 
 ### Custom Request Tags
 `from version 0.3`
 
-To add custom request tags data you can add an optional method `tags` which can return a dict of custom meta tags as shown in the example below:
+要添加自定义请求标记数据，您可以添加一个可选方法 `tags`，该方法可以返回自定义元数据的字典，如下例所示：
 
 ```python
 class MyModel(object):

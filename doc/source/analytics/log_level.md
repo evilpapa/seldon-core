@@ -1,44 +1,35 @@
-# Logging and log level
+# 日志和日志等级
 
-Out of the box, your Seldon deployments will be pre-configured to a sane set of
-defaults when it comes to logging.
-These settings involve both the logging level and the structure of the log
-messages.
+开箱即用，在日志记录方面，您的 Seldon 部署将预先配置为一组合理的默认值。
+这些设置涉及日志记录级别和日志消息的结构。
 
-These settings can be changed on a per-component basis.
+这些设置可以基于每个组件进行更改。
 
-## Log level
+## 日志等级
 
-By default, all the components in your Seldon deployment will come out of the
-box with `INFO` as the default log level.
+默认情况下，您的 Seldon 部署中的所有组件都将 `INFO` 作为默认日志级别。
 
-To change the log level you can use the `SELDON_LOG_LEVEL` environment
-variable.
-In general, this variable can be set to the following log levels (from more to
-less verbose):
+您可以使用 `SELDON_LOG_LEVEL` 环境变量更改日志级别。
+一般来说，这个变量可以设置为以下日志级别（从多到少）：
 
 - `DEBUG`
 - `INFO`
 - `WARNING` 
 - `ERROR`
 
-### Python inference servers
+### Python 预估服务器
 
 .. Note:: 
-   Setting the ``SELDON_LOG_LEVEL`` to ``WARNING`` and above in the Python
-   wrapper will disable the server's access logs, which are considered
-   ``INFO``-level logs.
+   在 Python 封装上设置 ``SELDON_LOG_LEVEL`` 为 ``WARNING`` 
+   和以上会禁用服务器的请求日志，
+   推荐 ``INFO`` 等级。
 
-When using the [Python wrapper](../python/index) (including the
-[MLflow](../servers/mlflow), [SKLearn](../servers/sklearn) and
-[XGBoost](../servers/xgboost) pre-package servers), you can control the log
-level using the `SELDON_LOG_LEVEL` environment variable.
-Note that the `SELDON_LOG_LEVEL` variable has to be set in the **respective
-container** within your inference graph.
+使用 [Python wrapper](../python/index) （包括[MLflow](../servers/mlflow), [SKLearn](../servers/sklearn) 和 [XGBoost](../servers/xgboost) 预封装服务器）时，
+您可以使用 `SELDON_LOG_LEVEL` 环境变量控制日志级别。
+请注意，
+`SELDON_LOG_LEVEL` 必须在推理图中的**相应容器中** 设置变量。
 
-For example, to set it in each container running with the python wrapper, you
-would do it as follows by adding the environment variable `SELDON_LOG_LEVEL` to
-the containers running images wrapped by the python wrapper:
+例如，要在使用 python 封装器运行的每个容器中设置它，您可以通过添加 `SELDON_LOG_LEVEL` 环境变量到由 python 封装器运行镜像容器容器：
 
 ```javascript
 "spec": {
@@ -69,7 +60,7 @@ the containers running images wrapped by the python wrapper:
 }
 ```
 
-Once this has been set, it's possible to use the log in your wrapper code as follows:
+一旦设置完成，就可以在封装器代码中使用日志，如下所示：
 
 ```python
 import logging
@@ -78,11 +69,9 @@ log = logging.getLogger()
 log.debug(...)
 ```
 
-### Log level in the service orchestrator
+### 服务编排器中的日志级别
 
-To change the log level in the service orchestrator, you can set the
-`SELDON_LOG_LEVEL`  environment variable on the `svcOrchSpec` section of the
-`SeldonDeployment` CRD:
+要在服务编排器中更改日志级别，您可以在 `SeldonDeployment` CRD 部分的 `svcOrchSpec` 设置 `SELDON_LOG_LEVEL` 环境变量：
 
 ```javascript
 "spec": {
@@ -103,16 +92,13 @@ To change the log level in the service orchestrator, you can set the
 }
 ```
 
-## Log format and sampling
+## 日志格式和采样
 
-By default, Seldon's service orchestrator and operator will serialise the log
-messages as JSON and will enable log sampling.
-This behaviour can be disabled by setting the `SELDON_DEBUG` variable to
-`true`.
-Note that this will **enable "debug mode"**, which can also have other side
-effects.
+默认情况下，Seldon 的服务编排器和操作器会将日志消息序列化为 JSON 并启用日志采样。
+可以通过将 `SELDON_DEBUG` 变量设置为 `true` 来禁用此行为。
+注意这将 **开启 "debug mode"**，这也会产生其他副作用。
 
-For example, to change this on the service orchestrator, you would do:
+例如，要在服务编排器上更改此设置，您可以执行以下操作：
 
 ```javascript
 "spec": {

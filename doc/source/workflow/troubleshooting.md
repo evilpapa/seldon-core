@@ -1,23 +1,23 @@
-# Troubleshooting Guide
+# 故障排查指南
 
-If your Seldon Deployment does not seem to be running here are some tips to
-diagnose the issue.
+如果 Seldon Deployment 未在此处运行，
+则有一些提示来诊断问题。
 
-## My model does not seem to be running
+## 我的模型似乎没有运行
 
-Check whether the Seldon Deployment is running:
+检查 Seldon Deployment 是否运行：
 
 ```bash
 kubectl get sdep
 ```
 
-If it exists, check its status, for a Seldon deployment called `<name>`:
+如果它存在，检查名为 `<name>` 的 Seldon deployment 的状态：
 
 ```bash
 kubectl get sdep <name> -o jsonpath='{.status}'
 ```
 
-This might look like:
+看起来像：
 
 ```bash
 >kubectl get sdep
@@ -29,7 +29,7 @@ mymodel   1m
 map[predictorStatus:[map[name:mymodel-mymodel-7cd068f replicas:1 replicasAvailable:1]] state:Available]
 ```
 
-If you have the `jq` tool installed you can get a nicer output with:
+如果安装了 `jq` 可获得更好的输出：
 
 ```bash
 >kubectl get sdep mymodel -o json | jq .status
@@ -45,7 +45,7 @@ If you have the `jq` tool installed you can get a nicer output with:
 }
 ```
 
-For a model with invalid json/yaml an example is shown below:
+无效的 json/yaml 的模型示例：
 
 ```bash
 >kubectl get sdep seldon-model -o json | jq .status
@@ -55,66 +55,65 @@ For a model with invalid json/yaml an example is shown below:
 }
 ```
 
-## Check all events on the SeldonDeployment
+## 检查所有 SeldonDeployment 事件
 
 ```bash
 kubectl describe sdep mysdep
 ```
 
-This will show each event from the operator including create, update, delete
-and error events.
+这将显示 operator 所有的创建、更新、删除和错误时间的时间信息。
 
-## My Seldon Deployment remains in "creating" state
+## Seldon Deployment 一直停留在“creating”状态
 
-Check if the pods are running successfully.
+检查pods是否运行成功。
 
-## I get 404s when calling the Ambassador endpoint
+## 访问 Ambassador 节点返回404
 
-If your model is running and you are using Ambassador for ingress and are
-having problems check the diagnostics page of Ambassador.
-See [here](https://www.getambassador.io/docs/edge-stack/latest/topics/running/debugging/).
-You can then find out what path your model can be found under to ensure the URL
-you are using is correct.
+模型运行中，
+并使用 Ambassador 作为 ingress 有问题时，
+请参阅 [Ambassador 文档](https://www.getambassador.io/docs/edge-stack/latest/topics/running/debugging/)。
+你可以找到模型
+执行的正确 URL 路径。
 
-If your ambassador isn't running at all then check the pod logs with `kubectl logs <pod_name>`.
-Note that if ambassador is installed with cluster-wide scope then its rbac
-should also not be namespaced, otherwise there will be a permissions error.
+如果 ambassador 未运行，查看 pod 日志： `kubectl logs <pod_name>`。
+注意 ambassador 是否以集群范围机型安装，
+其 rbac 设置不被限定在特定命名空间，否则会出现权限错误。
 
-## I get 500s when calling my model over the API
+## 通过API请求模型返回500错误
 
-Check the logs of your running model pods.
+查看运行模型的 pod 日志
 
-## My Seldon Deployment is not listed
+## Seldon Deployment 未列出
 
-Check the logs of the Seldon Operator.
-This is the pod which handles the Seldon Deployment graphs sent to Kubernetes.
-On a default installation, you can find the operator pod on the `seldon-system`
-namespace.
-The pod will be labelled as `control-plane=seldon-controller-manager`, so to
-get the logs you can run:
+查看 Seldon Operator 日志。
+他是处理 Seldon Deployment graphs 发送到 Kubernetes 集群的 pod。
+默认安装下
+你可以在`seldon-system`中找到 operator pod。
+他被打成 `control-plane=seldon-controller-manager` 标签，
+通过如下命令查看日志：
 
 ```bash
 kubectl logs -n seldon-system -l control-plane=seldon-controller-manager
 ```
 
-### Invalid memory address
+### 错误内存地址
 
-On some cases, you will see an error message on the operator logs like the
-following:
+有时候会看到 operator 
+出现如下日志错误：
 
 ```
 panic: runtime error: invalid memory address or nil pointer dereference
 ```
 
-This error can be caused by empty or unexpected values in the
-`SeldonDeployment` spec.
-The main cause is usually a misconfiguration of the mutating webhook.
-To fix it, you can try to [re-install Seldon Core](./install.md) in your
-cluster.
+这种错误通常是有空或者
+异常 `SeldonDeployment` spec值导致。
+通常主要为错误的 webhook 配置导致。
+可尝试通过[重新安装 Seldon Core](./install.md)
+来修复他。
 
-## I have tried the above and I'm still confused
+## 已经进行了上述尝试，但仍有问题
 
-- Contact our [Slack Community](https://join.slack.com/t/seldondev/shared_invite/enQtMzA2Mzk1Mzg0NjczLTJlNjQ1NTE5Y2MzMWIwMGUzYjNmZGFjZjUxODU5Y2EyMDY0M2U3ZmRiYTBkOTRjMzZhZjA4NjJkNDkxZTA2YmU)
-- Create an [issue on Seldon Core's Github repo](https://github.com/SeldonIO/seldon-core/issues).
-  Please make sure to add any diagnostics from the above suggestions to help us
-  diagnose your issue.
+- 联系[Slack 社区](https://join.slack.com/t/seldondev/shared_invite/enQtMzA2Mzk1Mzg0NjczLTJlNjQ1NTE5Y2MzMWIwMGUzYjNmZGFjZjUxODU5Y2EyMDY0M2U3ZmRiYTBkOTRjMzZhZjA4NjJkNDkxZTA2YmU) 
+- 创建一个 [Seldon Core’s Github repo]讨论(https://github.com/SeldonIO/seldon-core/issues)。
+  请务必添加上述建议的任何诊断，
+  以帮助我们诊断您的问题。

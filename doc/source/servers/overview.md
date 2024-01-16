@@ -1,15 +1,14 @@
-# Prepackaged Model Servers
+# 预备打包模型服务器
 
-Seldon provides several prepacked servers you can use to deploy trained models:
+Seldon 提供几个预封装服务器，您可以使用这些服务器部署训练好的模型：
 
-- [SKLearn Server](./sklearn.html)
-- [XGBoost Server](./xgboost.html)
-- [Tensorflow Serving](./tensorflow.html)
-- [MLflow Server](./mlflow.html)
-- [Custom Servers](./custom.html)
-- [Alibi Explainers](../analytics/explainers.html)
+- [SKLearn 服务](./sklearn.html)
+- [XGBoost 服务](./xgboost.html)
+- [Tensorflow Serving 服务](./tensorflow.html)
+- [MLflow 服务](./mlflow.html)
+- [自定义服务](./custom.html)
 
-For these servers you only need the location of the saved model in a local filestore, Google bucket, S3 bucket, azure or minio. An example manifest with an sklearn server is shown below:
+针对这些打包好的服务只需要定义存储在本地、Google bucket、S3 bucket、azure 或 minio 对象存储的模型文件位置。使用 Sklearn 服务的示例如下：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -26,40 +25,35 @@ spec:
         modelUri: gs://seldon-models/v1.14.0/sklearn/iris
 ```
 
-By default only public models published to Google Cloud Storage will be accessible.
-See below notes on how to configure credentials for AWS S3, Minio and other storage solutions.
+默认情况下，只有发布到 Google 云存储的公共模型才能访问。 
+有关如何配置 AWS S3、Minio 和其他存储解决方案的凭据，请参阅下文。
 
 
-## Init Containers
+## 初始化容器
 
-Seldon Core uses [Init Containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) to download model binaries for the prepackaged model servers. We use [rclone](https://rclone.org/)-based [storage initailizer](https://github.com/SeldonIO/seldon-core/tree/master/components/rclone-storage-initializer
-) for our `Init Containers` by defining
+Seldon Core 使用 [Init Containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) 为预封装服务下载模型二进制文件。
+我们使用 [rclone](https://rclone.org/) 实现方式的 [storage initailizer](https://github.com/SeldonIO/seldon-core/tree/master/components/rclone-storage-initializer) 来定义 [helm values](../charts/seldon-core-operator.html#values) 中的`Init Containers`。
 
 ```yaml
 storageInitializer:
   image: seldonio/rclone-storage-initializer:1.14.0
 ```
-in our default [helm values](../charts/seldon-core-operator.html#values).
-See the [Dockerfile](https://github.com/SeldonIO/seldon-core/blob/master/components/rclone-storage-initializer/Dockerfile
-) for a detailed reference.
-You can overwrite this value to specify another default `initContainer`. See details on requirements bellow
+可参考 [Dockerfile](https://github.com/SeldonIO/seldon-core/blob/master/components/rclone-storage-initializer/Dockerfile)。修改配置来指定为其他 `initContainer`，查看以下要求明细：
 
-Secrets are injected into the init containers as environmental variables from kubernetes `secrets`.
-The default secret name can be defined by setting following [helm value](../charts/seldon-core-operator.html#values)
+Kubernetes 将 `secrets` 密钥信息作为环境变量注入到 init 容器。默认的 secret 名称可通过 [helm value](../charts/seldon-core-operator.html#values) 设置。
 
 ```yaml
 predictiveUnit:
   defaultEnvSecretRefName: ""
 ```
 
-Note: prior to Seldon Core 1.8 we were using `kfserving/storage-initializer`, see [these](./kfserving-storage-initializer.md) notes if you wish to keep using it.
+备注：Seldon Core 1.8 之前使用的时 `kfserving/storage-initializer`，想继续使用它，请参考[这里](kfserving-storage-initializer.xhtml)。
 
+### 自定义 Init Containers
 
-### Customizing Init Containers
+通过 helm values 自定义**全局** `initContainer` 镜像和默认 `secret`。
 
-You can specify a custom `initContainer` image and default `secret` **globally** by overwriting the helm values specified in the previous section.
-
-To illustrate how `initContainers` are used by the prepackaged model servers, consider a following Seldon Deployment with `volumes`, `volumeMounts` and `initContainers` equivalent to ones that would be injected by the `Seldon Core Operator` if this was prepackaged model server:
+要明白预封装服务器如何使用 `initContainers`，请参考下面使用 Seldon Deployment 的配置文件，其中`volumes`, `volumeMounts` 和 `initContainers` 会被 `Seldon Core Operator` 注入到服务中
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1
@@ -110,15 +104,15 @@ spec:
             value: '[{"name":"model_uri","value":"/mnt/models","type":"STRING"}]'
 ```
 
-Key observations:
-- Our prepackaged model will expect model binaries to be saved into `/mnt/models` path
-- Default `initContainers` name is constructed from `{predictiveUnitName}-model-initializer`
-- The `entrypoint` of the `container` must take two arguments:
-  - First representing the models URI
-  - Second the desired path where binary should be downloaded to
-- If user would to provide their own `initContainer` which name matches the above pattern it would be used as provided
+主要查看：
+- 预封装计算服务依赖 模型二进制文件存储到 `/mnt/models` 路径
+- `initContainers` 由 `{predictiveUnitName}-model-initializer` 构造
+- `container` 的 `entrypoint` 必须接收两个参数
+  - 一个存储模型的 URI
+  - 一个为模型文件下载后的存储路径
+- 如果用户要提供自己的名称匹配上述模式，它将按规定使用 initContainer
 
-This is equivalent to the following `sklearn-iris` Seldon Deployment. As we can see using prepackaged model servers allow one to avoid defining boilerplate and make definition much cleaner:
+例如下面 `sklearn-iris` Seldon Deployment 的配置。正如我们所看到的，使用预封装模型服务器可以避免很多自定义模板，使用上更简洁：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1
@@ -133,16 +127,17 @@ spec:
       name: classifier
       implementation: SKLEARN_SERVER
       modelUri: s3://sklearn/iris
-      storageInitializerImage: seldonio/rclone-storage-initializer:1.14.0  # Specify custom image here
-      envSecretRefName: seldon-init-container-secret                          # Specify custom secret here
+      storageInitializerImage: seldonio/rclone-storage-initializer:1.14.0  # 此处定义模型文件下载镜像
+      envSecretRefName: seldon-init-container-secret                       # 自定义密钥信息
 ```
-Note that image and secret used by Storage Initializer can be customised per-deployment.
 
-See our [example](../examples/custom_init_container.html) that explains in details how init containers are used and how to write a custom one using [rclone](https://rclone.org/) for cloud storage operations as an example.
+请注意，Storage Initializer 使用的镜像和秘密可以在每次部署时进行自定义。
 
-## Further Customisation for Prepackaged Model Servers
+查看[示例](../examples/custom_init_container.html) 了解初始化容器如何使用，以及如何自定义使用 [rclone](https://rclone.org/) 进行容器的云存储操作。
 
-If you want to customize the resources for the server you can add a skeleton `Container` with the same name to your podSpecs, e.g.
+## 预封装模型服务的深度定制
+
+如果想定义更多资源，可以在你的 podSpecs 中添加 `Container` 设置，如：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -163,54 +158,54 @@ spec:
     graph:
       name: classifier
       implementation: SKLEARN_SERVER
-      modelUri: gs://seldon-models/v1.14.0/sklearn/iris
+      modelUri: gs://seldon-models/sklearn/iris
 ```
 
-The image name and other details will be added when this is deployed automatically.
+发布时，镜像名称和其他配置参数会被自动添加进来。
 
-Next steps:
+后续步骤：
 
-- [Worked notebook](../examples/server_examples.html)
-- [SKLearn Server](./sklearn.html)
-- [XGBoost Server](./xgboost.html)
-- [Tensorflow Serving](./tensorflow.html)
-- [MLflow Server](./mlflow.html)
-- [SKLearn Server with MinIO](../examples/minio-sklearn.html)
+- [可用示例](../examples/server_examples.html)
+- [SKLearn 服务](./sklearn.html)
+- [XGBoost 服务](./xgboost.html)
+- [Tensorflow Serving服务](./tensorflow.html)
+- [MLflow 服务](./mlflow.html)
+- [基于MinIOn的SKLearn 服务](../examples/minio-sklearn.html)
 
-You can also build and add your own [custom inference servers](./custom.md),
-which can then be used in a similar way as the prepackaged ones.
+你也可以创建自己的[自定义预估服务](custom.xhtml)，它也可以像官方封装的服务一样进行使用。
 
-If your use case does not fit for a reusable standard server then you can create your own component using our wrappers.
+如果您的用例时不可重复使用的标准服务器类型，你也可以使用我们的语言封装器来创建自己的组件（相当于以 seldon 的标准开发自己的组件）。
+
+## 处理凭据
+
+### 一般说明
+
+使用环境变量可配置 Rclone：
 
 
-## Handling Credentials
-
-### General notes
-
-Rclone remotes can be configured using the environmental variables:
-```
+```yaml
 RCLONE_CONFIG_<remote name>_<config variable>: <config value>
 ```
 
-Note: multiple remotes can be configured simultaneously.
+注意：可以同时配置多个远端
 
-Once the remote is configured the modelUri that is compatible with `rclone` takes form
-```
+以上配置等同于 modelUri 与 `rclone` 方式的兼容。
+
+```yaml
 modelUri: <remote>:<bucket name>
 ```
-for example `modelUri: s3:sklearn/iris`.
 
-Note: Rclone will remove the leading slashes for buckets so this is equivalent to `s3://sklearn/iris`.
+例如 `modelUri: s3:sklearn/iris`.
 
-Below you will find a few example configurations. For other cloud solutions, please, consult great [documentation](https://rclone.org/) of the rclone project.
+注意: Rclone 将删除双斜杠，它等同于 `s3://sklearn/iris`
 
+如下为一些配置示例，其他云解决方案请参考牛逼哄哄的 [rclone 项目文档](https://rclone.org/)。
 
-### Example for public GCS configuration
+### 公共 GCS 配置示例
 
-Note: this is configured by default in the `seldonio/rclone-storage-initializer` image.
+注: 它默认被 `seldonio/rclone-storage-initializer` 镜像使用。
 
-Reference: [rclone documentation](https://rclone.org/googlecloudstorage/).
-
+参考文献: [rclone 文档](https://rclone.org/googlecloudstorage/)。
 
 ```yaml
 apiVersion: v1
@@ -223,7 +218,7 @@ stringData:
   RCLONE_CONFIG_GS_ANONYMOUS: "true"
 ```
 
-Example deployment
+部署
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1
@@ -241,10 +236,9 @@ spec:
       envSecretRefName: seldon-rclone-secret
 ```
 
+### minio 配置示例
 
-### Example minio configuration
-
-Reference: [rclone documentation](https://rclone.org/s3/#minio)
+参考文献: [rclone 文档](https://rclone.org/s3/#minio)
 
 ```yaml
 apiVersion: v1
@@ -261,28 +255,9 @@ stringData:
   RCLONE_CONFIG_S3_ENDPOINT: http://minio.minio-system.svc.cluster.local:9000
 ```
 
-### Example AWS S3 with access key and secret
+### 基于 IAM 权限的 AWS S3 配置
 
-Reference: [rclone documentation](https://rclone.org/s3/#amazon-s3)
-
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: seldon-rclone-secret
-type: Opaque
-stringData:
-  RCLONE_CONFIG_S3_TYPE: s3
-  RCLONE_CONFIG_S3_PROVIDER: aws
-  RCLONE_CONFIG_S3_ENV_AUTH: "false"
-  RCLONE_CONFIG_S3_ACCESS_KEY_ID: "<your AWS_ACCESS_KEY_ID here>"
-  RCLONE_CONFIG_S3_SECRET_ACCESS_KEY: "<your AWS_SECRET_ACCESS_KEY here>"
-```
-
-
-### Example AWS S3 with IAM roles configuration
-
-Reference: [rclone documentation](https://rclone.org/s3/#amazon-s3)
+参考文献: [rclone 文档](https://rclone.org/s3/#amazon-s3)
 
 ```yaml
 apiVersion: v1
@@ -298,42 +273,13 @@ stringData:
   RCLONE_CONFIG_S3_ENV_AUTH: "true"
 ```
 
+### PVC 方式示例
 
-### Example for GCP/GKE
+相较于对象存储，可以直接使用 PVC 方式。如果你有很多非常大文件，又想避免上传/下载，可通过 NFS 驱动器实现。
 
-Reference: [rclone documentation](https://rclone.org/googlecloudstorage/)
+使用以下格式 `modelUri` 配置来定义 PVC，唯一需要确认的是，以 `runAsUser` 参数运行的容器是否具备文件读写权限。
 
-For GCP/GKE, you will need create a service-account key and have it as local `json` file.
-First make sure that you have `[SA-NAME]@[PROJECT-ID].iam.gserviceaccount.com` service account created in the gcloud console that have sufficient permissions to access the bucket with your models (i.e. `Storage Object Admin`).
-
-Now, generate `keys` locally using the `gcloud` tool
-```bash
-gcloud iam service-accounts keys create gcloud-application-credentials.json --iam-account [SA-NAME]@[PROJECT-ID].iam.gserviceaccount.com
-```
-
-Now using the content of locally saved `gcloud-application-credentials.json` file create a secret
 ```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: seldon-rclone-secret
-type: Opaque
-stringData:
-  RCLONE_CONFIG_GCS_TYPE: google cloud storage
-  RCLONE_CONFIG_GCS_ANONYMOUS: "false"
-  RCLONE_CONFIG_GCS_SERVICE_ACCOUNT_CREDENTIALS: '{"type":"service_account", ... <rest of gcloud-application-credentials.json>}'
-```
-
-Note: remote name is `gcs` here so urls would take form similar to `gcs:<your bucket>`.
-Tip: using `cat gcloud-application-credentials.json | jq -c .` can help to easily collapse credentials.json into one line.
-
-### Directly from PVC
-
-You are able to make models available directly from PVCs instead of object stores. This may be desirable if you have a lot of very large files and you want to avoid uploading/downloading, for example through NFS drives.
-
-The way in which you are able to specify the PVC is using the `modelUri` with the following format below. One thing to take into consideration is the permissions in the files as the containers will have their respective `runAsUser` parameters.
-
-```
 ...
     modelUri: pvc://<pvc-name>/<path>
 ```

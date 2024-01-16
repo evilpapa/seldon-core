@@ -1,6 +1,6 @@
-## Model with Custom Service Name
+## 具有自定义服务名称的模型
 
-In this example we define our own service name for the predictor.
+在这个例子中，我们为预测器定义了我们自己的服务名称。
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2

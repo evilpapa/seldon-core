@@ -1,109 +1,109 @@
 ========================================
-Install on Microsoft Azure Cloud
+在 Microsoft Azure Cloud 安装
 ========================================
 
-This guide runs through how to set up and install Seldon Core in a Kubernetes cluster running on Azure Cloud. By the end, you’ll have Seldon Core up and running and be ready to start deploying machine learning models.
+本指南介绍了如何在 Azure 云上运行的 Kubernetes 集群中设置和安装 Seldon Core。到最后，您将启动并运行 Seldon Core，并准备好开始部署机器学习模型。
 
-Prerequisites
+要求
 -----------------------------
 
-Azure Cloud CLI
+Azure 云 CLI
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You will need the Azure CLI in order to retrieve your cluster authentication credentials. It can also be used to create clusters and other resources for you:
+您将需要 Azure CLI 来检索集群身份验证凭据。它还可用于为您创建集群和其他资源：
 
-* `Install Azure CLI <https://docs.microsoft.com/en-us/cli/azure/install-azure-cli>`_
+* `安装 Azure CLI <https://docs.microsoft.com/en-us/cli/azure/install-azure-cli>`_
 
-Azure Kubernetes Service (AKS) Cluster
+Azure Kubernetes Service (AKS) 集群
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If you haven't already created a Kubernetes cluster on AKS, you can follow this quickstart guide to get set up with your first cluster:
+如果您尚未在 AKS 上创建 Kubernetes 集群，则可以按照此快速入门指南设置您的第一个集群：
 
-* `Create AKS Cluster <https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster?tabs=azure-cli>`_
+* `创建 AKS 集群 <https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster?tabs=azure-cli>`_
 
 .. note:: 
 
-    If you are just evaluating Seldon Core and are want to use http rather than https, make sure you select "Enable HTTP application routing" in your networking configuration.
+    如果您只是评估 Seldon Core 并且想要使用 http 而不是 https，请确保在网络配置中选择“启用 HTTP 应用程序路由”。
 
 Kubectl
 ^^^^^^^^^^^^^
-`kubectl <https://kubernetes.io/docs/reference/kubectl/overview/>`_ is the Kubernetes command-line tool. It allows you to run commands against Kubernetes clusters, which we'll need to do as part of setting up Seldon Core. 
+`kubectl <https://kubernetes.io/docs/reference/kubectl/overview/>`_ 是 Kubernetes 命令行工具。它允许您对 Kubernetes 集群运行命令，这是设置 Seldon Core 的一部分。
 
-* `Install kubectl on Linux <https://kubernetes.io/docs/tasks/tools/install-kubectl-linux>`_ 
-* `Install kubectl on macOS <https://kubernetes.io/docs/tasks/tools/install-kubectl-macos>`_ 
-* `Install kubectl on Windows <https://kubernetes.io/docs/tasks/tools/install-kubectl-windows>`_ 
+* `在 Linux 安装 kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl-linux>`_ 
+* `在 macOS 安装 kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl-macos>`_ 
+* `在 Windows 安装 kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl-windows>`_ 
 
 Helm
 ^^^^^^^^^^^^^
-`Helm <https://helm.sh/>`_ is a package manager that makes it easy to find, share and use software built for Kubernetes. If you don't already have Helm installed locally, you can install it here:
+`Helm <https://helm.sh/>`_ 是一个包管理工具，可以轻松查找、共享和使用为 Kubernetes 构建的软件。如果你还没有在本地安装 Helm，你可以在这里安装它：
 
-* `Install Helm <https://helm.sh/docs/intro/install/>`_ 
+* `安装 Helm <https://helm.sh/docs/intro/install/>`_ 
 
-Connect to Your Cluster
+连接到集群
 ------------------------------
 
-You can connect to your cluster by running the following `az` command:
+通过执行 `az` 命令连接到集群：
 
 .. code-block:: bash
 
     az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 
-This will configure ``kubectl`` to use your Azure kubernetes cluster. Don't forget to replace ``myResourceGroup`` and ``myAKSCluster`` with whatever you called your resource group and cluster are called. If you've forgotten, you can run ``az aks list``.
+他将配置 ``kubectl`` 到你的 Azure kubernetes 集群。别忘记替换 ``myResourceGroup`` 及 ``myAKSCluster`` 为你创建的资源组及集群名称。如果忘记，运行 ``az aks list``。
 
 .. note:: 
 
-    If you get authentication errors while running the command above, try running ``az login`` to check you are correctly logged in.
+    如果运行如上命令出现认证错误，尝试运行 ``az login`` 来检查是否正确登录。
 
-Install Cluster Ingress
+安装集群入口
 ------------------------------
 
-``Ingress`` is a Kubernetes object that provides routing rules for your cluster. It manages the incomming traffic and routes it to the services running inside the cluster.
+``Ingress`` 是为您的集群提供路由规则的 Kubernetes 对象。它管理传入的流量并将其路由到集群内运行的服务。
 
-Seldon Core supports using either `Istio <https://istio.io/>`_ or `Ambassador <https://www.getambassador.io/>`_ to manage incomming traffic. Seldon Core automatically creates the objects and rules required to route traffic to your deployed machine learning models.
+Seldon Core 支持使用 `Istio <https://istio.io/>`_ 或 `Ambassador <https://www.getambassador.io/>`_ 来管理传入流量。Seldon Core 自动创建将流量路由到您部署的机器学习模型所需的对象和规则。
 
 .. tabbed:: Istio
 
-    Istio is an open source service mesh. If the term *service mesh* is unfamiliar to you, it's worth reading `a little more about Istio <https://istio.io/latest/about/service-mesh/>`_.
+    Istio 是一个开源服务网格。如果您对 *service mesh* 不熟悉，非常值得去阅读 `更多关于Istio 的内容 <https://istio.io/latest/about/service-mesh/>`_ 。
 
-    **Download Istio**
+    **下载 Istio**
 
-    For Linux and macOS, the easiest way to download Istio is using the following command:
+    对于 Linux 及 macOS，最简单的方式是使用以下命令下载 Istio：
 
     .. code-block:: bash 
 
         curl -L https://istio.io/downloadIstio | sh -
 
-    Move to the Istio package directory. For example, if the package is ``istio-1.11.4``:
+    M进入 Istio 包目录。比如，包 ``istio-1.11.4``：
 
     .. code-block:: bash
 
         cd istio-1.11.4
 
-    Add the istioctl client to your path (Linux or macOS):
+    添加 istioctl 客户端到 path (Linux or macOS):
 
     .. code-block:: bash
 
         export PATH=$PWD/bin:$PATH
 
-    **Install Istio**
+    **安装 Istio**
 
-    Istio provides a command line tool ``istioctl`` to make the installation process easy. The ``demo`` `configuration profile <https://istio.io/latest/docs/setup/additional-setup/config-profiles/>`_ has a good set of defaults that will work on your local cluster.
+    Istio 提供了一个命令工具 ``istioctl`` 来使安装更便捷。``示例`` `配置项 <https://istio.io/latest/docs/setup/additional-setup/config-profiles/>`_ 有一组很好的默认值来运行在你本地集群。
 
     .. code-block:: bash
 
         istioctl install --set profile=demo -y
 
-    The namespace label ``istio-injection=enabled`` instructs Istio to automatically inject proxies alongside anything we deploy in that namespace. We'll set it up for our ``default`` namespace:
+    命名空间标签 ``istio-injection=enabled`` 指示 Istio 注入自动代理我们在该命名空间中部署的任何内容。我们将为我们的 ``default`` 命名空间设置它：
 
     .. code-block:: bash 
 
         kubectl label namespace default istio-injection=enabled
 
-    **Create Istio Gateway**
+    **创建 Istio 网关**
 
-    In order for Seldon Core to use Istio's features to manage cluster traffic, we need to create an `Istio Gateway <https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/>`_ by running the following command:
+    为了让 Seldon Core 使用 Istio 的特性来管理流量，我们使用如下命令来创建一个 `Istio Gateway <https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/>`_ ：
 
-    .. warning:: You will need to copy the entire command from the code block below
+    .. warning:: 你需要拷贝下面全部的命令
     
     .. code-block:: yaml
 
@@ -125,44 +125,44 @@ Seldon Core supports using either `Istio <https://istio.io/>`_ or `Ambassador <h
             - "*"
         END
     
-    For custom configuration and more details on installing seldon core with Istio please see the `Istio Ingress <../ingress/istio.md>`_ page.
+    自定义配置及更多 seldon core 集成 Istio 安装的细节请查看 `Istio 入口 <../ingress/istio.md>`_ 页。
 
 .. tabbed:: Ambassador
 
-    `Ambassador <https://www.getambassador.io/>`_ is a Kubernetes ingress controller and API gateway. It routes incomming traffic to the underlying kubernetes workloads through configuration. 
+    `Ambassador <https://www.getambassador.io/>`_ 是 Kubernetes 入口控制器及 API 网关。他通过配置路由请求流量到 kubernetes 负载。
 
-    **Install Ambassador**
+    **安装 Ambassador**
 
     .. note::
-        Seldon Core currently only supports the Ambassador V1 APIs. The installation instructions below will install the latest v1 version of emissary ingress.
+        Seldon Core 现在只支持 Ambassador V1 APIs。以下安装说明将只安装 emissary ingress 最新的 v1 版本。
 
 
-    First add the datawire helm repository:
+    首先添加 datawire helm 仓库：
 
     .. code-block:: bash
 
         helm repo add datawire https://www.getambassador.io
         helm repo update
 
-    Run the following `helm` command to install Ambassador on your GKE cluster:
+    执行以下 `helm` 命令安装 Ambassador 到 GKE 集群：
 
     .. code-block:: bash
 
         helm install ambassador datawire/ambassador --set enableAES=false --namespace ambassador --create-namespace
         kubectl rollout status -n ambassador deployment/ambassador -w
         
-    Ambassador is now ready to use. For custom configuration and more details on installing seldon core with Ambassador please see the `Ambassador Ingress <../ingress/ambassador.md>`_ page.
+    Ambassador 已就绪。自定义配置及更多集成 Ambassador 安装 seldon core 的细节请查看 `Ambassador 入口 <../ingress/ambassador.md>`_ 页。
 
-Install Seldon Core
+安装 Seldon Core
 ----------------------------
 
-Before we install Seldon Core, we'll create a new namespace ``seldon-system`` for the operator to run in:
+在安装 Seldon Core 前，创建一个 operator 运行所在的命名空间 ``seldon-system`` ：
 
 .. code:: bash
 
     kubectl create namespace seldon-system
 
-We're now ready to install Seldon Core in our cluster. Run the following command for your choice of Ingress:
+现在我们已经为在集群安装 Seldon Core 准备就绪。根据选择的入口类型执行如下命令：
 
 .. tabbed:: Istio
 
@@ -184,18 +184,18 @@ We're now ready to install Seldon Core in our cluster. Run the following command
             --set ambassador.enabled=true \
             --namespace seldon-system
 
-You can check that your Seldon Controller is running by doing:
+使用以下命令检查 Seldon Controller 运行状态：
 
 .. code-block:: bash
 
     kubectl get pods -n seldon-system
 
-You should see a ``seldon-controller-manager`` pod with ``STATUS=Running``.
+你应当看到 ``seldon-controller-manager`` pod 的状态 ``STATUS=Running``。
 
-Accessing your models
+访问您的模型
 -------------------------
 
-Congratulations! Seldon Core is now fully installed and operational. Before you move on to deploying models, make a note of your cluster IP and port:
+恭喜！Seldon Core 现在已完全安装并运行。在继续部署模型之前，请记下您的集群 IP 和端口：
 
 .. tabbed:: Istio
 
@@ -206,7 +206,7 @@ Congratulations! Seldon Core is now fully installed and operational. Before you 
         export INGRESS_URL=$INGRESS_HOST:$INGRESS_PORT
         echo $INGRESS_URL
 
-    This is the public address you will use to access models running in your cluster.
+    这是您将用于访问集群中运行的模型的公共地址。
 
 .. tabbed:: Ambassador
 
@@ -217,6 +217,6 @@ Congratulations! Seldon Core is now fully installed and operational. Before you 
         export INGRESS_URL=$INGRESS_HOST:$INGRESS_PORT
         echo $INGRESS_URL
 
-    This is the public address you will use to access models running in your cluster.
+    这是您将用于访问集群中运行的模型的公共地址。
 
-You are now ready to `deploy models to your cluster <../workflow/github-readme.md>`_.
+您现在已准备好 `将模型部署到您的集群 <../workflow/github-readme.md>`_。

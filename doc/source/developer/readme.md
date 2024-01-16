@@ -1,66 +1,64 @@
-# Developer
+# 开发者
 
-We welcome new contributors.
-Please read the [code of
-conduct](https://github.com/SeldonIO/seldon-core/blob/master/CODE_OF_CONDUCT.md)
-and the [contributing guidelines](contributing.rst).
+我们欢迎新的贡献者。
+请阅读[行为守则](https://github.com/SeldonIO/seldon-core/blob/master/CODE_OF_CONDUCT.md)和[贡献指引](contributing.rst)。
 
-## Operator Development
+## Operator 开发
 
-The Operator which manages the SeldonDeployment CRD is contained within the `/operator` folder. It is created using [kubebuilder](https://book.kubebuilder.io/)
+管理 SeldonDeployment CRD 的 Operator 包含在 `/operator` 目录。它由 [kubebuilder](https://book.kubebuilder.io/) 创建。
 
-For local development we use [kind](https://kind.sigs.k8s.io/), create a kind cluster
+在本地开发中，我们使用 [kind](https://kind.sigs.k8s.io/) 创建集群。
 
 ```console
 kind create cluster
 ```
 
-Install cert-manager
+安装 cert-manager
 
 ```console
 make install-cert-manager
 ```
 
-To build and load the current controller image into the Kind cluster:
+构建并加载当前控制器镜像到 Kind 集群：
 
 ```console
 make kind-image-install
 ```
 
-To install the Operator run:
+运行以下命令安装 Operator：
 
 ```console
 make deploy
 ```
 
-If you wish to install the Operator and prepare the controller to be run outside the cluster, for example inside an IDE (we use GoLand) then run the following. This has only been tested on a local Kind cluster:
+如果在集群外准备控制器和安装 Operator，比如在 IDE 中（我们用的是 GoLand）运行。尽在本地 Kind 集群中测试通过：
 
 ```console
 make deploy-local
 ```
 
-When the everything is running delete the seldon-controller-manager deployment from the seldon-system namespace as we will run locally.
+当以上全部运行，在 seldon-system 空间中删除运行中的 seldon-controller-manager 即可完成本地化。
 
-Next, download the webhook certificate (created by cert-manager) locally:
+下一步，下载本地 webhook 证书（通过 cert-manager 创建）：
 
 ```console
 make tls-extract
 ```
 
-You can now run the manager locally. You will need to set the webhook-port on startup e.g.,
+在本地运行 manager，需要在启动时设置 webhook-port，例如：
 
 ```console
 go run ./main.go --webhook-port=9000
 ```
 
-If running inside an IDE and you are using Kind then make sure you set the KUBECONFIG env as well.
+如果在 IDE 中运行 Kind，请确保设置好 KUBECONFIG 环境变量。
 
-## Tools we use
+## 用到的工具
 
 - [github-changelog-generator](https://github.com/skywinder/github-changelog-generator)
-- [Grip - Local Markdown viewer](https://github.com/joeyespo/grip)
+- [Grip - 本地 Markdown 预览](https://github.com/joeyespo/grip)
 
-## Building Seldon Core
+## 构建 Seldon Core
 
-- [Build using private repository](build-using-private-repo.md)
+- [使用私有仓库构建](build-using-private-repo.md)
 

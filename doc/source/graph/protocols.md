@@ -1,58 +1,58 @@
-# Protocols
+# 协议
 
-Tensorflow protocol is only available in version >=1.1.
+Tensorflow 协议只在版本 >=1.1 可用。
 
-Seldon Core supports the following data planes:
+Seldon Core 支持以下数据平面：
 
- * [REST and gRPC Seldon protocol](#rest-and-grpc-seldon-protocol)
- * [REST and gRPC Tensorflow Serving Protocol](#rest-and-grpc-tensorflow-protocol)
- * [REST and gRPC V2 Protocol](#v2-protocol)
+ * [REST 和 gRPC Seldon 协议](#rest-and-grpc-seldon-protocol)
+ * [REST 和 gRPC Tensorflow Serving 协议](#rest-and-grpc-tensorflow-protocol)
+ * [REST 和 gRPC V2 KFServing 协议](#v2-kfserving-protocol)
 
-## REST and gRPC Seldon Protocol
+## REST 和 gRPC Seldon 协议
 
  * [REST Seldon Protocol](../reference/apis/index.html)
 
-Seldon is the default protocol for SeldonDeployment resources. You can specify the gRPC protocol by setting `transport: grpc` in your SeldonDeployment resource or ensuring all components in the graph have endpoint.tranport set ot grpc.
+Seldon 是 SeldonDeployment 资源的默认协议。你可在 SeldonDeployment 资源设置 `transport: grpc` 指定 gRPC 协议，或者所有组件在图节点 endpoint.tranport 设置为 grpc。
 
-See [example notebook](../examples/protocol_examples.html). 
+查看[示例 notebook](../examples/protocol_examples.html)。
 
-## REST and gRPC Tensorflow Protocol
+## REST 和 gRPC Tensorflow 协议
 
-   * [REST Tensorflow Protocol definition](https://github.com/tensorflow/serving/blob/master/tensorflow_serving/g3doc/api_rest.md).
-   * [gRPC Tensorflow Protocol definition](https://github.com/tensorflow/serving/blob/master/tensorflow_serving/apis/prediction_service.proto).
+   * [REST Tensorflow Protocol 定义](https://github.com/tensorflow/serving/blob/master/tensorflow_serving/g3doc/api_rest.md)。
+   * [gRPC Tensorflow Protocol 定义](https://github.com/tensorflow/serving/blob/master/tensorflow_serving/apis/prediction_service.proto)。
 
-Activate this protocol by speicfying `protocol: tensorflow` and `transport: rest` or `transport: grpc` in your Seldon Deployment. See [example notebook](../examples/protocol_examples.html). 
+通过在 Seldon Deployment 定义 `protocol: tensorflow` 、 `transport: rest` 或 `transport: grpc` 来激活，参考[示例 notebook](../examples/protocol_examples.html)。
 
-For Seldon graphs the protocol will work as expected for single model graphs for Tensorflow Serving servers running as the single model in the graph. For more complex graphs you can chain models:
+在 Seldon 图定义中协议会按照预期的 Tensorflow Serving 服务运行单个模型图一样在图中运行单个模型。对于更复杂的图，可链式定义模型：
 
- * Sending the response from the first as a request to the second. This will be done automatically when you defined a chain of models as a Seldon graph. It is up to the user to ensure the response of each changed model can be fed a request to the next in the chain.
- * Only Predict calls can be handled in multiple model chaining.
-
-
-General considerations:
-
-  * Seldon components marked as MODELS, INPUT_TRANSFORMER and OUTPUT_TRANSFORMERS will allow a PredictionService Predict method to be called.
-  * GetModelStatus for any model in the graph is available.
-  * GetModelMetadata for any model in the graph is available.
-  * Combining and Routing with the Tensorflow protocol is not presently supported.
-  * `status` and `metadata` calls can be asked for any model in the graph
-  * a non-standard Seldon extension is available to call predict on the graph as a whole: `/v1/models/:predict`.
-  * The name of the model in the `graph` section of the SeldonDeployment spec must match the name of the model loaded onto the Tensorflow Server.
+ * 将第一个响应结果作为请求发送到第二个。这将自动在 Seldon 图中定义中完成。用户应确保每个更改模型的响应可以向链中的下一个提供请求。
+ * 只有多个链式模型才可处理预测。
 
 
-## V2 Protocol 
+一般考虑事项：
 
-Seldon has collaborated with the [NVIDIA Triton Server
-Project](https://github.com/triton-inference-server/server) and the [KServe
-Project](https://github.com/kserve) to create a new ML inference
-protocol.
-The core idea behind this joint effort is that this new protocol will become
-the standard inference protocol and will be used across multiple inference
-services.
+  * Seldon 组件标记为MODELS、INPUT_TRANSFORMER 和 OUTPUT_TRANSFORMERS 才允许 PredictionService Predict 方法调用。
+  * GetModelStatus 在所有模型图中可用。
+  * GetModelMetadata 在所有模型图中可用。
+  * Combining 和 Routing 当前在 Tensorflow 协议中不支持。
+  * `status` 和 `metadata` 可在任何途中的任何模型调用。
+  * 非标准 Seldon 扩展可在图上调用预估： `/v1/models/:predict`.
+  * SeldonDeployment 定义中 `graph` 节点的模型名称必须和 Tensorflow 服务加载的模型名称相同。
 
-In Seldon Core, this protocol can be used by specifying `protocol: v2` on
-your `SeldonDeployment`. 
-For example, 
+
+## V2 协议 
+
+Seldon 和 [NVIDIA Triton Server 
+项目](https://github.com/triton-inference-server/server) 以及 [KFServing 
+项目](https://github.com/kubeflow/kfserving)合作推出
+新的机器学习预估协议。
+这一共同努力的核心思想是，
+这一新协议将成为标准推理协议，
+并将用于多个推理服务。
+
+在 Seldon Core，
+可在 `SeldonDeployment` 将协议定义为 `protocol: kfserving`。
+比如：
 
 ```yaml
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -75,15 +75,15 @@ spec:
     name: default
 ```
 
-At present, the `v2` protocol is only supported in a subset of
-pre-packaged inference servers.
-In particular,
+目前，
+`v2` 协议只在预封装预估服务器子集中支持。
+特别地，
 
-| Pre-packaged server | Supported | Underlying runtime |
+| 预封装服务 | 支持 | 基础运行时 |
 | -- | -- | -- |
 | [TRITON_SERVER](../servers/triton.md) | ✅ | [NVIDIA Triton](https://github.com/triton-inference-server/server) |
 | [SKLEARN_SERVER](../servers/sklearn.md) | ✅  | [Seldon MLServer](https://github.com/seldonio/mlserver) |
 | [XGBOOST_SERVER](../servers/xgboost.md) | ✅  | [Seldon MLServer](https://github.com/seldonio/mlserver) |
 | [MLFLOW_SERVER](../servers/mlflow.md) | ✅  | [Seldon MLServer](https://github.com/seldonio/mlserver) |
 
-You can try out the `v2` in [this example notebook](../examples/protocol_examples.html). 
+可在[示例 notebook](../examples/protocol_examples.html)查看 `v2`。

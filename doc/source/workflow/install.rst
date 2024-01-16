@@ -1,59 +1,49 @@
-Install Seldon-Core
+安装 Seldon-Core
 ===================
 
-Pre-requisites:
+准备：
 ---------------
 
--  Kubernetes cluster version equal or higher than 1.18
+-  Kubernetes 集群版本不小于 1.12
 
-   -  For Openshift it requires version 4.6 or higher
+   -  Openshift 需要 4.2 或更高版本
 
--  Installer method
+-  安装方法
 
-   -  Helm version equal or higher than 3.0
-   -  Kustomize version equal or higher than 0.1.0
+   -  Helm 不小于 3.0 版本
+   -  Kustomize 不小于 0.1.0 版本
 
 -  Ingress
 
-   -  Istio ( sample installation using Istio 1.5 can be found at
+   -  Istio（可在这里找到 Istio 1.5 版本的安装示例 
       https://github.com/SeldonIO/seldon-core/tree/master/examples/auth
-      )
-   -  Ambassador v1 (v2 not currently supported)
+      ）
+   -  Ambassador v1 (v2 当前不支持)
 
-Running older versions of Seldon Core?
+正在运行旧版的 Seldon Core ？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Make sure you read the `"Upgrading Seldon Core
-Guide" <../reference/upgrading.md>`__
+请确保您已阅读 `「升级 Seldon Core 指引」 <../reference/upgrading.md>`__
 
--  **Seldon Core will stop supporting versions prior to 1.0 so make sure
-   you upgrade.**
--  If you are running an older version of Seldon Core, and will be
-   upgading it please make sure you read the `Upgrading Seldon Core
-   docs <../reference/upgrading.md>`__ to understand breaking changes
-   and best practices for upgrading.
--  Please see `Migrating from Helm v2 to Helm
-   v3 <https://helm.sh/docs/topics/v2_v3_migration/>`__ if you
-   are already running Seldon Core using Helm v2 and wish to upgrade.
+-  **Seldon Core 已停止为 1.0 之前版本提供支持，请确保您已升级到最新版本。**
+-  如果你在运行旧版本 Seldon Core，并想对它升级，请阅读[升级 Seldon Core 章节]<../reference/upgrading.md>`__ 来了解升级的改动和最佳实践。
+-  请查看 `从 Helm v2 迁移到 Helm v3 <https://helm.sh/docs/topics/v2_v3_migration/>`__ 如若你已经使用 Helm v2 安装运行了 Seldon Core 并想进行升级。
 
-Install Seldon Core with Helm
+以 Helm 方式安装Seldon Core
 -----------------------------
 
-First `install Helm 3.x <https://docs.helm.sh/docs/intro/install/>`__.
-When helm is installed you can deploy the seldon controller to manage
-your Seldon Deployment graphs.
+首先 `安装 Helm 3.x <https://docs.helm.sh/docs/intro/install/>`__。
+安装完 helm 之后，你就能通过发布 seldon 控制器来管理 Seldon Deployment 图。
 
-If you want to provide advanced parameters with your installation you
-can check the full `Seldon Core Helm Chart
-Reference <../reference/helm.html>`__.
+如果想在安装时设置高级参数，请查看完整的 `Seldon Core Helm Chart 参考 <../reference/helm.html>`__。
 
-The namespace ``seldon-system`` is preferred, so we can create it:
+首选命名空间 ``seldon-system``，如下创建：
 
 .. code:: bash
 
     kubectl create namespace seldon-system
 
-Now we can install Seldon Core in the ``seldon-system`` namespace.
+现在我们可以在命名空间 ``seldon-system`` 中安装 Seldon Core。
 
 .. tabbed:: Istio
 
@@ -76,55 +66,43 @@ Now we can install Seldon Core in the ``seldon-system`` namespace.
             --namespace seldon-system
 
 
-For full instructions on installation with Istio and Ambassador read the
-following pages:
+完整的 Istio 和 Ambassador 安装说明
+请查看以下页面：
 
 * `Ingress with Istio <../ingress/istio.md>`__ 
 * `Ingress with Ambassador <../ingress/ambassador.md>`__
 
-Install a specific version
+安装特殊版本
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In order to install a specific version you can do so by running the same
-command above with the ``--version`` flag, followed by the version you
-want to run.
+按照上面的命令使用 ``--version`` 参数来安装你想运行的特定版本。
 
-Install a SNAPSHOT version
+安装一个快照版本
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Whenever a new PR was merged to master, we have set up our CI to build a
-"SNAPSHOT" version, which would contain the Docker images for that
-specific development / master-branch code. Whilst the images are pushed
-under SNAPSHOT, they also create a new "dated" SNAPSHOT version entry,
-which pushes images with the tag
-``"<next-version>-SNAPSHOT_<timestamp>"``. A new branch is also created
-with the name ``"v<next-version>-SNAPSHOT_<timestamp>"``, which contains
-the respective helm charts, and allows for the specific version (as
-outlined by the version in ``version.txt``) to be installed.
+每当一个新的 PR 合并合并到主干，我们设置 CI 来构建一个「快照」版本，这将包含该特定开发/主分支代码的 Docker 镜像。
+当镜像以快照被推送，会创建一个 ``"<next-version>-SNAPSHOT_<timestamp>"``标签并包含 helm charts 的镜像来指定特殊版本（如 ``version.txt`` 中描述）来指定安装。
 
-This means that you can try out a dev version of master if you want to
-try a specific feature before it's released.
+这意味着，如果您想在开发版本发布之前尝试特定功能，则可以尝试主的开发版本。
 
-For this you would be able to clone the repository, and then checkout
-the relevant SNAPSHOT branch.
+为此，您将能够克隆存储库，然后签出相关的快照分支。
 
-Once you have done that you can install seldon-core using the following
-command:
+完成后，您可以使用以下
+命令安装：
 
 .. code:: bash
 
     helm install helm-charts/seldon-core-operator seldon-core-operator
 
-In this case ``helm-charts/seldon-core-operator`` is the folder within
-the repository that contains the charts.
+下为包含 ``helm-charts/seldon-core-operator`` charts 的版本文件夹。
 
-Install with cert-manager
+通过 cert-manager 安装
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can follow `the cert manager documentation to install
-it <https://cert-manager.io/docs/installation/kubernetes/>`__.
+按照 `cert manager 文档
+ <https://cert-manager.io/docs/installation/kubernetes/>`__ 来进行安装。
 
-You can then install seldon-core with:
+通过如下命令安装 seldon-core ：
 
 .. code:: bash
 
@@ -134,100 +112,92 @@ You can then install seldon-core with:
         --namespace seldon-system \
         --set certManager.enabled=true
 
-Seldon Core Kustomize Install
------------------------------
+通过 Kustomize 安装 Seldon Core
+-------------------------------
 
-The `Kustomize <https://github.com/kubernetes-sigs/kustomize>`__
-installation can be found in the ``/operator/config`` folder of the
-repo. You should copy this template to your own kustomize location for
-editing.
+`Kustomize <https://github.com/kubernetes-sigs/kustomize>`__ 安装在仓库 ``/operator/config`` 文件夹你可将模板拷贝到自己的 kustomize 路径进行编辑。
 
-To use the template directly, there is a Makefile which has a set of
-useful commands:
+要直接使用模板，这有一个 Makefile，它包含一组有用的命令：
 
-For kubernetes clusters of version higher than 1.15, make sure you
-`comment the patch\_object\_selector
-here <https://github.com/SeldonIO/seldon-core/blob/master/operator/config/webhook/kustomization.yaml#L8>`__.
+对于高于 1.15 的版本群集，确保
+`注释掉 patch\_object\_selector
+这块 <https://github.com/SeldonIO/seldon-core/blob/master/operator/config/webhook/kustomization.yaml#L8>`__。
 
-Install cert-manager
+安装 cert-manager
 
 .. code:: bash
 
     make install-cert-manager
 
-Install Seldon using cert-manager to provide certificates.
+安装 Seldon 使用 cert-manager 来提供证书。
 
 .. code:: bash
 
     make deploy
 
-Install Seldon with provided certificates in ``config/cert/``
+通过在 ``config/cert/`` 提供的证书安装 Seldon
 
 .. code:: bash
 
     make deploy-cert
 
-Other Options
+其他选项
 -------------
 
-Install Production Integrations
+生产集成安装
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now that you have Seldon Core installed, you can set it up with:
+Seldon Core 安装好，你可以进行如下设置：
 
-Install with Kubeflow
+集成 Kubeflow 安装 
 ^^^^^^^^^^^^^^^^^^^^^
 
--  `Install Seldon as part of
-   Kubeflow. <https://www.kubeflow.org/docs/guides/components/seldon/#seldon-serving>`__
+-  `将 Seldon 作为 
+    Kubeflow 的一部分. <https://www.kubeflow.org/docs/guides/components/seldon/#seldon-serving>`__
 
-GCP MarketPlace
+GCP 应用市场
 ^^^^^^^^^^^^^^^
 
-If you have a Google Cloud Platform account you can install via the `GCP
-Marketplace <https://console.cloud.google.com/marketplace/details/seldon-portal/seldon-core>`__.
+如果有 Google Cloud Platform 账户，可通过 `GCP
+Marketplace <https://console.cloud.google.com/marketplace/details/seldon-portal/seldon-core>`__安装。
 
 OpenShift
 ^^^^^^^^^
 
-You can install Seldon Core via OperatorHub on the OpenShift console UI.
+可在 OpenShift console UI 通过 OperatorHub 安装 Seldon Core。
 
 OperatorHub
 ^^^^^^^^^^^
 
-You can install Seldon Core from `Operator
-Hub <https://operatorhub.io/operator/seldon-operator>`__.
+你页可以通过 `Operator Hub <https://operatorhub.io/operator/seldon-operator>`__ 安装 Seldon Core。
 
-Upgrading from Previous Versions
+从上一版本进行升级
 --------------------------------
 
-See our `upgrading notes <../reference/upgrading.md>`__
+查看 `升级日志 <../reference/upgrading.md>`__
 
-Advanced Usage
+高级用法
 --------------
 
-Install Seldon Core in a single namespace (version >=1.0)
+在单独的命名空间中安装 Seldon Core (版本 >=1.0)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-**You will need a k8s cluster >= 1.15**
+**你需要一个版本 >= 1.15 的 k8s 集群**
 
 Helm
 ^^^^
 
-You can install the Seldon Core Operator so it only manages resources in
-its namespace. An example to install in a namespace ``seldon-ns1`` is
-shown below:
+可将 Seldon Core Operator 安装到指定的命名空间管理相关资源。
+一个安装在 ``seldon-ns1`` 命名空间的示例：
 
 .. code:: bash
 
     kubectl create namespace seldon-ns1
     kubectl label namespace seldon-ns1 seldon.io/controller-id=seldon-ns1
 
-We label the namespace with ``seldon.io/controller-id=<namespace>`` to
-ensure if there is a clusterwide Seldon Core Operator that it should
-ignore resources for this namespace.
+使用 `seldon.io/controller-id=<namespace>` 贴上标签，来确保全局全局性，Seldon Core Operator 将会忽略此命名空间。
 
-Install the Operator into the namespace:
+安装 Operator 到命名空间：
 
 .. code:: bash
 
@@ -238,31 +208,28 @@ Install the Operator into the namespace:
         --set crd.create=true \
         --namespace seldon-ns1
 
-We set ``crd.create=true`` to create the CRD. If you are installing a
-Seldon Core Operator after you have installed a previous Seldon Core
-Operator on the same cluster you will need to set ``crd.create=false``.
+可设置 ``crd.create=true`` 来创建 CRD。
+同意集群中如果在前一版本之后安装 Seldon Core Operator 需要设置 ``crd.create=false``。
 
 Kustomize
 ^^^^^^^^^
 
-An example install is provided in the Makefile in the Operator folder:
+Operator 文件加下的 Makefile 提供了一个安装示例：
 
 .. code:: bash
 
     make deploy-namespaced1
 
-See the `multiple server example
-notebook <../examples/multiple_operators.html>`__.
+查看 `多服务器示例
+笔记 <../examples/multiple_operators.html>`__。
 
-Label focused Seldon Core Operator (version >=1.0)
+指定标签的 Seldon Core Operator (version >=1.0)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-**You will need a k8s cluster >= 1.15**
+**需要 k8s 集群 >= 1.15**
 
-You can install the Seldon Core Operator so it manages only
-SeldonDeployments with the label ``seldon.io/controller-id`` where the
-value of the label matches the controller-id of the running operator. An
-example for a namespace ``seldon-id1`` is shown below:
+您可以安装 Seldon Core Operator，来管理带有标签的 SeldonDeployments，其中标签 ``seldon.io/controller-id`` 的值与正在运行的 operator 的 controller-id 匹配。
+示例 ``seldon-id1`` 命名空间如下所示：
 
 Helm
 ^^^^
@@ -271,7 +238,7 @@ Helm
 
     kubectl create namespace seldon-id1
 
-To install the Operator run:
+运行命令安装 Operator:
 
 .. code:: bash
 
@@ -283,42 +250,35 @@ To install the Operator run:
         --set controllerId=seldon-id1 \
         --namespace seldon-id1
 
-We set ``crd.create=true`` to create the CRD. If you are installing a
-Seldon Core Operator after you have installed a previous Seldon Core
-Operator on the same cluster you will need to set ``crd.create=false``.
+设置 ``crd.create=true`` 来创建 CRD。
+如果您在同一集群上在以前的 Seldon Core Operator 之上安装 Seldon Core Operator，则需要设置 ``crd.create=false``。
 
-For kustomize you will need to `uncomment the patch\_object\_selector
-here <https://github.com/SeldonIO/seldon-core/blob/master/operator/config/webhook/kustomization.yaml>`__
+针对 kustomize 你需要在此处 `去掉 patch\_object\_selector
+<https://github.com/SeldonIO/seldon-core/blob/master/operator/config/webhook/kustomization.yaml>`__ 注释。
 
 Kustomize
 ^^^^^^^^^
 
-An example install is provided in the Makefile in the Operator folder:
+Operator 文件夹中的 Makefile 中提供了一个示例安装：
 
 .. code:: bash
 
     make deploy-controllerid
 
-See the `multiple server example
-notebook <../examples/multiple_operators.html>`__.
+查看 `多服务器示例笔记 <../examples/multiple_operators.html>`__。
 
-Install behind a proxy
+通过代理安装
 ~~~~~~~~~~~~~~~~~~~~~~
 
-When your kubernetes cluster is behind a proxy, the ``kube-apiserver``
-typically inherits the system proxy variables. This can block the
-``kube-apiserver`` from reaching the webhooks needed to create Seldon
-resources.
+当您的 kubernetes 集群位于代理后面时， ``kube-apiserver``通常会继承系统代理变量。
+这可以阻止 ``kube-apiserver`` 访问创建 Seldon 所需的 webhook资源。
 
-You could see this error:
+你可能会看到如下错误：
 
 .. code:: bash
 
     Internal error occurred: failed calling webhook "v1.vseldondeployment.kb.io": Post https://seldon-webhook-service.seldon-system.svc:443/validate-machinelearning-seldon-io-v1-seldondeployment?timeout=30s: Service Unavailable
 
-To fix this, ensure the ``no_proxy`` environment variable for the
-``kube-apiserver`` includes ``.svc,.svc.cluster.local``. See `this
-Github Issue
-Comment <https://github.com/jetstack/cert-manager/issues/2640#issuecomment-601872165>`__
-for reference. As described there, the error could also occur for the
-``cert-manager-webhook``.
+要解决此问题，请确保 ``kube-apiserver`` 的环境变量 ``no_proxy``包含 ``.svc,.svc.cluster.local``。
+查看`这个 Github Issue 回复 <https://github.com/jetstack/cert-manager/issues/2640#issuecomment-601872165>`__来参考。
+如那里所述，错误也可能发生在 ``cert-manager-webhook``。

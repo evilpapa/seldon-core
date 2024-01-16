@@ -1,30 +1,30 @@
-# External Prediction API
+# 外部预估 API
 
 ![API](./api.png)
 
-The Seldon Core exposes a generic external API to connect your ML runtime prediction to external business applications.
+Seldon Core 公开了一个通用的外部 API，以将您的 ML 运行时预测连接到外部业务应用程序。
 
 ## REST API
 
-### Prediction
+### 预估
 
  - endpoint : POST /api/v1.0/predictions
- - payload : JSON representation of `SeldonMessage` - see [proto definition](./prediction.md#proto-buffer-and-grpc-definition)
- - example payload :
+ - payload : `SeldonMessage` JSON 表示 - 查看 [proto 定义](./prediction.md#proto-buffer-and-grpc-definition)
+ - 示例 payload :
 
    ```json
    {"data":{"names":["a","b"],"tensor":{"shape":[2,2],"values":[0,0,1,1]}}}
    ```
 
-### Feedback
+### 反馈
 
  - endpoint : POST /api/v1.0/feedback
- - payload : JSON representation of `Feedback` - see [proto definition](./prediction.md#proto-buffer-and-grpc-definition)
+ - payload : `Feedback` JSON 表示 - 查看 [proto 定义](./prediction.md#proto-buffer-and-grpc-definition)
 
-### Metadata - Graph Level
+### 元数据 - Graph 级别
 
 - endpoint : GET /api/v1.0/metadata
-- example response :
+- 响应示例：
 
 ```json
 {
@@ -50,13 +50,13 @@ The Seldon Core exposes a generic external API to connect your ML runtime predic
 }
 ```
 
-see metadata [documentation](./metadata.md) for more details.
+查看元数据[文档](./metadata.md)细节。
 
 
-### Metadata - Model Level
+### 元数据 - Model 级别
 
 - endpoint : GET /api/v1.0/metadata/{MODEL_NAME}
-- example response:
+- 响应示例：
 
 ```json
 {
@@ -68,7 +68,7 @@ see metadata [documentation](./metadata.md) for more details.
 }
 ```
 
-see metadata [documentation](./metadata.md) for more details.
+查看元数据[文档](./metadata.md)细节。
 
 
 ## gRPC
@@ -82,4 +82,4 @@ service Seldon {
 }
 ```
 
-see full [proto definition](./prediction.md#proto-buffer-and-grpc-definition)
+查看 [proto 定义](./prediction.md#proto-buffer-and-grpc-definition)

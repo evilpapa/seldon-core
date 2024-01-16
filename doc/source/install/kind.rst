@@ -1,55 +1,55 @@
 ====================
-Install Locally
+本地安装
 ====================
 
-This guide runs through how to set up and install Seldon Core in a Kubernetes cluster running on your local machine. By the end, you'll have Seldon Core up and running and be ready to start deploying machine learning models.
+本指南介绍了如何在本地机器上运行的 Kubernetes 集群中设置和安装 Seldon Core。最终，您将启动并运行 Seldon Core，并准备好开始部署机器学习模型。
 
-Prerequisites
+先决条件
 -----------------
 
-In order to install Seldon Core locally you'll need the following tools:
+为了在本地安装 Seldon Core，您需要以下工具：
 
-.. warning:: Depending on permissions for your local machine and the directory you're working in, some tools might require root access
+.. warning:: 根据您的本地计算机的权限和您正在使用的目录，某些工具可能需要 root 访问权限
 
-Docker or Podman
+Docker 或 Podman
 ^^^^^^^^^^^^^^^^^^^
-`Docker <https://www.docker.com/>`_ and `Podman <https://podman.io/>`_ are container engines. Kind needs a container engine (like docker or podman) to actually run the containers inside your clusters.
-You only need one of either Docker or Podman. Note that Docker is no longer free for individual use at large companies:
+`Docker <https://www.docker.com/>`_ 和 `Podman <https://podman.io/>`_ 是容器引擎。Kind 需要一个容器引擎（如 docker 或 podman）来实际运行集群内的容器。
+您只需要 Docker 或 Podman 之一。请注意，Docker 不再免费为大公司供个人使用：
 
-* Install Docker for `Linux <https://docs.docker.com/engine/install/ubuntu/>`_ , `Mac <https://docs.docker.com/desktop/mac/install/>`_ , `Windows <https://docs.docker.com/desktop/windows/install/>`_
+* 为 `Linux <https://docs.docker.com/engine/install/ubuntu/>`_ , `Mac <https://docs.docker.com/desktop/mac/install/>`_ , `Windows <https://docs.docker.com/desktop/windows/install/>`_ 安装 Docker
 
-or
+或
 
-* `Install Podman <https://podman.io/getting-started/installation>`_
+* `安装 Podman <https://podman.io/getting-started/installation>`_
 
-.. note:: If using Podman remember to set ``alias docker=podman``
+.. note:: 如果使用 Podman 记得设置 ``alias docker=podman``
 
 Kind
 ^^^^^^^^^^^^^
-`Kind <https://kind.sigs.k8s.io/>`_ is a tool for running Kubernetes clusters locally. We'll use it to create a cluster on your machine so that you can install Seldon Core in to it. If don't already have `kind <https://kind.sigs.k8s.io/>`_ installed on your machine, you'll need to follow their installation guide:
+`Kind <https://kind.sigs.k8s.io/>`_ 是一个在本地运行 Kubernetes 集群的工具。我们将使用它在您的机器上创建一个集群，以便您可以在其中安装 Seldon Core。如果您的机器上还没有安装 `kind <https://kind.sigs.k8s.io/>`_，您需要按照他们的安装指南进行操作：
 
-* `Install Kind <https://kind.sigs.k8s.io/docs/user/quick-start/#installation>`_ 
+* `安装 Kind <https://kind.sigs.k8s.io/docs/user/quick-start/#installation>`_ 
 
 Kubectl
 ^^^^^^^^^^^^^
-`kubectl <https://kubernetes.io/docs/reference/kubectl/overview/>`_ is the Kubernetes command-line tool. It allows you to run commands against Kubernetes clusters, which we'll need to do as part of setting up Seldon Core. 
+`kubectl <https://kubernetes.io/docs/reference/kubectl/overview/>`_ 是 Kubernetes 命令行工具。它允许您对 Kubernetes 集群运行命令，这是设置 Seldon Core 的一部分。
 
-* `Install kubectl on Linux <https://kubernetes.io/docs/tasks/tools/install-kubectl-linux>`_ 
-* `Install kubectl on macOS <https://kubernetes.io/docs/tasks/tools/install-kubectl-macos>`_ 
-* `Install kubectl on Windows <https://kubernetes.io/docs/tasks/tools/install-kubectl-windows>`_ 
+* `在 Linux 安装 kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl-linux>`_ 
+* `在 macOS 安装 kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl-macos>`_ 
+* `在 Windows 安装 kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl-windows>`_ 
 
 Helm
 ^^^^^^^^^^^^^
-`Helm <https://helm.sh/>`_ is a package manager that makes it easy to find, share and use software built for Kubernetes. If you don't already have Helm installed locally, you can install it here:
+`Helm <https://helm.sh/>`_ 是一个包管理工具，可以轻松查找、共享和使用为 Kubernetes 构建的软件。如果你还没有在本地安装 Helm，你可以在这里安装它：
 
-* `Install Helm <https://helm.sh/docs/intro/install/>`_ 
+* `安装 Helm <https://helm.sh/docs/intro/install/>`_ 
 
-Set Up Kind
+设置 Kind
 ----------------
 
 
 
-Once kind is installed on your system you can create a new Kubernetes cluster by running
+当在及其安装 kind 之后，通过运行以下命令创建一个先的 Kubernetes 集群
 
 .. tabbed:: Istio 
 
@@ -81,66 +81,66 @@ Once kind is installed on your system you can create a new Kubernetes cluster by
             protocol: TCP
         EOF
 
-After ``kind`` has created your cluster, you can configure ``kubectl`` to use the cluster by setting the context:
+在 ``kind`` 创建集群后，可通过设置上下文配置 ``kubectl`` 使用集群：
 
 .. code-block:: bash
 
     kubectl cluster-info --context kind-seldon
 
-From now on, all commands run using ``kubectl`` will be directed at your ``kind`` cluster. 
+从现在起，所有使用 ``kubectl`` 运行的命令都将直接作用于 ``kind`` 集群。 
 
-.. note:: Kind prefixes your cluster names with ``kind-`` so your cluster context is ``kind-seldon`` and not just ``seldon``
+.. note:: Kind 为您的集群名称添加 ``kind-`` 前缀，所以集群上下文是 ``kind-seldon`` 而非 ``seldon``
 
-Install Cluster Ingress
+安装集群入口
 ------------------------------
 
-``Ingress`` is a Kubernetes object that provides routing rules for your cluster. It manages the incomming traffic and routes it to the services running inside the cluster.
+``Ingress`` 是为您的集群提供路由规则的 Kubernetes 对象。它管理传入的流量并将其路由到集群内运行的服务。
 
-Seldon Core supports using either `Istio <https://istio.io/>`_ or `Ambassador <https://www.getambassador.io/>`_ to manage incomming traffic. Seldon Core automatically creates the objects and rules required to route traffic to your deployed machine learning models.
+Seldon Core 支持使用 `Istio <https://istio.io/>`_ 或 `Ambassador <https://www.getambassador.io/>`_ 来管理传入流量。Seldon Core 自动创建将流量路由到您部署的机器学习模型所需的对象和规则。
 
 .. tabbed:: Istio
 
-    Istio is an open source service mesh. If the term *service mesh* is unfamiliar to you, it's worth reading `a little more about Istio <https://istio.io/latest/about/service-mesh/>`_.
+    Istio 是一个开源服务网格。如果您对 *service mesh* 不熟悉，非常值得去阅读 `更多关于Istio 的内容 <https://istio.io/latest/about/service-mesh/>`_ 。
 
-    **Download Istio**
+    **下载 Istio**
 
-    For Linux and macOS, the easiest way to download Istio is using the following command:
+    对于 Linux 及 macOS，最简单的方式是使用以下命令下载 Istio：
 
     .. code-block:: bash 
 
         curl -L https://istio.io/downloadIstio | sh -
 
-    Move to the Istio package directory. For example, if the package is ``istio-1.11.4``:
+    进入 Istio 包目录。比如，包 ``istio-1.11.4``：
 
     .. code-block:: bash
 
         cd istio-1.11.4
 
-    Add the istioctl client to your path (Linux or macOS):
+    添加 istioctl 客户端到 path (Linux or macOS):
 
     .. code-block:: bash
 
         export PATH=$PWD/bin:$PATH
 
-    **Install Istio**
+    **安装 Istio**
 
-    Istio provides a command line tool ``istioctl`` to make the installation process easy. The ``demo`` `configuration profile <https://istio.io/latest/docs/setup/additional-setup/config-profiles/>`_ has a good set of defaults that will work on your local cluster.
+    Istio 提供了一个命令工具 ``istioctl`` 来使安装更便捷。``示例`` `配置项 <https://istio.io/latest/docs/setup/additional-setup/config-profiles/>`_ 有一组很好的默认值来运行在你本地集群。
 
     .. code-block:: bash
 
         istioctl install --set profile=demo -y
 
-    The namespace label ``istio-injection=enabled`` instructs Istio to automatically inject proxies alongside anything we deploy in that namespace. We'll set it up for our ``default`` namespace:
+    命名空间标签 ``istio-injection=enabled`` 指示 Istio 注入自动代理我们在该命名空间中部署的任何内容。我们将为我们的 ``default`` 命名空间设置它：
 
     .. code-block:: bash 
 
         kubectl label namespace default istio-injection=enabled
 
-    **Create Istio Gateway**
+    **创建 Istio 网关**
 
-    In order for Seldon Core to use Istio's features to manage cluster traffic, we need to create an `Istio Gateway <https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/>`_ by running the following command:
+    为了让 Seldon Core 使用 Istio 的特性来管理流量，我们使用如下命令来创建一个 `Istio Gateway <https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/>`_ ：
 
-    .. warning:: You will need to copy the entire command from the code block below
+    .. warning:: 你需要拷贝下面全部的命令
     
     .. code-block:: yaml
 
@@ -162,39 +162,39 @@ Seldon Core supports using either `Istio <https://istio.io/>`_ or `Ambassador <h
             - "*"
         END
     
-    For custom configuration and more details on installing seldon core with Istio please see the `Istio Ingress <../ingress/istio.md>`_ page.
+    自定义配置及更多 seldon core 集成 Istio 安装的细节请查看 `Istio 入口 <../ingress/istio.md>`_ 页。
 
 .. tabbed:: Ambassador
 
-    `Ambassador <https://www.getambassador.io/>`_ is a Kubernetes ingress controller and API gateway. It routes incomming traffic to the underlying kubernetes workloads through configuration. 
+    `Ambassador <https://www.getambassador.io/>`_ 是 Kubernetes 入口控制器及 API 网关。他通过配置路由请求流量到 kubernetes 负载。
 
-    **Install Ambassador**
+    **安装 Ambassador**
 
-    First, we must install the Custom Resource Definitions by running:
+    首先通过命令安装 Custom Resource Definitions：
 
     .. code-block:: bash 
 
         kubectl apply -f https://github.com/datawire/ambassador-operator/releases/latest/download/ambassador-operator-crds.yaml
 
-    Now install the kind-specific manifests in the ``ambassador`` namespace:
+    现在安装 kind-specific manifests in the ``ambassador`` namespace:
 
     .. code-block:: bash 
 
         kubectl apply -n ambassador -f https://github.com/datawire/ambassador-operator/releases/latest/download/ambassador-operator-kind.yaml
         kubectl wait --timeout=180s -n ambassador --for=condition=deployed ambassadorinstallations/ambassador
 
-    Ambassador is now ready to use. For custom configuration and more details on installing seldon core with Ambassador please see the `Ambassador Ingress <../ingress/ambassador.md>`_ page.
+    Ambassador 已就绪。自定义配置及更多集成 Ambassador 安装 seldon core 的细节请查看 `Ambassador 入口 <../ingress/ambassador.md>`_ 页。
 
-Install Seldon Core
+安装 Seldon Core
 ----------------------------
 
-Before we install Seldon Core, we'll create a new namespace ``seldon-system`` for the operator to run in:
+在安装 Seldon Core 前，创建一个 operator 运行所在的命名空间 ``seldon-system`` ：
 
 .. code:: bash
 
     kubectl create namespace seldon-system
 
-We're now ready to install Seldon Core in our cluster. Run the following command for your choice of Ingress:
+现在我们已经为在集群安装 Seldon Core 准备就绪。根据选择的入口类型执行如下命令：
 
 .. tabbed:: Istio
 
@@ -216,18 +216,18 @@ We're now ready to install Seldon Core in our cluster. Run the following command
             --set ambassador.enabled=true \
             --namespace seldon-system
 
-You can check that your Seldon Controller is running by doing:
+使用以下命令检查 Seldon Controller 运行状态：
 
 .. code-block:: bash
 
     kubectl get pods -n seldon-system
 
-You should see a ``seldon-controller-manager`` pod with ``STATUS=Running``.
+你应该能看到 ``seldon-controller-manager`` pod 的 ``STATUS=Running``状态。
 
-Local Port Forwarding
+本地端口转发
 -------------------------------
 
-Because your kubernetes cluster is running locally, we need to forward a port on your local machine to one in the cluster for us to be able to access it externally. You can do this by running:
+因为 kubernetes 集群运行在本地，我们需要转发一个本地及其端口到集群，以便我们从外部访问。可通过命令尝试：
 
 .. tabbed:: Istio
 
@@ -241,6 +241,6 @@ Because your kubernetes cluster is running locally, we need to forward a port on
 
         kubectl port-forward -n ambassador svc/ambassador 8080:80
 
-This will forward any traffic from port 8080 on your local machine to port 80 inside your cluster.
+这将转发本地端口 8080 的任意流量到集群内 80 端口。
 
-You have now successfully installed Seldon Core on a local cluster and are ready to `start deploying models <../workflow/github-readme.md>`_ as production microservices.
+现在成功在本地安装 Seldon Core 并就绪 `开始部署模型 <../workflow/github-readme.md>`_ 作为生产微服务。

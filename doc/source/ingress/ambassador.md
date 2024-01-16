@@ -1,20 +1,20 @@
-# Ingress with Ambassador
+# 使用 Ingress Ambassador
 
-Seldon Core works well with [Ambassador](https://www.getambassador.io/), allowing a single ingress to be used to expose Ambassador and [running machine learning deployments that can then be dynamically exposed](https://kubernetes.io/blog/2018/06/07/dynamic-ingress-in-kubernetes/) through Seldon-created Ambassador configurations. Ambassador is a Kubernetes-native API Gateway built on Envoy Proxy. Managed entirely via Kubernetes Custom Resource Definitions, Ambassador provides powerful capabilities for traffic management, authentication, and observability. Ambassador has native integrations for popular service meshes, including Consul, Istio, and Linkerd.  In this doc we will discuss how your Seldon Deployments are exposed via Ambassador and how you can use both to do various production rollout strategies.
+Seldon Core 与 [Ambassador](https://www.getambassador.io/) 搭配良好，用于通过单入口暴露 Ambassador 以及 通过 Seldon 创建的 Ambassador 配置化的[运行中机器学习部署的动态暴露](https://kubernetes.io/blog/2018/06/07/dynamic-ingress-in-kubernetes/)。 Ambassador 是一个建立在 Envoy Proxy 基础上的 Kubernetes 原生 API 网关。完全通过 Kubernetes 自定义资源实现，Ambassador 提供强大的流量分发，身份验证，可观察性的管理能力。Ambassador 具有流行的服务网格原生实现，比如 Consul、Istio 以及 Linkerd。本文档中我们将讨论 Seldon Deployments 如何通过 Ambassador 暴露服务，以及如何同时使用这两种部署执行各种生产部署策略。
 
-## Installing Ambassador
+## 安装 Ambassador
 
-You have [two options](https://www.getambassador.io/editions/) when installing Ambassador:
+安装 Ambassador 有[两部建议](https://www.getambassador.io/editions/)：
 
 .. warning::
-   Seldon Core currently only supports the V1 Ambassador APIs. You **must** use the ``datawire/ambassador`` helm chart rather than the V2 ``datawire/edge-stack`` or V2 ``datawire/emissary`` charts. Following the installation instructions below or in our `installation guides <../nav/installation.rst>`_ should work fine.
+   Seldon Core 当前只支持 V1 Ambassador APIs. 你 **必须** 使用 ``datawire/ambassador`` helm chart 而不是使用 ``datawire/edge-stack`` 或者 V2 ``datawire/emissary`` charts。跟随 `安装指引 <../nav/installation.rst>`_ 可以正确工作。
 
-### Option 1: Ambassador Edge Stack
+### 建议 1：Ambassador 全栈
 
-The [Ambassador Edge Stack](https://www.getambassador.io/products/edge-stack/) is the easiest way to get started with Ambassador, providing easy, [Automatic TLS configuration](https://www.getambassador.io/docs/edge-stack/latest/topics/running/host-crd/#acme-support) in addition to other features, like [Authentication](https://www.getambassador.io/docs/edge-stack/latest/topics/using/filters/), [Rate Limiting](https://www.getambassador.io/docs/edge-stack/latest/topics/using/rate-limits/), and advanced routing behaviors, like [custom prefixes](https://www.getambassador.io/docs/edge-stack/latest/topics/using/intro-mappings/), [virtual hosting](https://www.getambassador.io/docs/edge-stack/latest/topics/using/headers/host/), [method](https://www.getambassador.io/docs/edge-stack/latest/topics/using/method/)/[query-parameter](https://www.getambassador.io/docs/edge-stack/latest/topics/using/query_parameters/) based routing, and many others.
-Follow the [AES installation instructions](https://www.getambassador.io/docs/edge-stack/1.14/tutorials/getting-started/) to install it on your Kubernetes cluster.
+[Ambassador Edge Stack](https://www.getambassador.io/products/edge-stack/) 时最简单的开始 Ambassador 的方式，提供简单，[自动 TLS 配置](https://www.getambassador.io/docs/edge-stack/latest/topics/running/host-crd/#acme-support) 等其他特性，如 [身份验证](https://www.getambassador.io/docs/edge-stack/latest/topics/using/filters/)，[限流](https://www.getambassador.io/docs/edge-stack/latest/topics/using/rate-limits/)，和高级的路由行为，比如[自定义前缀](https://www.getambassador.io/docs/edge-stack/latest/topics/using/intro-mappings/)，[虚拟主机](https://www.getambassador.io/docs/edge-stack/latest/topics/using/headers/host/)，[method](https://www.getambassador.io/docs/edge-stack/latest/topics/using/method/)/[query-parameter](https://www.getambassador.io/docs/edge-stack/latest/topics/using/query_parameters/) 基础的路由等等。
+查看 [AES 安装说明](https://www.getambassador.io/docs/edge-stack/latest/tutorials/getting-started/)将其安装到你的 Kubernetes 集群。
 
-Using `helm` the steps can be summarised as
+使用 `helm` 步骤可概况为：
 ```bash
 kubectl create namespace ambassador || echo "namespace ambassador exists"
 
@@ -25,12 +25,12 @@ helm install ambassador datawire/ambassador \
   --namespace ambassador
 ```
 
-### Option 2: Ambassador API Gateway (now Emissary Ingress)
+### 建议 2: Ambassador API 网关 (现为 Emissary Ingress)
 
-The [Ambassador API Gateway](https://www.getambassador.io/products/api-gateway/) (now Emissary Ingress) is the fully open source version of Ambassador Edge Stack and provides all the functionality of a traditional ingress controller.
-Follow the [Ambassador OSS instructions](https://www.getambassador.io/docs/emissary/1.14/tutorials/getting-started/) to install it on your kubernetes cluster.
+[Ambassador API Gateway](https://www.getambassador.io/products/api-gateway/) (现在为 Emissary Ingress) 是 Ambassador Edge Stack 的完全开源版本，并且提供传统控制器入口的所有功能。
+查看 [Ambassador OSS 说明](https://www.getambassador.io/docs/latest/topics/install/) 将其安装到你的 Kubernetes 集群。
 
-Using `helm` the steps can be summarised as
+使用 `helm` 步骤可概况为：
 ```bash
 kubectl create namespace ambassador || echo "namespace ambassador exists"
 
@@ -44,69 +44,69 @@ helm install ambassador datawire/ambassador \
 
 ### TLS
 
-It is highly recommended to utilize TLS to encrypt traffic that is coming into Ambassador.  The default Ambassador Edge Stack installation comes with a self-signed certificate that will be used absent any other TLS configuration.  Follow the [instructions](https://www.getambassador.io/docs/edge-stack/latest/howtos/tls-termination/) for setting up TLS on your cluster.
+强烈建议使用 TLS 加密控制进入 Ambassador 的流量。默认安装自带自签名证书，并且未使用任何其他 TLS 配置。查看 [说明](https://www.getambassador.io/docs/edge-stack/latest/howtos/tls-termination/) 来对集群进行 TLS 配置。
 
 ## Ambassador REST
 
-Assuming Ambassador is exposed at `<ambassadorEndpoint>` and with a Seldon deployment name `<deploymentName>` running in a namespace `namespace`:
+假设 Ambassador 服务暴露于运行在 `namespace` 空间 `<deploymentName>` Seldon deployment 上的 `<ambassadorEndpoint>`：
 
-Note, if you chose to install the Ambassador Edge Stack then you will need to use https.  You can either [set up TLS](https://www.getambassador.io/docs/edge-stack/latest/howtos/tls-termination/) or pass the `-k` flag in `curl` to allow the self-signed certificate.
+注意，如果选择安装的是 Ambassador Edge Stack 需使用 https。即可使用[TLS 设置](https://www.getambassador.io/docs/edge-stack/latest/howtos/tls-termination/) 也可传递 `-k` 参数在 `curl` 中允许自签名证书。
 
-For Seldon Core restricted to a namespace, `singleNamespace=true`, the endpoints exposed are:
+对于限定了命名空间的 Seldon Core，`singleNamespace=true`，节点暴露为：
 
  * `http(s)://<ambassadorEndpoint>/seldon/<deploymentName>/api/v1.0/predictions`
  * `http(s)://<ambassadorEndpoint>/seldon/<namespace>/<deploymentName>/api/v1.0/predictions`
 
-For Seldon Core running cluster wide, `singleNamespace=false`, the endpoints exposed are all namespaced:
+全局运行的 Seldon Core，`singleNamespace=false`，节点暴露为：
 
  * `http(s)://<ambassadorEndpoint>/seldon/<namespace>/<deploymentName>/api/v1.0/predictions`
 
-## Example Curl
+## Curl示例
 
 ### Ambassador REST
 
-If you installed the OSS Ambassador API Gateway, and assuming a Seldon Deployment `mymodel` with Ambassador exposed on `0.0.0.0:8003` you can send a curl request as follows:
+如果安装的是 OSS Ambassador API 网关，假设基于 Ambassador 的 Seldon Deployment `mymodel` 服务暴露为 `0.0.0.0:8003` 可按下面发送请求：
 
 ```bash
 curl -v 0.0.0.0:8003/seldon/mymodel/api/v1.0/predictions -d '{"data":{"names":["a","b"],"tensor":{"shape":[2,2],"values":[0,0,1,1]}}}' -H "Content-Type: application/json"
 ```
 
-Alternatively, if you installed the Ambassador Edge Stack with TLS configured, and assuming a Seldon Deployment `mymodel` with the Ambassador hostname `example-hostname.com`:
+或者，安装的是 TLS 配置的 Ambassador Edge Stack，假设基于 Ambassador 的 Seldon Deployment `mymodel` 服务 hostname 为 `example-hostname.com`：
 
 ```bash
 curl -v https://example-hostname.com/seldon/mymodel/api/v1.0/predictions -d '{"data":{"names":["a","b"],"tensor":{"shape":[2,2],"values":[0,0,1,1]}}}' -H "Content-Type: application/json"
 ```
 
-If you did not, you can use the exposed IP address in place of `example-hostname` and pass the -k flag for insecure TLS.
+如果都不是，可使用 IP 地址代替 `example-hostname` 并传递 -k 选项来方位不安全的 TLS。
 
 ```bash
 curl -vk https://0.0.0.0/seldon/mymodel/api/v1.0/predictions -d '{"data":{"names":["a","b"],"tensor":{"shape":[2,2],"values":[0,0,1,1]}}}' -H "Content-Type: application/json"
 ```
 
-## Ambassador Configuration Annotations Reference
+## Ambassador 配置注解参考
 
-| Annotation | Description |
+| 注解 | 说明 |
 |------------|-------------|
-|`seldon.io/ambassador-config:<configuration>`| Custom Ambassador Configuration |
-|`seldon.io/ambassador-header:<header>`| The header to add to Ambassador configuration |
-|`seldon.io/ambassador-id:<instance id>`| The instance id to be added to Ambassador `ambassador_id` configuration |
-|`seldon.io/ambassador-regex-header:<regex>`| The regular expression header to use for routing via headers|
-|`seldon.io/ambassador-retries:<number of retries>` | The number of times ambassador will retry request on connect-failure. Default 0. Use custom configuration if more control needed.|
-|`seldon.io/ambassador-service-name:<existing_deployment_name>`| The name of the existing Seldon Deployment for shadow or header based routing |
-|`seldon.io/grpc-timeout: <gRPC read timeout (msecs)>` | gRPC read timeout |
-|`seldon.io/rest-timeout:<REST read timeout (msecs)>` | REST read timeout |
-|`seldon.io/ambassador-circuit-breakers-max-connections:<maximum number of connections>` | The maximum number of connections will make to the Seldon Deployment |
-|`seldon.io/ambassador-circuit-breakers-max-pending-requests:<maximum number of queued requests>` | The maximum number of requests that will be queued while waiting for a connection |
-|`seldon.io/ambassador-circuit-breakers-max-requests:<maximum number of parallel outstanding requests>` | The maximum number of parallel outstanding requests to the Seldon Deployment |
-|`seldon.io/ambassador-circuit-breakers-max-retries:<maximum number of parallel retries>` | The maximum number of parallel retries allowed to the Seldon Deployment |
+|`seldon.io/ambassador-config:<configuration>`| 自定义 Ambassador 配置 |
+|`seldon.io/ambassador-header:<header>`| 添加到 Ambassador 配置的 Header |
+|`seldon.io/ambassador-id:<instance id>`| 添加到 Ambassador `ambassador_id` 配置的实例 id |
+|`seldon.io/ambassador-regex-header:<regex>`| T用于通过 header 头路由的正则表达式|
+|`seldon.io/ambassador-retries:<number of retries>` | Tambassador 将在连接失败时重试请求的次数。默认 0。如果需要更多控制，请使用自定义配置。|
+|`seldon.io/ambassador-service-name:<existing_deployment_name>`| 现有 Seldon Deployment 的名称，用于基于 shadow 或 header 的路由 |
+|`seldon.io/grpc-timeout: <gRPC read timeout (msecs)>` | gRPC 读取超时时间 |
+|`seldon.io/rest-timeout:<REST read timeout (msecs)>` | REST 读取超时时间 |
+|`seldon.io/ambassador-circuit-breakers-max-connections:<maximum number of connections>` | Seldon 部署的最大连接数 |
+|`seldon.io/ambassador-circuit-breakers-max-pending-requests:<maximum number of queued requests>` | 等待连接时将排队的最大请求数 |
+|`seldon.io/ambassador-circuit-breakers-max-requests:<maximum number of parallel outstanding requests>` | Seldon 部署的最大并行未完成请求数 |
+|`seldon.io/ambassador-circuit-breakers-max-retries:<maximum number of parallel retries>` | Seldon 部署允许的最大并行重试次数 |
 
-All annotations should be placed in `spec.annotations`.
+所有注解需放在 `spec.annotations`。
 
-See below for details.
+下面查看明细。
 
-### Canary Deployments
+### 金丝雀部署
 
-Canary rollouts are available where you wish to push a certain percentage of traffic to a new model to test whether it works ok in production. To add a canary to your SeldonDeployment simply add a new predictor section and set the traffic levels for the main and canary to desired levels. For example:
+如果您希望将一定比例的流量推送到新模型以测试它在生产中是否正常工作，则可以使用 Canary 部署。要将金丝雀添加到您的 SeldonDeployment，只需添加一个新的预测器部分并将主要和金丝雀的流量级别设置为所需的级别。例如：
 
 ```YAML
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -147,63 +147,63 @@ spec:
 
 ```
 
-The above example has a "main" predictor with 75% of traffic and a "canary" with 25%.
+以上示例包含 75% 流量分发到 “main”，25% 流量到 “canary”。
 
-A worked example for [canary deployments](../examples/ambassador_canary.html) is provided.
+这里提供了一个[canary 发布](../examples/ambassador_canary.html)的示例。
 
-### Shadow Deployments
+### 影子部署
 
-Shadow deployments allow you to send duplicate requests to a parallel deployment but throw away the response. This allows you to test machine learning models under load and compare the results to the live deployment.
+影子部署允许您向并行部署发送重复请求，但丢弃响应。这允许您在负载下测试机器学习模型并将结果与​​实时部署进行比较。
 
-Simply set the `shadow` boolean in your shadow predictor.
+只需预测器中设置 `shadow` 布尔值。
 
-A worked example for [shadow deployments](../examples/ambassador_shadow.html) is provided.
+提供了[影子部署](../examples/ambassador_shadow.html)工作示例。
 
-To understand more about the Ambassador configuration for this see [their docs on shadow deployments](https://www.getambassador.io/reference/shadowing/).
+要了解有关 ambassador 配置的更多信息，请参阅[他们的影子部署文档](https://www.getambassador.io/reference/shadowing/).
 
-### Header based Routing
+### 基于 Header 头的路由
 
-Header based routing allows you to route requests to particular Seldon Deployments based on headers in the incoming requests.
+基于标头的路由允许您根据传入请求中的标头将请求路由到特定的 Seldon 部署。
 
-You simply need to add some annotations to your Seldon Deployment resource.
+您只需要向您的 Seldon 部署资源添加一些注释。
 
-  * `seldon.io/ambassador-header:<header>` : The header to add to Ambassador configuration
-     * Example:  `"seldon.io/ambassador-header":"location: london"	    `
-  * `seldon.io/ambassador-regex-header:<header>` : The regular expression header to add to Ambassador configuration
-     * Example:  `"seldon.io/ambassador-header":"location: lond.*"	    `
-  * `seldon.io/ambassador-service-name:<existing_deployment_name>` : The name of the existing Seldon Deployment you want to attach to as an alternative mapping for requests.
-     * Example: `"seldon.io/ambassador-service-name":"example"`
+  * `seldon.io/ambassador-header:<header>` : 加到 Ambassador 配置
+     * 例:  `"seldon.io/ambassador-header":"location: london"	    `
+  * `seldon.io/ambassador-regex-header:<header>` : 添加到配置的正则表达式标头
+     * 例:  `"seldon.io/ambassador-header":"location: lond.*"	    `
+  * `seldon.io/ambassador-service-name:<existing_deployment_name>` : 要附加到作为请求的替代映射的现有 Seldon 部署的名称。
+     * 例: `"seldon.io/ambassador-service-name":"example"`
 
-A worked example for [header based routing](../examples/ambassador_headers.html) is provided.
+我们提供了一个[header头路由](../examples/ambassador_headers.html)工作示例。
 
-To understand more about the Ambassador configuration for this see [their docs on header based routing](https://www.getambassador.io/reference/headers).
+要了解有关 ambassador 配置的更多信息，请参阅 [header 头路由](https://www.getambassador.io/reference/headers)文档。
 
-### Circuit Breakers
+### 限流
 
-By preventing additional connections or requests to an overloaded Seldon Deployment, circuit breakers help improve resilience of your system.
+通过阻止对过载 Seldon 部署的额外连接或请求，限流器有助于提高系统的弹性。
 
-You simply need to add some annotations to your Seldon Deployment resource.
+您只需要向您的 Seldon 部署资源添加一些注释。
 
-  * `seldon.io/ambassador-circuit-breakers-max-connections:<maximum number of connections>` : The maximum number of connections will make to the Seldon Deployment
+  * `seldon.io/ambassador-circuit-breakers-max-connections:<maximum number of connections>` : Seldon Deployment 的最大连接数
      * Example:  `"seldon.io/ambassador-circuit-breakers-max-connections":"200"`
-  * `seldon.io/ambassador-circuit-breakers-max-pending-requests:<maximum number of queued requests>` : The maximum number of requests that will be queued while waiting for a connection
+  * `seldon.io/ambassador-circuit-breakers-max-pending-requests:<maximum number of queued requests>` : 等待连接时排队的最大请求数
      * Example:  `"seldon.io/ambassador-circuit-breakers-max-pending-requests":"100"`
-  * `seldon.io/ambassador-circuit-breakers-max-requests:<maximum number of parallel outstanding requests>` : The maximum number of parallel outstanding requests to the Seldon Deployment
+  * `seldon.io/ambassador-circuit-breakers-max-requests:<maximum number of parallel outstanding requests>` : Seldon 部署的最大并行未完成请求数
      * Example: `"seldon.io/ambassador-circuit-breakers-max-requests":"200"`
-  * `seldon.io/ambassador-circuit-breakers-max-retries:<maximum number of parallel retries>` : The maximum number of parallel retries allowed to the Seldon Deployment
+  * `seldon.io/ambassador-circuit-breakers-max-retries:<maximum number of parallel retries>` : Seldon Deployment 允许的最大并行重试次数
      * Example: `"seldon.io/ambassador-circuit-breakers-max-retries":"3"`
 
-A worked example for [circuit breakers](../examples/ambassador_circuit_breakers.html) is provided.
+提供了[限流器](../examples/ambassador_circuit_breakers.html)的工作示例。
 
-To understand more about the Ambassador configuration for this see [their docs on circuit breakers](https://www.getambassador.io/docs/latest/topics/using/circuit-breakers/).
+要了解有关 ambassador 配置的更多信息，请参阅[限流器]](https://www.getambassador.io/docs/latest/topics/using/circuit-breakers/)文档。
 
-## Multiple Ambassadors in the same cluster
+## 同一集群中的多个 Ambassador
 
-To avoid conflicts in a cluster with multiple ambassadors running, you can add the following annotation to your Seldon Deployment resource.
+为了避免在运行多个 Ambassador 的集群中发生冲突，您可以将以下注释添加到您的 Seldon 部署资源中。
 
-  * `seldon.io/ambassador-id:<instance id>`: The instance id to be added to Ambassador `ambassador_id` configuration
+  * `seldon.io/ambassador-id:<instance id>`: 要添加到 Ambassador 的实例 id `ambassador_id` 配置
 
-For example,
+例如，
 
 ```YAML
 apiVersion: machinelearning.seldon.io/v1alpha2
@@ -216,17 +216,17 @@ spec:
   name: ambassadors-example
 ```
 
-Note that your Ambassador instance must be configured with matching `ambassador_id`.
+请注意，您的 Ambassador 实例必须配置为匹配的 `ambassador_id`。
 
-See [AMBASSADOR_ID](https://www.getambassador.io/docs/latest/topics/running/running/#ambassador_id) for details
+查看 [AMBASSADOR_ID](https://www.getambassador.io/docs/latest/topics/running/running/#ambassador_id) 获取更多信息。
 
-### Custom Amabassador configuration
+### 自定义 Amabassador 配置
 
-The above discussed configurations should cover most cases, however custom configuration is necessary to leverage the full feature-set of Ambassador Edge Stack as a traffic management and authentication tool.  There are two options for configuring Ambassador, based on how you want to manage the configuration: Custom Resource Definitions (CRD's) and Annotations.
+上面讨论的配置应该涵盖大多数情况，但是自定义配置是必要的，以利用 Ambassador Edge Stack 的完整功能集作为流量管理和身份验证工具。根据您希望如何管理配置，有两种配置 Ambassador 的选项：自定义资源定义 (CRD) 和注释。
 
-Ambassador primarily utilizes [Custom Resource Definitions](https://www.getambassador.io/docs/edge-stack/latest/topics/concepts/gitops-continuous-delivery/#policies-declarative-configuration-and-custom-resource-definitions) for managing configuration.  These are custom `kind` resources that the Kubernetes API can read, and are used to update Ambassador's config in a way that is observable to the cluster as a whole (e.g. you can `kubectl get` these resources).  These CRD's can be managed independent of the Seldon Deploy itself.
+Ambassador 主要利用 [自定义资源](https://www.getambassador.io/docs/edge-stack/latest/topics/concepts/gitops-continuous-delivery/#policies-declarative-configuration-and-custom-resource-definitions) 来管理配置。这是  Kubernetes API 可读的自定义 `kind` 资源，用于以整个集群可观察的方式更新 Ambassador 的配置（例如，您可以使用 `kubectl get` 这些资源）。这些 CRD 可以独立于 Seldon Deploy 本身进行管理。
 
-Ambassador also supports annotation based configuration, which can be applied to a Seldon Deployment using the `seldon.io/ambassador-config` annotation key.  The overall formatting of the annotation-based config is the same as the CRD based config, except without the `metadata` and `spec` fields.  The following snippets demonstrate the difference between CRD and Annotation based configurations, and are functionally identical.
+Ambassador 还支持基于注解的配置，可以使用 `seldon.io/ambassador-config` 注解键将其应用于 Seldon 部署。除了没有 `metadata` 和 `spec` 字段之外，基于注释的配置的整体格式与基于 CRD 的配置相同。以下片段演示了 CRD 和基于注释的配置之间的区别，并且在功能上是相同的。
 
 ```yaml
 apiVersion: getambassador.io/v2
@@ -239,7 +239,7 @@ spec:
   timeout_ms: 3000
 ```
 
- * `seldon.io/ambassador-config:<configuration>` : The custom ambassador configuration
+ * `seldon.io/ambassador-config:<configuration>` : 自定义 ambassador 配置
     * Example: `"seldon.io/ambassador-config":"apiVersion: ambassador/v2\nkind: Mapping\nname: seldon_example_rest_mapping\nprefix: /mycompany/ml/\nservice: production-model-example.seldon:8000\ntimeout_ms: 3000"`
 
-A worked example for [custom Ambassador config](../examples/ambassador_custom.html) is provided.
+提供了自定义 Ambassador 配置的[工作示例](../examples/ambassador_custom.html)。
