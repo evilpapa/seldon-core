@@ -1,23 +1,23 @@
-# NVIDIA Inference Server Proxy
+# NVIDIA 预估服务代理
 
-The NVIDIA Inference Server Proxy provides a proxy to forward Seldon prediction requests to a running [NVIDIA Inference Server](https://docs.nvidia.com/deeplearning/sdk/inference-user-guide/index.html).
+NVIDIA 预估服务代理提供了 Seldon 预估请求转发来运行 [NVIDIA 预估服务](https://docs.nvidia.com/deeplearning/sdk/inference-user-guide/index.html)。
 
 ## Configuration
 
-The Nvidia Proxy takes several parameters:
+Nvidia Proxy 有以下参数：
 
- | Parameter | Type | Value | Example |
+ | 参数 | 类型 | 值 | 示例 |
  |-----------|------|-------|---------|
  | url | STRING | URL to Nvidia Inference Server endpoint | 127.0.0.1:8000 |
  | model_name | STRING | model name | tensorrt_mnist |
- | protocol | STRING | API protocol to use: HTTP or GRPC | HTTP |
+ | protocol | STRING | API 协议： HTTP or GRPC | HTTP |
 
 
-An example SeldonDeployment Kubernetes resource taken from the MNIST demo is shown below to illustrate how these parameters are set. The graph consists of three containers
+下面显示了从 MNIST 演示中获取的 SeldonDeployment Kubernetes 资源示例，以说明如何设置这些参数。该图由三个容器组成
 
-  1. A Seldon transformer to do feature transformations on the raw input.
-  1. A NVIDIA Inference Server Model Proxy.
-  1. The NVIDIA Inference Server loaded with a model.
+  1. 对原始输入进行特征变换的 Seldon 变换器。
+  1. 一个 NVIDIA 推理服务器模型代理。
+  1. NVIDIA 推理服务器加载了一个模型。
 
 ![MNIST Example](./mnist-graph.png)
 

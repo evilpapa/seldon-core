@@ -149,7 +149,7 @@ securityContext:
 # 使用 Istio 服务网格
 Istio 也可以直接用于集群内部的导流，而不是将其作为入口（导流集群外部流量）。
 
-为此，虚拟服务 Seldon 会创建附加到名为 `mesh` 的“特殊”网关。这会将路由规则应用于网格内的流量，而无需通过网关进行路由。
+为此，虚拟服务 Seldon 会创建附加到名为 `mesh` 的「特殊」网关。这会将路由规则应用于网格内的流量，而无需通过网关进行路由。
 
 由于 Istio 的限制（从 v1.11.3 开始），本地网格中的虚拟服务只能应用于一个主机。(在[此处](https://istio.io/latest/docs/ops/best-practices/traffic-management/#split-virtual-services)查看他们的文档)。因此，每个 Graph 都需要一个唯一的服务，这可以通过在主预测器中设置 `seldon.io/svc-name` 注解。
 

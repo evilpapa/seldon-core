@@ -12,7 +12,7 @@ KNative Eventing 的工作方式是创建相关触发器发送到匹配到的相
 
 Seldon Core 实现了 KNative Eventing Duck Typing 要求，允许用户创建引用特定 SeldonDeployments 的触发器。
 
-可以使用以下格式创建名为 “iris-deployment” 的 SeldonDeployment 触发器示例：
+可以使用以下格式创建名为 「iris-deployment」 的 SeldonDeployment 触发器示例：
 
 ```yaml
 apiVersion: eventing.knative.dev/v1beta1
@@ -32,7 +32,7 @@ spec:
       name: iris-deployment
 ```
 
-这意味着任何类型为 “seldon.iris-deployment.default.request” 的 Cloudevents 都将被发送到名为 `iris-deployment` 的 SeldonDeployment。
+这意味着任何类型为 「seldon.iris-deployment.default.request」 的 Cloudevents 都将被发送到名为 `iris-deployment` 的 SeldonDeployment。
 
 URL 路径是通过我们从 Knative 中实现的 Duck Typing 来推断的，它会自动从 Kubernetes 资源状态中提取 URL，特别是从属性 `status.addressable.url` 中提取 URL。
 

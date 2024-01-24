@@ -1,6 +1,6 @@
-# Seldon Service Orchestrator
+# Seldon 服务编排器
 
-## Functionality
+## 功能性
 
  * REST and gRPC for Seldon and Tensorflow protocols. Easily extendable to other protocols.
  * Logging of request and or response payloads to arbitrary URLs with CloudEvents
@@ -10,9 +10,9 @@
  * Not meta data additions to payloads are carried out by the executor.
 
 
-## Testing
+## 测试
 
-An example is shown below:
+一个示例：
 
 ```JSON
 apiVersion: machinelearning.seldon.io/v1alpha2

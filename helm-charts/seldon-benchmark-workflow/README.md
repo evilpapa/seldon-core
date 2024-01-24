@@ -6,7 +6,7 @@ Seldon Benchmark Workflow
 
 ## Usage
 
-To use this chart, you will first need to add the `seldonio` Helm repo:
+使用本chart，首先要添加 `seldonio` Helm 仓库：
 
 ```bash
 helm repo add seldonio https://storage.googleapis.com/seldon-charts
@@ -26,13 +26,13 @@ using:
 helm install $MY_MODEL_NAME seldonio/seldon-benchmark-workflow --namespace $MODELS_NAMESPACE
 ```
 
-## Source Code
+## 源码
 
 * <https://github.com/SeldonIO/seldon-core>
 
-## Values
+## 设置值
 
-| Key | Type | Default | Description |
+| 键 | 类型 | 默认值 | 描述 |
 |-----|------|---------|-------------|
 | benchmark.concurrency | int | `1` |  |
 | benchmark.cpu | int | `4` |  |

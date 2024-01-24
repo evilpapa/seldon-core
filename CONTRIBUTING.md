@@ -1,30 +1,29 @@
-# Contributing to Seldon Core
+# 为 Seldon Core 贡献
 
-_Before opening a pull request_ consider:
+_在打开 PR 前_ 考虑：
 
-- Is the change important and ready enough to ask the community to spend time reviewing?
-- Have you searched for existing, related issues and pull requests?
-- Is the change being proposed clearly explained and motivated?
+- 变更是否足够重要并准备完毕以让社区花费时间经理来进行 review？
+- 你有没有搜索已经存在或相关的讨论或者PR？
+- 提议的变更是否得到了明确的解释和目的？
 
-When you contribute code, you affirm that the contribution is your original work and that you
-license the work to the project under the project's open source license. Whether or not you
-state this explicitly, by submitting any copyrighted material via pull request, email, or
-other means you agree to license the material under the project's open source license and
-warrant that you have the legal authority to do so.
+当您贡献代码时，您确认该贡献是您的原创作品，并且您
+根据项目的开源许可证将作品授权给该项目。不管你是否
+通过 PR 请求、电子邮件或
+其他表示您同意根据项目的开源许可证对材料进行许可，并且
+保证你有这样做的合法权限。
 
-## Release notes
+## 发布书名
 
-Our process to manage release notes is modelled after how the Kubernetes project handles them.
-This process can be separated into 2 separate phases: 
+我们管理发行说明的过程是以 Kubernetes 项目如何处理它们为模型的。
+该过程可分为两个独立阶段：
 
-- Adding notes on each PR. Happens at **PR creation time**.
-- Compiling all PR notes before a release. Happens at **release time**.
+- 在 **PR 创建时**为每个 PR 增加说明。
+- **发布时** 在发布之前编译所有PR注释。
 
-### Adding notes on each PR
+### 为每个 PR 增加说明
 
-When a PR is created, a [Prow / Lighthouse
-plugin](https://prow.k8s.io/command-help#release_note_none) will check if there
-is a populated `release-note` block in the PR body such as:
+当 PR 创建，一个 [Prow / Lighthouse
+插件](https://prow.k8s.io/command-help#release_note_none) 会检查 PR 体中是否存在一个相应的 `release-note` 区块如：
 
 ````md
 ```release-note
@@ -32,25 +31,19 @@ Some public-facing release note.
 ```
 ````
 
-If there isn't, the PR will be labelled as
-`do-not-merge/release-note-label-needed`.
-Note that to speed things up, the [default PR
-template](https://github.com/SeldonIO/seldon-core/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
-will create an empty
-`release-notes` block for you.
-For PRs that don't need public-facing release notes (e.g. fixes on the
-integration tests), you can use the `/release-note-none` Prow command.
+如果没有，PR 会被打标为 `do-not-merge/release-note-label-needed`。
+请注意，为了加快速度，[默认的 PR
+模板](https://github.com/SeldonIO/seldon-core/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
+会为你创建一个空的 `release-notes` 块。
+对于不需要面向公众的发布说明的 PR (e.g. 继承测试的修复程序)，你可以使用 `/release-note-none` Prow 命令。
 
-#### Conventions
+#### 约定
 
-There are a number of conventions that we can use so that the changes are more
-semantic.
-These are mainly based around keywords which will affect how the release notes
-will get displayed.
+我们可以使用许多约定，以便更改更具语义。
+这些主要基于关键字，这些关键字将影响发布说明的显示方式。
 
-- Use the words `Added`, `Changed`, `Fixed`, `Removed` or `Deprecated` to
-  describe the contents of the PR.
-  For example:
+- 使用 `Added`、`Changed`、`Fixed`、`Removed` 或者 `Deprecated` 单词来描述 PR 内容。
+  例如：
   
   ````md
   ```release-note
@@ -58,7 +51,7 @@ will get displayed.
   ```
   ````
 
-- Use the expression `Action required` to describe breaking changes.
+- 使用表达式 `Action required` 描述中断更改。
   For example:
 
   ````md
@@ -68,57 +61,48 @@ will get displayed.
   ```
   ````
 
-### Compiling all PR notes before a release
+### 发布前编译所有PR注释
 
-At release time, there is a [release-notes
-command](https://github.com/kubernetes/release/blob/master/cmd/release-notes/README.md)
-which crawls over all the PRs between 2 particular tags (e.g. `v1.1.0` to
-`v1.2.0`), extracting the release-notes blocks.
-These blocks can then be used to generate the final release notes.
+发布时，有一个 [release-notes
+命令](https://github.com/kubernetes/release/blob/master/cmd/release-notes/README.md)
+会在 2 个特定标签之间的所有 PR 上爬取行提取发行说明块（例如 `v1.1.0` 到 `v1.2.0`）。
+然后可以使用这些块来生成最终发行说明。
 
-## Coding conventions
+## 编码约定
 
-We use [pre-commit](https://pre-commit.com/) to handle a number of Git hooks
-which ensure that all changes to the codebase follow Seldon's code conventions.
-It is recommended to set these up before making any change to the codebase.
-Extra checks down the line will stop the build if the code is not compliant to
-the style guide of each language in the repository.
+我们使用 [pre-commit](https://pre-commit.com/) 处理一些 Git hooks，它能确保
+所有基线代码的修改能遵循 Seldon 代码约定。
+推荐在任何修改代码前进行设置。
+如果代码不符合存储库中每种语言的样式指南，那么接下来的额外检查将停止构建。
 
-To install it, follow the [official instructions](https://pre-commit.com/#install).
+参考[官方说明](https://pre-commit.com/#install)进行安装。
 Once installed, run:
 
 ```console
 $ pre-commit install
 ```
 
-This will read the hooks defined in `.pre-commit-config.yaml` and install them
-accordingly on your local repository.
+这会读取 `.pre-commit-config.yaml` 的 hook 定义并照着安装到本地仓库。
 
 ### Java
 
-To format our Java code we follow [Google's Java style
-guide](https://google.github.io/styleguide/javaguide.html).
-To make sure that the codebase remains consistent, we use
-[checkstyle](https://github.com/checkstyle/checkstyle) as part of the `mvn validate` lifecycle.
+Java 代码格式遵循 [Google's Java 风格指南](https://google.github.io/styleguide/javaguide.html)。
+为了确保代码库保持一致，我们使用
+[checkstyle](https://github.com/checkstyle/checkstyle) 作为 `mvn validate` 生命周期的一部分。
 
-To integrate these on your local editor, you can follow the official
-instructions to [configure checkstyle
-locally](https://checkstyle.org/beginning_development.html) and to [set-up
-google-java-format](https://github.com/google/google-java-format#using-the-formatter).
+要在本地编辑器整合，你可以参考[本地配置 checkstyle](https://checkstyle.org/beginning_development.html) 的官方说明并
+[设置 google-java-format](https://github.com/google/google-java-format#using-the-formatter)。
 
 ### Python
 
-To format our Python code we use [black](https://github.com/psf/black), the
-heavily opinionated formatter.
+Python 代码格式遵循 [black](https://github.com/psf/black)，一个很重的格式化程序。
 
-To integrate it on your local editor, you can follow the official instructions
-to [set-up black](https://github.com/psf/black#editor-integration).
+要在本地编辑器整合，你可以参考[设置 black](https://github.com/psf/black#editor-integration)的官方说明。
 
 ## Tests
 
-Regardless of the package you are working on, we abstract the main tasks to a
-`Makefile`.
-Therefore, in order to run the tests, you should be able to just do:
+无论您正在处理哪个包，我们都将主要任务抽象为 `Makefile`。
+因为，为了执行测试，你需要这么做：
 
 ```bash
 $ make test
@@ -126,46 +110,37 @@ $ make test
 
 ### Python
 
-We use [pytest](https://docs.pytest.org/en/latest/) as our main test runner.
-However, to ensure that tests run on the same version of the package that final
-users will download from `pip` and pypi.org, we use
-[tox](https://tox.readthedocs.io/en/latest/) on top of it.
-To install both (plus other required plugins), just run:
+我们使用 [pytest](https://docs.pytest.org/en/latest/) 作为主要的执行器。
+然而，为了确保测试能在最终用户通过 `pip` 及 pypi.org 下载的相同版本的包上运行，我们在其上使用[tox](https://tox.readthedocs.io/en/latest/)。
+安装两者（亦或者其他以来的插件），使用：
 
 ```bash
 $ make install_dev
 ```
 
-Using `tox` we can run the entire test suite over different environments,
-isolated between them.
-You can see the different ones we currently use on the
+我们可以使用 `tox` 在不同的隔离环境中运行整个测试套件。
+您可以在文件中看到我们当前使用的不同
 [setup.cfg](https://github.com/SeldonIO/seldon-core/blob/master/python/setup.cfg)
-file.
-You can run your tests across all these environments using the standard `make test` [mentioned above](#Tests).
-Alternatively, if you want to pass any extra parameters, you can also run `tox`
-directly as:
+文件。
+你可以在所有环境中使用 `make test` [mentioned above](#Tests) 运行测试。
+或者，如果您想传递任何额外的参数，你也可以直接运行 `tox`：
 
 ```bash
 $ tox
 ```
 
-One of the caveats of `tox` is that, as the number of environments grows, so
-does the time it takes to finish running the tests.
-As a solution, during local development it may be recommended to run `pytest` directly
-on your own environment.
-You can do so as:
+一个 `tox` 警告是，随着环境数量的增长，完成测试所需的时间也在增加。
+作为解决方案，在本地环境推荐你直接运行 `pytest`：
+你可以直接执行：
 
 ```bash
 $ pytest
 ```
 
-### End to End Tests
+### 端到端测试
 
-As part of Seldon Core's test suite, we also run end to end tests.
-These spin up an actual Kubernetes cluster using
-[Kind](https://github.com/kubernetes-sigs/kind) and deploy different
-`SeldonDeployment` and resources.
+作为 Seldon Core 的测试套件，我们也支持端到端测试。
+这些使用 [Kind](https://github.com/kubernetes-sigs/kind) 生成了一个实际的Kubernetes集群并
+部署不同的 `SeldonDeployment` 及资源。
 
-You can learn more about how to run them and how to add new test cases on
-[their dedicated
-documentation](https://docs.seldon.io/projects/seldon-core/en/latest/developer/e2e.html).
+你可以通过[专门的文档](https://docs.seldon.io/projects/seldon-core/en/latest/developer/e2e.html)学习如何运行并添加测试用例。

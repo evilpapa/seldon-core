@@ -1,10 +1,10 @@
-# End to End Tests
+# 端到端测试
 
-## Running the test suite
+## 执行测试套件
 
-### Prerequisites
+### 要求
 
-We use:
+我们使用：
 
 [Kind](https://github.com/kubernetes-sigs/kind) v0.6.1
 
@@ -20,23 +20,23 @@ We use:
 [gRPC.io Tools](https://grpc.io/docs/languages/python/quickstart/#grpc-tools)
 `python -m pip install grpcio-tools`
 
-### Setup
+### 设置
 
-To get everything setup run:
+执行以下命令设置所有：
 
 ```console
 kind_test_setup.sh
 ```
 
-Activate kind kubernetes config:
+可用的 kind kubernetes 配置：
 
 ```console
 export KUBECONFIG="$(kind get kubeconfig-path)"
 ```
 
-### Run
+### 运行
 
-Then to run the tests and log output to a file:
+运行测试并输出日志到文件：
 
 ```console
 make test_sequential > test_sequential.log
@@ -48,64 +48,55 @@ make test_parallel > test_parallel.log
 make test_notebooks > test_notebooks.log
 ```
 
-To run a single test:
+运行单个测试
 ```console
 pytest -sv test_tags.py::TestTagsPythonS2iK8s::test_model_single_grpc > test_model_single_grpc.log
 ```
 
-### Logs
+### 日志
 
-To view test logs in a separate terminal:
+在独立终端查看测试日志：
 
 ```console
 tail -f test_sequential.log
 ```
 
-To also follow controller logs in a separate terminal:
+在独立的终端查看控制器日志：
 
 ```console
 export KUBECONFIG="$(kind get kubeconfig-path)"
 kubectl logs -f -n seldon-system $(kubectl get pods -n seldon-system -l app=seldon -o jsonpath='{.items[0].metadata.name}')
 ```
 
-## Writing new tests
+## 编写新测试：
 
-### Individual namespaces
+### 个人命名空间
 
-Each test should run on its own separate Kubernetes namespace.
-This allows for a cleaner environment as well as enables some of them
-to get parallelised (see [Sequential and parallel
-tests](#Sequential-and-parallel-tests)).
+每个测试都应该运行在他们各自的 Kubernetes 命名空间。
+这允许更清洁的环境，并使其中一些能够平行化 (参考 [串行和并行测试](#Sequential-and-parallel-tests))。
 
-To make the creation and deletion of the namespace easier, you can
-use the `namespace` fixture.
-This fixture takes care of creating a namespace with a unique name
-and tearing it down at the end.
-To use it you just need to specify the `namespace` parameter as part
-of the arguments passed to your test function.
-The fixture will create the new namespace on the background and the
-`namespace` argument will take on the namespace name as value.
+为使创建和删除命名空间更简化，你可以
+使用 `namespace` 装置。
+这个 fixture 负责创建一个具有唯一名称的名称空间，并在最后将其拆下。
+要使用它，你仅需指定 `namespace` 参数作为传参的一部分传入到测试函数。
+该 fixture 会在后台取值 `namespace` 参数值，并创建一个新的命名空间。
 
 ```python
 def test_foo(..., namespace, ...):
   print(f"the new namespace's name is {namespace}")
 ```
 
-### Sequential and parallel tests
+### 串行及并行测试
 
-We leverage `pytest-xdist` to speed up the test suite by
-parallelising the test execution.
-However, some of the tests may have side-effects which make
-them unsuitable to be executed alongside others.
-For example, the operator update tests change the cluster-wide Seldon
-operator which could affect the other tests running in parallel.
+我们借助 `pytest-xdist` 并行化执行测试来加速测试套件。
+然而一些测试可能跟其他测试一起执行时产生副作用。
+比如，操作器更新测试会改变整个集群的 Seldon 操作器，这
+会影响并行测试执行。
 
-To differentiate between parallelisable tests and tests which are
-required to be run sequentially you can use the `sequential` mark.
-Marks in `pytest` allow to [select subsets of
-tests](http://doc.pytest.org/en/latest/example/markers.html).
+为了区分串行和并行化的测试，你需要使用 `sequential` 标记。
+标记 `pytest` 以允许 [选择测试子集](http://doc.pytest.org/en/latest/example/markers.html)。
 
-To mark a test to run sequentially, you can do:
+要标记串行测试，你可以；
 
 ```python
 @pytest.mark.sequential
@@ -113,5 +104,4 @@ def test_foo(...):
   print("the scripts will run this test sequentially")
 ```
 
-The integration test scripts will make sure that tests marked as
-`sequential` get run with a single worker.
+测试整合脚本会确保测试标记为 `sequential` 以运行在独立的 worker 中。

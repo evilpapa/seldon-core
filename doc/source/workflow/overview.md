@@ -187,7 +187,7 @@ Seldon Core `Operator` 通过 [Kubebuilder](https://github.com/kubernetes-sigs/k
 指标是生产中 ML 推理模型的重要一面。
 Seldon Core 通过 `Service Orchestrator` 暴露标准的指标给 [Prometheus](https://prometheus.io/)。
 
-![](../images/metrics.svg)
+![](images/metrics.svg)
 
 阅读更多有关 [指标资料](../analytics/analytics.html).
 

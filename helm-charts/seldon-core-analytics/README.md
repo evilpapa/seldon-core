@@ -2,43 +2,41 @@
 
 ![Version: 1.14.0](https://img.shields.io/static/v1?label=Version&message=1.14.0&color=informational&style=flat-square)
 
-Prometheus and Grafana installation with a basic Grafana dashboard showing
-the default Prometheus metrics exposed by Seldon for each inference graph
-deployed.
+使用基本的 Grafana 仪表板安装 Prometheus 和 Grafana，并显示 Seldon 为每个部署的推理图所公开的默认 Prometheus 指标。
 
-## Usage
+## 用法
 
-To use this chart, you will first need to add the `seldonio` Helm repo:
+使用本chart，首先要添加 `seldonio` Helm 仓库：
 
 ```bash
 helm repo add seldonio https://storage.googleapis.com/seldon-charts
 helm repo update
 ```
 
-Onca that's done, you should then be able to deploy the chart as:
+一旦完成，你就能使用以下命令部署 chart：
 
 ```bash
 kubectl create namespace seldon-system
 helm install seldon-core-analytics seldonio/seldon-core-analytics --namespace seldon-system
 ```
 
-**Homepage:** <https://github.com/SeldonIO/seldon-core>
+**主页:** <https://github.com/SeldonIO/seldon-core>
 
-## Source Code
+## 源码
 
 * <https://github.com/SeldonIO/seldon-core>
 * <https://github.com/SeldonIO/seldon-core/tree/master/helm-charts/seldon-core-analytics>
 
-## Requirements
+## 基本要求
 
-| Repository | Name | Version |
+| 仓库 | 名称 | 版本 |
 |------------|------|---------|
 | https://charts.helm.sh/stable | grafana | ~5.1.4 |
 | https://charts.helm.sh/stable | prometheus | ~11.4.0 |
 
-## Values
+## 设置值
 
-| Key | Type | Default | Description |
+| 键 | 类型 | 默认值 | 描述 |
 |-----|------|---------|-------------|
 | alertmanager.config.enabled | bool | `false` |  |
 | grafana.adminPassword | string | `"password"` |  |

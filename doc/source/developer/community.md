@@ -29,7 +29,7 @@ Seldon 核心团队组织与社区进行夜间通话，提供当前发展、最�
 
 ## 聚会
 
-我们定期组织 [MLOps Community Meetup](https://mlops.london/)。这些事件是“混合的”；如果您在伦敦附近，请随时亲自参加或关注 [YouTube 频道](https://www.youtube.com/channel/UCSBfllj_pRPB36TAZJfjXWg)。
+我们定期组织 [MLOps Community Meetup](https://mlops.london/)。这些事件是「混合的」；如果您在伦敦附近，请随时亲自参加或关注 [YouTube 频道](https://www.youtube.com/channel/UCSBfllj_pRPB36TAZJfjXWg)。
 
 ## Twitter
 

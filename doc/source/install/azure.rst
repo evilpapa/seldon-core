@@ -23,7 +23,7 @@ Azure Kubernetes Service (AKS) 集群
 
 .. note:: 
 
-    如果您只是评估 Seldon Core 并且想要使用 http 而不是 https，请确保在网络配置中选择“启用 HTTP 应用程序路由”。
+    如果您只是评估 Seldon Core 并且想要使用 http 而不是 https，请确保在网络配置中选择「启用 HTTP 应用程序路由」。
 
 Kubectl
 ^^^^^^^^^^^^^

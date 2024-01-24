@@ -55,7 +55,7 @@ A language wrapper is a model which enables cross language and/or runtime intero
     
 可以发布训练模型的服务。
 
-Seldon Core 中内置了预封装的推理服务器，允许用户轻松地从 artifact (即序列化模型) 到 ML 部署而无需考虑工具包。请参阅以下文档页面，供用户查找有关如何创建自己的“预封装”推理服务器的说明：
+Seldon Core 中内置了预封装的推理服务器，允许用户轻松地从 artifact (即序列化模型) 到 ML 部署而无需考虑工具包。请参阅以下文档页面，供用户查找有关如何创建自己的「预封装」推理服务器的说明：
 - [https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html](https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html)
 - [https://docs.seldon.io/projects/seldon-core/en/latest/servers/custom.html](https://docs.seldon.io/projects/seldon-core/en/latest/servers/custom.html)
 

@@ -1,6 +1,6 @@
-# Python Module for Seldon Core
+# Seldon Core 的 Python 模块
 
-# Version Changes
+# 版本变更
 
 0.2.6
 

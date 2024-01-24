@@ -8,34 +8,34 @@ Proxy integration to deploy models optimized for Intel OpenVINO in Seldon Core
 
 ## Usage
 
-To use this chart, you will first need to add the `seldonio` Helm repo:
+使用本chart，首先要添加 `seldonio` Helm 仓库：
 
 ```bash
 helm repo add seldonio https://storage.googleapis.com/seldon-charts
 helm repo update
 ```
 
-Once that's done, you should then be able to use the inference graph template as:
+一旦完成，你可以按照如下使用预估图模板：
 
 ```bash
 helm template $MY_MODEL_NAME seldonio/seldon-openvino --namespace $MODELS_NAMESPACE
 ```
 
-Note that you can also deploy the inference graph directly to your cluster
-using:
+注意你也可以直接部署预估图到集群中：
+使用：
 
 ```bash
 helm install $MY_MODEL_NAME seldonio/seldon-openvino --namespace $MODELS_NAMESPACE
 ```
 
-## Source Code
+## 源码
 
 * <https://github.com/SeldonIO/seldon-core>
 * <https://github.com/SeldonIO/seldon-core/tree/master/helm-charts/seldon-openvino>
 
-## Values
+## 设置值
 
-| Key | Type | Default | Description |
+| 键 | 类型 | 默认值 | 描述 |
 |-----|------|---------|-------------|
 | engine.env.SELDON_LOG_MESSAGES_EXTERNALLY | bool | `false` |  |
 | engine.env.SELDON_LOG_REQUESTS | bool | `false` |  |

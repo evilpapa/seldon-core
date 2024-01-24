@@ -1,46 +1,47 @@
-# Seldon Core: Blazing Fast, Industry-Ready ML
-An open source platform to deploy your machine learning models on Kubernetes at massive scale.
+# Seldon Core：超快、行业就绪的机器学习
+一个开源平台，用于在 Kubernetes 上大规模部署您的机器学习模型。
 
 ![](https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/core-logo-small.png)
 
-## Overview
+## 概述
 
-Seldon core converts your ML models (Tensorflow, Pytorch, H2o, etc.) or language wrappers (Python, Java, etc.) into production REST/GRPC microservices.
+Seldon core 转换及的机器学习模型 (Tensorflow, Pytorch, H2o, etc.) 或封装语言 (Python, Java, etc.) 为生产化额 REST/GRPC 微服务。
 
-Seldon handles scaling to thousands of production machine learning models and provides advanced machine learning capabilities out of the box including Advanced Metrics, Request Logging, Explainers, Outlier Detectors, A/B Tests, Canaries and more.
+Seldon 处理扩展到数千个生产机器学习模型，并提供开箱即用的高级机器学习功能，包括高级指标、请求记录、解释器、异常值检测器、A/B 测试、
+金丝雀等。
 
-* Read the [Seldon Core Documentation](https://docs.seldon.io/projects/seldon-core/en/latest/)
-* Join our [community Slack](https://join.slack.com/t/seldondev/shared_invite/zt-vejg6ttd-ksZiQs3O_HOtPQsen_labg) to ask any questions
-* Get started with [Seldon Core Notebook Examples](https://docs.seldon.io/projects/seldon-core/en/latest/examples/notebooks.html)
-* Join our fortnightly [online working group calls](https://docs.seldon.io/projects/seldon-core/en/latest/developer/community.html) : [Google Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=MXBtNzI1cjk0dG9kczhsZTRkcWlmcm1kdjVfMjAyMDA3MDlUMTUwMDAwWiBzZWxkb24uaW9fbTRuMnZtcmZubDI3M3FsczVnYjlwNjVpMHNAZw&tmsrc=seldon.io_m4n2vmrfnl273qls5gb9p65i0s%40group.calendar.google.com&scp=ALL)
-* Learn how you can [start contributing](https://docs.seldon.io/projects/seldon-core/en/latest/developer/contributing.html)
-* Check out [Blogs](https://docs.seldon.io/projects/seldon-core/en/latest/tutorials/blogs.html) that dive into Seldon Core components
-* Watch some of the [Videos and Talks](https://docs.seldon.io/projects/seldon-core/en/latest/tutorials/videos.html) using Seldon Core
+* 阅读 [Seldon Core 文档](https://docs.seldon.io/projects/seldon-core/en/latest/)
+* 加入 [Slack 社区](https://join.slack.com/t/seldondev/shared_invite/zt-vejg6ttd-ksZiQs3O_HOtPQsen_labg) to ask any questions
+* 从 [Seldon Core 笔记本示例]开始(https://docs.seldon.io/projects/seldon-core/en/latest/examples/notebooks.html)
+* 加入我们每两周一次的 [在线工作组电话会议](https://docs.seldon.io/projects/seldon-core/en/latest/developer/community.html) : [Google 日历](https://calendar.google.com/event?action=TEMPLATE&tmeid=MXBtNzI1cjk0dG9kczhsZTRkcWlmcm1kdjVfMjAyMDA3MDlUMTUwMDAwWiBzZWxkb24uaW9fbTRuMnZtcmZubDI3M3FsczVnYjlwNjVpMHNAZw&tmsrc=seldon.io_m4n2vmrfnl273qls5gb9p65i0s%40group.calendar.google.com&scp=ALL)
+* 了解如何 [开始贡献](https://docs.seldon.io/projects/seldon-core/en/latest/developer/contributing.html)
+* 查看深入 Seldon Core 组件的 [博客](https://docs.seldon.io/projects/seldon-core/en/latest/tutorials/blogs.html) that dive into Seldon Core components
+* 观看使用 Seldon Core 的[视频和访谈](https://docs.seldon.io/projects/seldon-core/en/latest/tutorials/videos.html) using Seldon Core
 
 ![](https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/seldon-core-high-level.jpg)
 
-### High Level Features
+### 高级功能
 
-With over 2M installs, Seldon Core is used across organisations to manage large scale deployment of machine learning models, and key benefits include:
+Seldon Core 的安装量超过 200 万，用于跨组织管理机器学习模型的大规模部署，主要优势包括：
 
- * Easy way to containerise ML models using our [pre-packaged inference servers](https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html), [custom servers](https://docs.seldon.io/projects/seldon-core/en/latest/servers/custom.html), or [language wrappers](https://docs.seldon.io/projects/seldon-core/en/latest/wrappers/language_wrappers.html).
- * Out of the box endpoints which can be tested through [Swagger UI](https://docs.seldon.io/projects/seldon-core/en/latest/reference/apis/openapi.html?highlight=swagger), [Seldon Python Client or Curl / GRPCurl](https://docs.seldon.io/projects/seldon-core/en/latest/python/python_module.html#seldon-core-python-api-client).
- * Cloud agnostic and tested on [AWS EKS, Azure AKS, Google GKE, Alicloud, Digital Ocean and Openshift](https://docs.seldon.io/projects/seldon-core/en/latest/examples/notebooks.html#cloud-specific-examples).
- * Powerful and rich inference graphs made out of [predictors, transformers, routers, combiners, and more](https://docs.seldon.io/projects/seldon-core/en/latest/examples/graph-metadata.html).
- * Metadata provenance to ensure each model can be traced back to its respective [training system, data and metrics](https://docs.seldon.io/projects/seldon-core/en/latest/reference/apis/metadata.html).
- * Advanced and customisable metrics with integration [to Prometheus and Grafana](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/analytics.html).
- * Full auditability through model input-output request [logging integration with Elasticsearch](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/log_level.html).
- * Microservice distributed tracing through [integration to Jaeger](https://docs.seldon.io/projects/seldon-core/en/latest/graph/distributed-tracing.html) for insights on latency across microservice hops.
- * Secure, reliable and robust system maintained through a consistent [security & updates policy](https://github.com/SeldonIO/seldon-core/blob/master/SECURITY.md).
+ * 超简单方式使用 [预包装推理服务](https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html)封装你的机器学习模型，[自定义服务](https://docs.seldon.io/projects/seldon-core/en/latest/servers/custom.html)，或[封装语言](https://docs.seldon.io/projects/seldon-core/en/latest/wrappers/language_wrappers.html)。
+ * 开箱即用的 [Swagger UI](https://docs.seldon.io/projects/seldon-core/en/latest/reference/apis/openapi.html?highlight=swagger)端点测试，[Seldon Python 客户端或 Curl / GRPCurl](https://docs.seldon.io/projects/seldon-core/en/latest/python/python_module.html#seldon-core-python-api-client).
+ * Cloud 无关并且在 [AWS EKS, Azure AKS, Google GKE, Alicloud, Digital Ocean 及 Openshift](https://docs.seldon.io/projects/seldon-core/en/latest/examples/notebooks.html#cloud-specific-examples)都测试过。
+ * 丰富强大的推理图来管理 [predictors, transformers, routers, combiners等](https://docs.seldon.io/projects/seldon-core/en/latest/examples/graph-metadata.html)。
+ * 元数据输出以确保每个模型都能追溯 [训练系统，数据及指标](https://docs.seldon.io/projects/seldon-core/en/latest/reference/apis/metadata.html)。
+ * 高级自定义 [Prometheus and Grafana](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/analytics.html) 指标实现。
+ * 可审计的模型输入输出记录 [Elasticsearch 日志集成](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/log_level.html)。
+ * 通过 [Jaeger 集成](https://docs.seldon.io/projects/seldon-core/en/latest/graph/distributed-tracing.html) 实现微服务分布式追踪，以了解各微服务点延迟。
+ * 通过一致的[安全及更新策略](https://github.com/SeldonIO/seldon-core/blob/master/SECURITY.md)实现安全、可靠、强大的系统。
 
 
-## Getting Started
+## 开始
 
-Deploying your models using Seldon Core is simplified through our pre-packaged inference servers and language wrappers. Below you can see how you can deploy our "hello world Iris" example. You can see more details on these workflows in our [Documentation Quickstart](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/quickstart.html).
+通过我们的预包装服务器和封装语言可以非常容易的在 Seldon Core 发布模型。下面能查看一个 "hello world Iris" 发布示例。你可以在[快速开始文档](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/quickstart.html)查看有关这些工作流程的更多详细信息。
 
-### Install Seldon Core
+### 安装 Seldon Core
 
-Quick install using Helm 3 (you can also use Kustomize):
+使用 Helm 3 快速安装（你也可以使用 Kustomize）：
 
 ```bash
 kubectl create namespace seldon-system
@@ -53,23 +54,23 @@ helm install seldon-core seldon-core-operator \
     # You can set ambassador instead with --set ambassador.enabled=true
 ```
 
-### Deploy your model using pre-packaged model servers
+### 使用预打包模型服务快速部署模型
 
-We provide optimized model servers for some of the most popular Deep Learning and Machine Learning frameworks that allow you to deploy your trained model binaries/weights without having to containerize or modify them.
+我们为一些最流行的深度学习和机器学习框架提供优化的模型服务器，允许您部署经过训练的模型二进制文件/权重，而无需容器化或修改它们。
 
-You only have to upload your model binaries into your preferred object store, in this case we have a trained scikit-learn iris model in a Google bucket:
+您只需要将模型二进制文件上传到您首选的对象存储中，在这种情况下，我们在 Google 存储桶中有一个经过训练的 scikit-learn iris 模型：
 
 ```console
 gs://seldon-models/v1.14.0/sklearn/iris/model.joblib
 ```
 
-Create a namespace to run your model in:
+创建一个命名空间来运行你的模型：
 
 ```bash
 kubectl create namespace seldon
 ```
 
-We then can deploy this model with Seldon Core to our Kubernetes cluster using the pre-packaged model server for scikit-learn (SKLEARN_SERVER) by running the `kubectl apply` command below:
+然后，我们可以使用预打包的 scikit-learn (SKLEARN_SERVER) 模型服务器通过 `kubectl apply` 将这个模型通过 Seldon Core 部署到我们的 Kubernetes 集群。
 
 ```yaml
 $ kubectl apply -f - << END
@@ -90,15 +91,15 @@ spec:
 END
 ```
 
-#### Send API requests to your deployed model
+#### 发送 API 请求到部署的模型
 
-Every model deployed exposes a standardised User Interface to send requests using our OpenAPI schema.
+部署的每个模型都公开了一个标准化的用户界面，以使用我们的 OpenAPI 模式发送请求。
 
-This can be accessed through the endpoint `http://<ingress_url>/seldon/<namespace>/<model-name>/api/v1.0/doc/` which will allow you to send requests directly through your browser.
+这可以通过端点访问 `http://<ingress_url>/seldon/<namespace>/<model-name>/api/v1.0/doc/`，它允许您直接通过浏览器发送请求。
 
 ![](https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/rest-openapi.jpg)
 
-Or alternatively you can send requests programmatically using our [Seldon Python Client](https://docs.seldon.io/projects/seldon-core/en/latest/python/seldon_client.html) or another Linux CLI:
+或者，您可以使用我们的 [Seldon Python Client](https://docs.seldon.io/projects/seldon-core/en/latest/python/seldon_client.html) 或其他 Linux CLI：
 
 ```console
 $ curl -X POST http://<ingress>/seldon/seldon/iris-model/api/v1.0/predictions \
@@ -124,11 +125,11 @@ $ curl -X POST http://<ingress>/seldon/seldon/iris-model/api/v1.0/predictions \
 }
 ```
 
-### Deploy your custom model using language wrappers
+### 使用语言封装部署您的自定义模型
 
-For more custom deep learning and machine learning use-cases which have custom dependencies (such as 3rd party libraries, operating system binaries or even external systems), we can use any of the Seldon Core language wrappers.
+对于更多具有自定义依赖项的自定义深度学习和机器学习用例（例如 3rd 方库、操作系统二进制文件甚至外部系统），我们可以使用任何 Seldon Core 语言封装器。
 
-You only have to write a class wrapper that exposes the logic of your model; for example in Python we can create a file `Model.py`:
+您只需要编写一个公开模型逻辑的类包装器；例如在 Python 中，我们可以创建一个文件 `Model.py`：
 
 ```python
 import pickle
@@ -141,13 +142,13 @@ class Model:
         return output
 ```
 
-We can now containerize our class file using the [Seldon Core s2i utils](https://docs.seldon.io/projects/seldon-core/en/latest/wrappers/s2i.html) to produce the `sklearn_iris` image:
+可使用 [Seldon Core s2i 工具](https://docs.seldon.io/projects/seldon-core/en/latest/wrappers/s2i.html) 容器化我们的类文件，来生成 `sklearn_iris` 镜像：
 
 ```console
 s2i build . seldonio/seldon-core-s2i-python3:0.18 sklearn_iris:0.1
 ```
 
-And we now deploy it to our Seldon Core Kubernetes Cluster:
+现在我们将它部署到我们的 Seldon Core Kubernetes 集群：
 
 ```yaml
 $ kubectl apply -f - << END
@@ -171,15 +172,15 @@ spec:
 END
 ```
 
-#### Send API requests to your deployed model
+#### 向您部署的模型发送 API 请求
 
-Every model deployed exposes a standardised User Interface to send requests using our OpenAPI schema.
+部署的每个模型都公开了一个标准化的用户界面，以使用我们的 OpenAPI 模式发送请求。
 
-This can be accessed through the endpoint `http://<ingress_url>/seldon/<namespace>/<model-name>/api/v1.0/doc/` which will allow you to send requests directly through your browser.
+这可以通过端点访问 `http://<ingress_url>/seldon/<namespace>/<model-name>/api/v1.0/doc/`，它允许您直接通过浏览器发送请求。
 
 ![](https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/rest-openapi.jpg)
 
-Or alternatively you can send requests programmatically using our [Seldon Python Client](https://docs.seldon.io/projects/seldon-core/en/latest/python/seldon_client.html) or another Linux CLI:
+或者，您可以使用我们的 [Seldon Python Client](https://docs.seldon.io/projects/seldon-core/en/latest/python/seldon_client.html) 或其他 Linux CLI 以编程方式发送请求：
 
 ```console
 $ curl -X POST http://<ingress>/seldon/model-namespace/iris-model/api/v1.0/predictions \
@@ -205,18 +206,18 @@ $ curl -X POST http://<ingress>/seldon/model-namespace/iris-model/api/v1.0/predi
 }
 ```
 
-### Dive into the Advanced Production ML Integrations
+### 深入了解高级生产机器学习集成
 
-Any model that is deployed and orchestrated with Seldon Core provides out of the box machine learning insights for monitoring, managing, scaling and debugging.
+任何使用 Seldon Core 部署和编排的模型都可以提供开箱即用的机器学习洞察力，用于监控、管理、扩展和调试。
 
-Below are some of the core components together with link to the logs that provide further insights on how to set them up.
+以下是一些核心组件以及指向日志的链接，这些日志提供了有关如何设置它们的进一步见解。
 
 <table>
   <tr valign="top">
     <td width="50%" >
         <a href="https://docs.seldon.io/projects/seldon-core/en/latest/analytics/analytics.html">
             <br>
-            <b>Standard and custom metrics with prometheus</b>
+            <b>prometheus 的标准和自定义指标</b>
             <br>
             <br>
             <img src="https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/analytics/dashboard.png">
@@ -225,7 +226,7 @@ Below are some of the core components together with link to the logs that provid
     <td width="50%">
         <a href="https://docs.seldon.io/projects/seldon-core/en/latest/analytics/logging.html">
             <br>
-            <b>Full audit trails with ELK request logging</b>
+            <b>带有 ELK 请求日志记录的完整审计跟踪</b>
             <br>
             <br>
             <img src="https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/kibana-custom-search.png">
@@ -236,7 +237,7 @@ Below are some of the core components together with link to the logs that provid
     <td width="50%">
         <a href="https://docs.seldon.io/projects/seldon-core/en/latest/analytics/explainers.html">
             <br>
-            <b>Explainers for Machine Learning Interpretability</b>
+            <b>机器学习可解释性解释器</b>
             <br>
             <br>
             <img src="https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/anchors.jpg">
@@ -245,7 +246,7 @@ Below are some of the core components together with link to the logs that provid
     <td width="50%">
         <a href="https://docs.seldon.io/projects/seldon-core/en/latest/analytics/outlier_detection.html">
             <br>
-            <b>Outlier and Adversarial Detectors for Monitoring</b>
+            <b>用于监控的异常值和对抗性检测器</b>
             <br>
             <br>
             <img src="https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/adversarial-attack.png">
@@ -256,7 +257,7 @@ Below are some of the core components together with link to the logs that provid
     <td width="50%">
         <a href="https://docs.seldon.io/projects/seldon-core/en/latest/analytics/cicd-mlops.html">
             <br>
-            <b>CI/CD for MLOps at Massive Scale</b>
+            <b>大规模 MLOps 的 CI/CD</b>
             <br>
             <br>
             <img src="https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/cicd-seldon.jpg">
@@ -265,7 +266,7 @@ Below are some of the core components together with link to the logs that provid
     <td width="50%">
         <a href="https://docs.seldon.io/projects/seldon-core/en/latest/graph/distributed-tracing.html">
             <br>
-            <b>Distributed tracing for performance monitoring</b>
+            <b>用于性能监控的分布式跟踪</b>
             <br>
             <br>
             <img src="https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/graph/jaeger-ui-rest-example.png">
@@ -275,107 +276,107 @@ Below are some of the core components together with link to the logs that provid
 </table>
 
 
-## Where to go from here
+## 接下来该怎么看
 
-### Getting Started
+### 开始
 
-* [Quickstart Guide ](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/github-readme.html)
-* [Overview of Components ](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/overview.html)
-* [Install Seldon Core on Kubernetes ](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/install.html)
-* [Join the Community ](https://docs.seldon.io/projects/seldon-core/en/latest/developer/community.html)
+* [快速入门指南 ](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/github-readme.html)
+* [组件概述 ](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/overview.html)
+* [在 Kubernetes 上安装 Seldon Core ](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/install.html)
+* [加入社区 ](https://docs.seldon.io/projects/seldon-core/en/latest/developer/community.html)
 
-### Seldon Core Deep Dive
+### 深入 Seldon Core
 
-* [Detailed Installation Parameters ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/helm.html)
-* [Pre-packaged Inference Servers ](https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html)
-* [Language Wrappers for Custom Models ](https://docs.seldon.io/projects/seldon-core/en/latest/wrappers/language_wrappers.html)
-* [Create your Inference Graph ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/inference-graph.html)
-* [Deploy your Model  ](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/deploying.html)
-* [Testing your Model Endpoints  ](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/serving.html)
-* [Troubleshooting guide ](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/troubleshooting.html)
-* [Usage reporting ](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/usage-reporting.html)
-* [Upgrading ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/upgrading.html)
-* [Changelog ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/changelog.html)
+* [详细安装参数 ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/helm.html)
+* [预打包推理服务器 ](https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html)
+* [自定义模型的语言包装器 ](https://docs.seldon.io/projects/seldon-core/en/latest/wrappers/language_wrappers.html)
+* [创建推理图 ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/inference-graph.html)
+* [部署您的模型 ](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/deploying.html)
+* [测试您的模型端点  ](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/serving.html)
+* [故障排除指南 ](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/troubleshooting.html)
+* [使用情况报告 ](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/usage-reporting.html)
+* [升级 ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/upgrading.html)
+* [变更日志 ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/changelog.html)
 
-### Pre-Packaged Inference Servers
+### 预打包推理服务器
 
-* [MLflow Server ](https://docs.seldon.io/projects/seldon-core/en/latest/servers/mlflow.html)
-* [SKLearn server ](https://docs.seldon.io/projects/seldon-core/en/latest/servers/sklearn.html)
-* [Tensorflow Serving ](https://docs.seldon.io/projects/seldon-core/en/latest/servers/tensorflow.html)
-* [XGBoost server ](https://docs.seldon.io/projects/seldon-core/en/latest/servers/xgboost.html)
+* [MLflow 服务器 ](https://docs.seldon.io/projects/seldon-core/en/latest/servers/mlflow.html)
+* [SKLearn 服务器 ](https://docs.seldon.io/projects/seldon-core/en/latest/servers/sklearn.html)
+* [Tensorflow 服务 ](https://docs.seldon.io/projects/seldon-core/en/latest/servers/tensorflow.html)
+* [XGBoost 服务器 ](https://docs.seldon.io/projects/seldon-core/en/latest/servers/xgboost.html)
 
-### Language Wrappers (Production)
+### 语言封装 (生产)
 
-* [Python Language Wrapper [Production] ](https://docs.seldon.io/projects/seldon-core/en/latest/python/index.html)
+* [Python 语言封装 [Production] ](https://docs.seldon.io/projects/seldon-core/en/latest/python/index.html)
 
-### Language Wrappers (Incubating)
+### 语言封装 (孵化)
 
-* [Java Language Wrapper [Incubating] ](https://docs.seldon.io/projects/seldon-core/en/latest/java/README.html)
-* [R Language Wrapper [ALPHA] ](https://docs.seldon.io/projects/seldon-core/en/latest/R/README.html)
-* [NodeJS Language Wrapper [ALPHA] ](https://docs.seldon.io/projects/seldon-core/en/latest/nodejs/README.html)
-* [Go Language Wrapper [ALPHA] ](https://docs.seldon.io/projects/seldon-core/en/latest/go/go_wrapper_link.html)
+* [Java 语言封装 [Incubating] ](https://docs.seldon.io/projects/seldon-core/en/latest/java/README.html)
+* [R 语言封装 [ALPHA] ](https://docs.seldon.io/projects/seldon-core/en/latest/R/README.html)
+* [NodeJS 语言封装 [ALPHA] ](https://docs.seldon.io/projects/seldon-core/en/latest/nodejs/README.html)
+* [Go 语言封装 [ALPHA] ](https://docs.seldon.io/projects/seldon-core/en/latest/go/go_wrapper_link.html)
 
-### Ingress
+### 流量入口
 
-* [Ambassador Ingress ](https://docs.seldon.io/projects/seldon-core/en/latest/ingress/ambassador.html)
-* [Istio Ingress ](https://docs.seldon.io/projects/seldon-core/en/latest/ingress/istio.html)
+* [Ambassador 流量入口 ](https://docs.seldon.io/projects/seldon-core/en/latest/ingress/ambassador.html)
+* [Istio 流量入口 ](https://docs.seldon.io/projects/seldon-core/en/latest/ingress/istio.html)
 
-### Production
+### 生产环境
 
-* [Supported API Protocols ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/protocols.html)
-* [CI/CD MLOps at Scale ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/cicd-mlops.html)
-* [Metrics with Prometheus ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/analytics.html)
-* [Payload Logging with ELK ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/logging.html)
-* [Distributed Tracing with Jaeger ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/distributed-tracing.html)
-* [Replica Scaling ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/scaling.html)
-* [Budgeting Disruptions](https://docs.seldon.io/projects/seldon-core/en/latest/graph/disruption-budgets.html)
-* [Custom Inference Servers](https://docs.seldon.io/projects/seldon-core/en/latest/servers/custom.html)
+* [支持的 API 协议 ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/protocols.html)
+* [大规模 CI/CD MLOps ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/cicd-mlops.html)
+* [Prometheus 指标 ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/analytics.html)
+* [ELK 日志负载记录 ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/logging.html)
+* [Jaeger 链路追踪 ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/distributed-tracing.html)
+* [副本扩展 ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/scaling.html)
+* [熔断 ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/disruption-budgets.html)
+* [自定义推理服务器](https://docs.seldon.io/projects/seldon-core/en/latest/servers/custom.html)
 
-### Advanced Inference
+### 高级推理
 
-* [Model Explanations ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/explainers.html)
-* [Outlier Detection ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/outlier_detection.html)
-* [Routers (incl. Multi Armed Bandits)  ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/routers.html)
+* [模型解释 ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/explainers.html)
+* [异常值检测 ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/outlier_detection.html)
+* [路由 (包括 多臂老虎机)  ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/routers.html)
 
-### Examples
+### 示例
 
-* [Notebooks ](https://docs.seldon.io/projects/seldon-core/en/latest/examples/notebooks.html)
-* [Articles/Blogs ](https://docs.seldon.io/projects/seldon-core/en/latest/tutorials/blogs.html)
-* [Videos ](https://docs.seldon.io/projects/seldon-core/en/latest/tutorials/videos.html)
+* [笔记本 ](https://docs.seldon.io/projects/seldon-core/en/latest/examples/notebooks.html)
+* [文章/博客 ](https://docs.seldon.io/projects/seldon-core/en/latest/tutorials/blogs.html)
+* [视频 ](https://docs.seldon.io/projects/seldon-core/en/latest/tutorials/videos.html)
 
-### Reference
+### 参考
 
-* [Annotation-based Configuration ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/annotations.html)
-* [Benchmarking ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/benchmarking.html)
-* [General Availability ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/ga.html)
+* [基于注解的配置 ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/annotations.html)
+* [基准测试 ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/benchmarking.html)
+* [一般可用性 ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/ga.html)
 * [Helm Charts ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/helm_charts.html)
-* [Images ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/images.html)
-* [Logging & Log Level ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/log_level.html)
-* [Private Docker Registry ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/private_registries.html)
-* [Prediction APIs ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/apis/index.html)
-* [Python API reference ](https://docs.seldon.io/projects/seldon-core/en/latest/python/api/modules.html)
-* [Release Highlights ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/release-highlights.html)
+* [镜像 ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/images.html)
+* [日志记录和日志级别 ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/log_level.html)
+* [私有 Docker 参考 ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/private_registries.html)
+* [预测 API ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/apis/index.html)
+* [Python API 参考 ](https://docs.seldon.io/projects/seldon-core/en/latest/python/api/modules.html)
+* [发布亮点 ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/release-highlights.html)
 * [Seldon Deployment CRD ](https://docs.seldon.io/projects/seldon-core/en/latest/reference/seldon-deployment.html)
-* [Service Orchestrator ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/svcorch.html)
+* [服务编排器 ](https://docs.seldon.io/projects/seldon-core/en/latest/graph/svcorch.html)
 * [Kubeflow ](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/kubeflow.html)
 
-### Developer
+### 开发者
 
-* [Overview ](https://docs.seldon.io/projects/seldon-core/en/latest/developer/readme.html)
-* [Contributing to Seldon Core ](https://docs.seldon.io/projects/seldon-core/en/latest/developer/contributing.html)
-* [End to End Tests ](https://docs.seldon.io/projects/seldon-core/en/latest/developer/e2e.html)
-* [Roadmap ](https://docs.seldon.io/projects/seldon-core/en/latest/developer/roadmap.html)
-* [Build using private repo ](https://docs.seldon.io/projects/seldon-core/en/latest/developer/build-using-private-repo.html)
+* [概述 ](https://docs.seldon.io/projects/seldon-core/en/latest/developer/readme.html)
+* [为 Seldon Core 做贡献 ](https://docs.seldon.io/projects/seldon-core/en/latest/developer/contributing.html)
+* [端到端测试 ](https://docs.seldon.io/projects/seldon-core/en/latest/developer/e2e.html)
+* [路线图 ](https://docs.seldon.io/projects/seldon-core/en/latest/developer/roadmap.html)
+* [使用私有仓库构建 ](https://docs.seldon.io/projects/seldon-core/en/latest/developer/build-using-private-repo.html)
 
 
 
-## About the name "Seldon Core"
+## 关于「Seldon Core」
 
-The name Seldon (ˈSɛldən) Core was inspired from [the Foundation Series (Scifi Novel)](https://en.wikipedia.org/wiki/Foundation_series) where it's premise consists of a mathematician called "Hari Seldon" who spends his life developing a theory of Psychohistory, a new and effective mathematical sociology which allows for the future to be predicted extremely accurate through long periods of time (across hundreds of thousands of years).
+Seldon (ˈSɛldən) Core 名字的灵感来自 [the Foundation Series (Scifi Novel)](https://en.wikipedia.org/wiki/Foundation_series) ，它的前提是由一位名叫“Hari Seldon”的数学家组成，他毕生致力于发展一种心理史理论，这是一种新的有效的数学社会学，它为未来创造了条件可以在很长一段时间内（跨越数十万年）进行极其准确的预测。
 
-## Commercial Support
+## 商业支持
 
 ![](https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/deploy-logo.png)
 
-We offer commercial support via our enterprise product Seldon Deploy. Please visit [https://www.seldon.io/](https://www.seldon.io/) for details and a trial.
+我们通过我们的企业产品 Seldon Deploy 提供商业支持。请访问 [https://www.seldon.io/](https://www.seldon.io/) 了解详情和试用。
 

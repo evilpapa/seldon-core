@@ -7,7 +7,7 @@
 
 ## Usage
 
-To use this chart, you will first need to add the `seldonio` Helm repo:
+使用本chart，首先要添加 `seldonio` Helm 仓库：
 
 ```bash
 helm repo add seldonio https://storage.googleapis.com/seldon-charts

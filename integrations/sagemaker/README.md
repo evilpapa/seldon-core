@@ -1,4 +1,4 @@
-# AWS SageMaker Proxy
+# AWS SageMaker 代理
 
-Initial AWS SageMaker proxy that translates Seldon predict API requests to SageMaker equivalent.
+最初的 AWS SageMaker 代理将 Seldon 预测 API 请求转换为 SageMake 等效请求。
 

@@ -63,7 +63,7 @@ kubectl describe sdep mysdep
 
 这将显示 operator 所有的创建、更新、删除和错误时间的时间信息。
 
-## Seldon Deployment 一直停留在“creating”状态
+## Seldon Deployment 一直停留在「creating」状态
 
 检查pods是否运行成功。
 

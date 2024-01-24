@@ -147,7 +147,7 @@ spec:
 
 ```
 
-以上示例包含 75% 流量分发到 “main”，25% 流量到 “canary”。
+以上示例包含 75% 流量分发到 「main」，25% 流量到 「canary」。
 
 这里提供了一个[canary 发布](../examples/ambassador_canary.html)的示例。
 

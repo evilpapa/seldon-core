@@ -187,7 +187,7 @@ seldon_request = {
 
 当不使用微批处理时，每一行将被理解为独立的 SeldonMessage 并按原样发送到模型，包括 `meta.tags` 信息。
 
-如果使用微批处理，则每个“原始”输入必须代表 `ndarray` 或 `tensor` 有效负载类型，并且仅包含单个推理请求。 在这种情况下，用户提供的标签不会发送到模型。 然而，它们将被合并到响应中并写入输出文件。
+如果使用微批处理，则每个「原始」输入必须代表 `ndarray` 或 `tensor` 有效负载类型，并且仅包含单个推理请求。 在这种情况下，用户提供的标签不会发送到模型。 然而，它们将被合并到响应中并写入输出文件。
 
 Example raw `input.data` may look like this for example
 ```yaml

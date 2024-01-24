@@ -1,6 +1,6 @@
-# Example GO Wrapper (ALPHA)
+# GO 包装器示例 (ALPHA)
 
-This is an initial example Go project to illustrate how Go microservices can be built and deployed for management by Seldon Core.
+这是一个最初的 Go 项目示例，旨在说明 Seldon Core 如何构建和部署 Go 微服务进行管理。
 
-Follow the [notebook](https://github.com/SeldonIO/seldon-core/blob/master/incubating/wrappers/s2i/go/SeldonGoModel.ipynb) to test.
+跟随 [notebook](https://github.com/SeldonIO/seldon-core/blob/master/incubating/wrappers/s2i/go/SeldonGoModel.ipynb) 进行测试。
 

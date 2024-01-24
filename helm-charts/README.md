@@ -1,58 +1,55 @@
 # Seldon Core Helm Charts
 
-Helm charts are published to our official repo.
+Helm charts 发布在我们的官方仓库。
 
-## Core Charts
+## 核心 Charts
 
-The core charts for installing Seldon Core are shown below.
+以下是安装 Seldon Core 的核心 charts。
 
  * [seldon-core-operator](https://docs.seldon.io/projects/seldon-core/en/latest/charts/seldon-core-operator.html)
-   * Main helm chart for installing Seldon Core CRD and Controller
+   * 安装 Seldon Core CRD 及 Controller 的主要 helm chart
  * [seldon-core-analytics](https://docs.seldon.io/projects/seldon-core/en/latest/charts/seldon-core-analytics.html)
-   * Example Prometheus and Grafana setup with demonstration Grafana dashboard for Seldon Core
+   * 演示 Seldon Core 的示例 Prometheus 和 Grafana 设置，包括展示 Grafana 仪表板。
 
 
-## Seldon Core Inference Graph Templates
+## Seldon Core 预估图模板
 
-A set of charts to provide example templates for creating particular inference graphs using Seldon Core
+一组 chart，为使用 Seldon Core 创建特定推理图的示例模板提供支持。
 
  * [seldon-single-model](https://docs.seldon.io/projects/seldon-core/en/latest/charts/seldon-single-model.html)
-   * Serve a single model with attached Persistent Volume.
+   * 继承存储卷的单模型服务。
  * [seldon-abtest](https://docs.seldon.io/projects/seldon-core/en/latest/charts/seldon-abtest.html)
-   * Serve an AB test between two models.
+   * 继承AB 测试的两个模型服务。
  * [seldon-mab](https://docs.seldon.io/projects/seldon-core/en/latest/charts/seldon-mab.html)
-   * Serve a multi-armed bandit between two models.
+   * 在两个模型之间提供多臂赌博机服务。
  * [seldon-od-model](https://docs.seldon.io/projects/seldon-core/en/latest/charts/seldon-od-model.html) and [seldon-od-transformer](https://docs.seldon.io/projects/seldon-core/en/latest/charts/seldon-od-transformer.html)
-   * Serve one of the following Outlier Detector components as either models or transformers:
+   * 将以下异常检测组件之一作为模型或转换器提供服务：
      * [Isolation Forest](https://github.com/SeldonIO/seldon-core/tree/master/components/outlier-detection/isolation-forest)
      * [Variational Auto-Encoder](https://github.com/SeldonIO/seldon-core/tree/master/components/outlier-detection/vae)
      * [Sequence-to-Sequence-LSTM](https://github.com/SeldonIO/seldon-core/tree/master/components/outlier-detection/seq2seq-lstm)
      * [Mahalanobis Distance](https://github.com/SeldonIO/seldon-core/tree/master/components/outlier-detection/mahalanobis)
 
-For examples of using some of the above charts see [here](https://github.com/SeldonIO/seldon-core/tree/master/notebooks/helm_examples.ipynb).
+参考[这里]使用如上示例(https://github.com/SeldonIO/seldon-core/tree/master/notebooks/helm_examples.ipynb)。
 
-## Misc
+## 杂项
 
  * [seldon-core-loadtesting](https://docs.seldon.io/projects/seldon-core/en/latest/charts/seldon-core-loadtesting.html)
-   * Utility to load test
+   * 负载测试工具
 
-## Documentation
+## 文档
 
-To generate the documentation of our Helm charts, we use
-[`helm-docs`](https://github.com/norwoodj/helm-docs).
-This tool will read the metadata included in the `Chart.yaml` and `values.yaml`
-to generate a `README.md` page.
+为了生成 Helm charts 文档，我们使用 [`helm-docs`](https://github.com/norwoodj/helm-docs)。
+该工具会读取 `Chart.yaml` 及 `values.yaml` 包含的元数据信息来生成 `README.md` 页。
 
-### Generating documentation locally
+### 本地生成文档
 
-You can install the latest version of `helm-docs` using the `install` target of
-the `Makefile`:
+你可以使用 `Makefile` 的 `install` 选项来安装 `helm-docs` 最新版本。
 
 ```shell
 make install
 ```
 
-Afterwards, you can use the `docs` target of the `Makefile`:
+然后，使用 `Makefile` 的 `docs` 选项：
 
 ```shell
 make docs

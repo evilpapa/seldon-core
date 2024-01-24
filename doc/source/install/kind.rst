@@ -222,7 +222,7 @@ Seldon Core 支持使用 `Istio <https://istio.io/>`_ 或 `Ambassador <https://w
 
     kubectl get pods -n seldon-system
 
-你应该能看到 ``seldon-controller-manager`` pod 的 ``STATUS=Running``状态。
+你应该能看到 ``seldon-controller-manager`` pod 的 ``STATUS=Running`` 状态。
 
 本地端口转发
 -------------------------------

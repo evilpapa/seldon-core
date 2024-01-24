@@ -81,7 +81,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 每当一个新的 PR 合并合并到主干，我们设置 CI 来构建一个「快照」版本，这将包含该特定开发/主分支代码的 Docker 镜像。
-当镜像以快照被推送，会创建一个 ``"<next-version>-SNAPSHOT_<timestamp>"``标签并包含 helm charts 的镜像来指定特殊版本（如 ``version.txt`` 中描述）来指定安装。
+当镜像以快照被推送，会创建一个 ``"<next-version>-SNAPSHOT_<timestamp>"`` 标签并包含 helm charts 的镜像来指定特殊版本（如 ``version.txt`` 中描述）来指定安装。
 
 这意味着，如果您想在开发版本发布之前尝试特定功能，则可以尝试主的开发版本。
 
@@ -99,8 +99,8 @@
 通过 cert-manager 安装
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-按照 `cert manager 文档
- <https://cert-manager.io/docs/installation/kubernetes/>`__ 来进行安装。
+按照 `cert manager 文
+档 <https://cert-manager.io/docs/installation/kubernetes/>`__ 来进行安装。
 
 通过如下命令安装 seldon-core ：
 
@@ -153,13 +153,13 @@ Seldon Core 安装好，你可以进行如下设置：
 ^^^^^^^^^^^^^^^^^^^^^
 
 -  `将 Seldon 作为 
-    Kubeflow 的一部分. <https://www.kubeflow.org/docs/guides/components/seldon/#seldon-serving>`__
+    Kubeflow 的一部分 <https://www.kubeflow.org/docs/guides/components/seldon/#seldon-serving>`__ 。
 
 GCP 应用市场
 ^^^^^^^^^^^^^^^
 
 如果有 Google Cloud Platform 账户，可通过 `GCP
-Marketplace <https://console.cloud.google.com/marketplace/details/seldon-portal/seldon-core>`__安装。
+Marketplace <https://console.cloud.google.com/marketplace/details/seldon-portal/seldon-core>`__ 安装。
 
 OpenShift
 ^^^^^^^^^

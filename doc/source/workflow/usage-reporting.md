@@ -6,7 +6,7 @@
 
 ### 开启使用报告
 
-为了帮助 seldon-core 的开发支持，任何时候都可通过“seldon-core-operator” helm chart设置 `–set usageMetrics.enabled=true` 选项来自愿开启使用报告回馈。
+为了帮助 seldon-core 的开发支持，任何时候都可通过「seldon-core-operator」 helm chart设置 `–set usageMetrics.enabled=true` 选项来自愿开启使用报告回馈。
 
 ```bash
 helm install seldon-core seldon-core-operator \

@@ -4,7 +4,7 @@ To use these playbooks follow the installation of the Ansible collection at http
 
 Once installed you can use the following Playbooks.
 
-## Create Kind Cluster
+## 创建 Kind 集群
 
 ```bash
 ansible-playbook playbooks/kind_cluster.yaml
@@ -13,14 +13,14 @@ ansible-playbook playbooks/kind_cluster.yaml
 To deploy Kind cluster with 4 workers add `-e kind_use_many_workers=yes` flag.
 
 
-## Install Seldon Core with Istio
+## 安装 Seldon Core 集成 Istio
 
 ```
 ansible-playbook playbooks/seldon_core.yaml
 ```
 
 
-## Install Kafka
+## 安装 Kafka
 
 ```bash
 ansible-playbook playbooks/kafka.yaml

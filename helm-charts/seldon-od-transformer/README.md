@@ -6,36 +6,36 @@ Chart to deploy an outlier detector as a transformer in an inference graph.
 
 ## Usage
 
-To use this chart, you will first need to add the `seldonio` Helm repo:
+使用本chart，首先要添加 `seldonio` Helm 仓库：
 
 ```bash
 helm repo add seldonio https://storage.googleapis.com/seldon-charts
 helm repo update
 ```
 
-Once that's done, you should then be able to use the inference graph template as:
+一旦完成，你可以按照如下使用预估图模板：
 
 ```bash
 helm template $MY_MODEL_NAME seldonio/seldon-od-transformer --namespace $MODELS_NAMESPACE
 ```
 
-Note that you can also deploy the inference graph directly to your cluster
-using:
+注意你也可以直接部署预估图到集群中：
+使用：
 
 ```bash
 helm install $MY_MODEL_NAME seldonio/seldon-od-transformer --namespace $MODELS_NAMESPACE
 ```
 
-**Homepage:** <https://github.com/SeldonIO/seldon-core>
+**主页:** <https://github.com/SeldonIO/seldon-core>
 
-## Source Code
+## 源码
 
 * <https://github.com/SeldonIO/seldon-core>
 * <https://github.com/SeldonIO/seldon-core/tree/master/helm-charts/seldon-od-transformer>
 
-## Values
+## 设置值
 
-| Key | Type | Default | Description |
+| 键 | 类型 | 默认值 | 描述 |
 |-----|------|---------|-------------|
 | model.image.name | string | `"seldonio/mock_classifier:1.0"` |  |
 | model.name | string | `"classifier"` |  |

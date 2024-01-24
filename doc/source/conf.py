@@ -190,7 +190,7 @@ if html_theme == "sphinx_material":
         "color_accent": "teal",
         "repo_url": "https://github.com/SeldonIO/seldon-core/",
         "repo_name": "Seldon Core",
-        "nav_title": "Seldon Core Documentation",
+        "nav_title": "Seldon Core 文档",
         "globaltoc_depth": 3,
         "globaltoc_collapse": True,
         "globaltoc_includehidden": True,
@@ -227,12 +227,12 @@ if html_theme == "sphinx_material":
             {
                 "href": "https://deploy.seldon.io",
                 "internal": False,
-                "title": "Seldon Deploy (Enterprise)",
+                "title": "Seldon Deploy (企业)",
             },
             {
                 "href": "https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk",
                 "internal": False,
-                "title": "Seldon Deploy SDK (Enterprise)",
+                "title": "Seldon Deploy SDK (企业)",
             },
         ],
     }

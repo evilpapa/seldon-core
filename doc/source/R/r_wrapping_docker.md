@@ -80,7 +80,7 @@ EXPOSE 5000
 CMD Rscript microservice.R --model $MODEL_NAME --api $API_TYPE --service $SERVICE_TYPE --persistence $PERSISTENCE
 ```
 
-这里二进制版本的库安装在顶部。seldon 封装器所需依赖项 'plumber', 'jsonlite', 'optparse', 'stringr', 'urltools' 和 'caret' - 除了这些，你可以添加你自己的依赖项（这里的“pls”是示例，封装器不需要）。
+这里二进制版本的库安装在顶部。seldon 封装器所需依赖项 'plumber', 'jsonlite', 'optparse', 'stringr', 'urltools' 和 'caret' - 除了这些，你可以添加你自己的依赖项（这里的「pls」是示例，封装器不需要）。
 
 然后设置环境变量，最后将作为参数传递给 CMD 中的 R 微服务。下面解释环境变量的含义。
 
