@@ -23,7 +23,7 @@ Seldon 处理着成千上万的生产环境机器学习模型实例，并提供�
 
 * 加入社区 `Slack 社区 <https://join.slack.com/t/seldondev/shared_invite/zt-vejg6ttd-ksZiQs3O_HOtPQsen_labg>`_ 来讨论问题
 * 从 `Seldon Core Notebook 示例 <./examples/notebooks.html>`_ 开始
-* 加入我们每两周一次的 `线上讨论会 </developer/community.html#community-calls) : [Google 日历](https://calendar.google.com/event?action=TEMPLATE&tmeid=MXBtNzI1cjk0dG9kczhsZTRkcWlmcm1kdjVfMjAyMDA3MDlUMTUwMDAwWiBzZWxkb24uaW9fbTRuMnZtcmZubDI3M3FsczVnYjlwNjVpMHNAZw&tmsrc=seldon.io_m4n2vmrfnl273qls5gb9p65i0s%40group.calendar.google.com&scp=ALL>`_
+* 加入我们每两周一次的 `线上讨论会 </developer/community.html#community-calls>_ （`Google 日历 <https://calendar.google.com/event?action=TEMPLATE&tmeid=MXBtNzI1cjk0dG9kczhsZTRkcWlmcm1kdjVfMjAyMDA3MDlUMTUwMDAwWiBzZWxkb24uaW9fbTRuMnZtcmZubDI3M3FsczVnYjlwNjVpMHNAZw&tmsrc=seldon.io_m4n2vmrfnl273qls5gb9p65i0s%40group.calendar.google.com&scp=ALL>`_，`iCal <https://calendar.google.com/calendar/ical/seldon.io_m4n2vmrfnl273qls5gb9p65i0s%40group.calendar.google.com/public/basic.ics>`_）
 * 学习如何开始参与 `社区贡献 <./developer/contributing.html>`_
 * 查看 `博客 <./tutorials/blogs.html>`_ 深入了解 Seldon 核心组件
 * 观看使用 Seldon 核心的 `视频和讨论 <./tutorials/videos.html>`_

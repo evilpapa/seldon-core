@@ -14,14 +14,15 @@
 #
 import os
 import sys
-import sphinx_material
+import pathlib
 
+sys.path.insert(0, os.path.abspath("."))
 sys.path.insert(0, os.path.abspath("../.."))
 
 # -- Project information -----------------------------------------------------
 
 project = "seldon-core"
-copyright = "2021, Seldon Technologies Ltd"
+copyright = "2024, Seldon Technologies Ltd"
 author = "Seldon Technologies Ltd"
 
 # The short X.Y version
@@ -128,7 +129,7 @@ master_doc = "index"
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -180,73 +181,31 @@ pygments_style = None
 # Chosen Themes:
 # * https://github.com/bashtage/sphinx-material/
 # * https://github.com/myyasuda/sphinx_materialdesign_theme
-html_theme = "sphinx_material"
+html_theme = "sphinx_book_theme"
 
-if html_theme == "sphinx_material":
-    html_theme_options = {
-        "google_analytics_account": "UA-54780881-2",
-        "base_url": "https://docs.seldon.io/projects/seldon-core/",
-        "color_primary": "indigo",
-        "color_accent": "teal",
-        "repo_url": "https://github.com/SeldonIO/seldon-core/",
-        "repo_name": "Seldon Core",
-        "nav_title": "Seldon Core 文档",
-        "globaltoc_depth": 3,
-        "globaltoc_collapse": True,
-        "globaltoc_includehidden": True,
-        "repo_type": "github",
-        "version_dropdown": True,
-        "version_dropdown_text": "Versions",
-        "master_doc": False,
-        "nav_links": [
-            {
-                "href": "/",
-                "internal": False,
-                "title": "🚀 Our Other Projects & Products:",
-            },
-            {
-                "href": "https://docs.seldon.io/projects/alibi/en/stable/",
-                "internal": False,
-                "title": "Alibi Explain",
-            },
-            {
-                "href": "https://docs.seldon.io/projects/alibi-detect/en/stable/",
-                "internal": False,
-                "title": "Alibi Detect",
-            },
-            {
-                "href": "https://mlserver.readthedocs.io/en/latest/",
-                "internal": False,
-                "title": "MLServer",
-            },
-            {
-                "href": "https://tempo.readthedocs.io/en/latest/",
-                "internal": False,
-                "title": "Tempo SDK",
-            },
-            {
-                "href": "https://deploy.seldon.io",
-                "internal": False,
-                "title": "Seldon Deploy (企业)",
-            },
-            {
-                "href": "https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk",
-                "internal": False,
-                "title": "Seldon Deploy SDK (企业)",
-            },
-        ],
-    }
-
-    extensions.append("sphinx_material")
-    html_theme_path = sphinx_material.html_theme_path()
-    html_context = sphinx_material.get_html_context()
-
-html_sidebars = {
-    "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
+html_theme_options = {
+    "announcement": None,
+    "navbar_align": "left",
+    "navbar_persistent": [
+        "theme-switcher",
+    ],
+    "secondary_sidebar_items": [
+        "page-toc",
+        "edit-this-page",
+    ],
+    "content_footer_items": [
+    ],
+    "navigation_depth": 4,
 }
 
+
+
+# html_sidebars = {
+#     "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
+# }
+
 # The Seldon Logo located at the top of the navigation bar.
-html_logo = "Seldon_White.png"
+html_logo = "seldon.png"
 
 html_favicon = 'favicon.ico'
 
@@ -255,7 +214,7 @@ html_favicon = 'favicon.ico'
 # documentation.
 html_static_path = ['_static']
 
-html_css_files = ['theme_overrides.css']
+# html_css_files = ['theme_overrides.css']
 
 html_extra_path = ["_extra"]
 
@@ -303,7 +262,7 @@ latex_documents = [
     (
         master_doc,
         "seldon-core.tex",
-        "seldon-core Documentation",
+        "seldon-core 文档",
         "Seldon Technologies Ltd",
         "manual",
     ),
@@ -313,7 +272,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "seldon-core", "seldon-core Documentation", [author], 1)]
+man_pages = [(master_doc, "seldon-core", "seldon-core 文档", [author], 1)]
 
 # -- Options for Texinfo output ----------------------------------------------
 
@@ -324,7 +283,7 @@ texinfo_documents = [
     (
         master_doc,
         "seldon-core",
-        "seldon-core Documentation",
+        "seldon-core 文档",
         author,
         "seldon-core",
         "One line description of project.",

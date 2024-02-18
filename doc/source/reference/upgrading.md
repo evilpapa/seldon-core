@@ -22,7 +22,7 @@ Alibi 升级到 to 0.6.0
 Alibi 服务器 python 升级到 3.7.10
 
 
-## 升级到 to 1.8
+## 升级到 1.8
 
 ### Rclone Storage Initailizer
 
@@ -83,11 +83,11 @@ Seldon Core 1.9 最终废弃 Java Engine，并移除了相关仓库代码。
 
 ### 重大变化
 
-默认 sklearn 服务器使用的 sklearn 版本为 0.23.2。要使用不同的版本，您需要按照[ sklearn 服务器文档](../servers/sklearn.html)描述的步骤进行。
+默认 sklearn 服务器使用的 sklearn 版本为 0.23.2。要使用不同的版本，您需要按照 [sklearn 服务器文档](../servers/sklearn.html)描述的步骤进行。
 
 ## 升级到 1.2.1
 
-*\[NOTE\]* 1.2.0 有一个问题，所有 Seldon 部署都被标记为「NotReady」，因为有一个[ volumeName 更新 bug](https://github.com/SeldonIO/seldon-core/issues/2017)造成。可通过 1.2.0 volume patch [示例概述](../examples/patch_1_2.html)来解决。建议直接升级到1.2.1版本。
+*\[NOTE\]* 1.2.0 有一个问题，所有 Seldon 部署都被标记为「NotReady」，因为有一个 [volumeName 更新 bug](https://github.com/SeldonIO/seldon-core/issues/2017) 造成。可通过 1.2.0 volume patch [示例概述](../examples/patch_1_2.html)来解决。建议直接升级到 1.2.1 版本。
 
 作为此升级的一部分，所有 seldon-managed 的 Pod 都将进行滚动更新。
 
@@ -169,7 +169,7 @@ rest-seldon-model-0-classifier
 
 #### Ambassador 重试
 
-重试次数已从之前的硬编码值 3 中删除。现在可通过[ Ambassador 注解](../ingress/ambassador.html)设置。
+重试次数已从之前的硬编码值 3 中删除。现在可通过 [Ambassador 注解](../ingress/ambassador.html)设置。
 
 ### Python 封装标签更新
 

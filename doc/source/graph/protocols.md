@@ -14,14 +14,14 @@ Seldon Core 支持以下数据平面：
 
 Seldon 是 SeldonDeployment 资源的默认协议。你可在 SeldonDeployment 资源设置 `transport: grpc` 指定 gRPC 协议，或者所有组件在图节点 endpoint.tranport 设置为 grpc。
 
-查看[示例 notebook](../examples/protocol_examples.html)。
+查看 [notebook 示例](../examples/protocol_examples.html)。
 
 ## REST 和 gRPC Tensorflow 协议
 
-   * [REST Tensorflow Protocol 定义](https://github.com/tensorflow/serving/blob/master/tensorflow_serving/g3doc/api_rest.md)。
-   * [gRPC Tensorflow Protocol 定义](https://github.com/tensorflow/serving/blob/master/tensorflow_serving/apis/prediction_service.proto)。
+   * [REST Tensorflow 协议定义](https://github.com/tensorflow/serving/blob/master/tensorflow_serving/g3doc/api_rest.md)。
+   * [gRPC Tensorflow 协议定义](https://github.com/tensorflow/serving/blob/master/tensorflow_serving/apis/prediction_service.proto)。
 
-通过在 Seldon Deployment 定义 `protocol: tensorflow` 、 `transport: rest` 或 `transport: grpc` 来激活，参考[示例 notebook](../examples/protocol_examples.html)。
+通过在 Seldon Deployment 定义 `protocol: tensorflow` 、 `transport: rest` 或 `transport: grpc` 来激活，参考 [notebook 示例](../examples/protocol_examples.html)。
 
 在 Seldon 图定义中协议会按照预期的 Tensorflow Serving 服务运行单个模型图一样在图中运行单个模型。对于更复杂的图，可链式定义模型：
 
@@ -31,7 +31,7 @@ Seldon 是 SeldonDeployment 资源的默认协议。你可在 SeldonDeployment �
 
 一般考虑事项：
 
-  * Seldon 组件标记为MODELS、INPUT_TRANSFORMER 和 OUTPUT_TRANSFORMERS 才允许 PredictionService Predict 方法调用。
+  * Seldon 组件标记为 MODELS、INPUT_TRANSFORMER 和 OUTPUT_TRANSFORMERS 才允许 PredictionService Predict 方法调用。
   * GetModelStatus 在所有模型图中可用。
   * GetModelMetadata 在所有模型图中可用。
   * Combining 和 Routing 当前在 Tensorflow 协议中不支持。
@@ -86,4 +86,4 @@ spec:
 | [XGBOOST_SERVER](../servers/xgboost.md) | ✅  | [Seldon MLServer](https://github.com/seldonio/mlserver) |
 | [MLFLOW_SERVER](../servers/mlflow.md) | ✅  | [Seldon MLServer](https://github.com/seldonio/mlserver) |
 
-可在[示例 notebook](../examples/protocol_examples.html)查看 `v2`。
+可在 [notebook 示例](../examples/protocol_examples.html)查看 `v2`。

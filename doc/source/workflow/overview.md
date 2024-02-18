@@ -17,7 +17,7 @@ Seldon 将您的机器学习模型转换为 REST/gRPC 微服务。
 保持阅读以学习更多内容
 
 
-## E2E Serving with Model Servers
+## E2E Serving 模型服务器
 
 使用 `Seldon Core` 你可以非常灵活的将 `Model Servers` 直接用于生产环境。
 

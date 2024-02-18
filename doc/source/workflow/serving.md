@@ -1,4 +1,4 @@
-# 模型Endpoints测试
+# 模型 Endpoints 测试
 
 为了测试组件，可使用 CURL/grpCURL 或者相似工具，或者我们的 Python SeldonClient SDK。
 

@@ -23,10 +23,10 @@
 正在运行旧版的 Seldon Core ？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-请确保您已阅读 `「升级 Seldon Core 指引」 <../reference/upgrading.md>`__
+请确保您已阅读 `「Seldon Core 升级指引」 <../reference/upgrading.md>`__
 
 -  **Seldon Core 已停止为 1.0 之前版本提供支持，请确保您已升级到最新版本。**
--  如果你在运行旧版本 Seldon Core，并想对它升级，请阅读[升级 Seldon Core 章节]<../reference/upgrading.md>`__ 来了解升级的改动和最佳实践。
+-  如果你在运行旧版本 Seldon Core，并想对它升级，请阅读 `「Seldon Core 升级指引」 <../reference/upgrading.md>`__ 来了解升级的改动和最佳实践。
 -  请查看 `从 Helm v2 迁移到 Helm v3 <https://helm.sh/docs/topics/v2_v3_migration/>`__ 如若你已经使用 Helm v2 安装运行了 Seldon Core 并想进行升级。
 
 以 Helm 方式安装Seldon Core
@@ -152,8 +152,7 @@ Seldon Core 安装好，你可以进行如下设置：
 集成 Kubeflow 安装 
 ^^^^^^^^^^^^^^^^^^^^^
 
--  `将 Seldon 作为 
-    Kubeflow 的一部分 <https://www.kubeflow.org/docs/guides/components/seldon/#seldon-serving>`__ 。
+-  `将 Seldon 作为 Kubeflow 的一部分 <https://www.kubeflow.org/docs/guides/components/seldon/#seldon-serving>`__ 。
 
 GCP 应用市场
 ^^^^^^^^^^^^^^^
@@ -220,8 +219,7 @@ Operator 文件加下的 Makefile 提供了一个安装示例：
 
     make deploy-namespaced1
 
-查看 `多服务器示例
-笔记 <../examples/multiple_operators.html>`__。
+查看 `多服务器示例笔记 <../examples/multiple_operators.html>`__。
 
 指定标签的 Seldon Core Operator (version >=1.0)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
