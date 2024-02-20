@@ -65,7 +65,7 @@ kubectl describe sdep mysdep
 
 ## Seldon Deployment 一直停留在「creating」状态
 
-检查pods是否运行成功。
+检查 pods 是否运行成功。
 
 ## 访问 Ambassador 节点返回404
 
@@ -79,7 +79,7 @@ kubectl describe sdep mysdep
 注意 ambassador 是否以集群范围机型安装，
 其 rbac 设置不被限定在特定命名空间，否则会出现权限错误。
 
-## 通过API请求模型返回500错误
+## 通过 API 请求模型返回 500 错误
 
 查看运行模型的 pod 日志
 
@@ -88,7 +88,7 @@ kubectl describe sdep mysdep
 查看 Seldon Operator 日志。
 他是处理 Seldon Deployment graphs 发送到 Kubernetes 集群的 pod。
 默认安装下
-你可以在`seldon-system`中找到 operator pod。
+你可以在 `seldon-system` 中找到 operator pod。
 他被打成 `control-plane=seldon-controller-manager` 标签，
 通过如下命令查看日志：
 
@@ -106,14 +106,14 @@ panic: runtime error: invalid memory address or nil pointer dereference
 ```
 
 这种错误通常是有空或者
-异常 `SeldonDeployment` spec值导致。
+异常 `SeldonDeployment` spec 值导致。
 通常主要为错误的 webhook 配置导致。
-可尝试通过[重新安装 Seldon Core](./install.md)
+可尝试通过 [重新安装 Seldon Core](./install.md)
 来修复他。
 
 ## 已经进行了上述尝试，但仍有问题
 
-- 联系[Slack 社区](https://join.slack.com/t/seldondev/shared_invite/enQtMzA2Mzk1Mzg0NjczLTJlNjQ1NTE5Y2MzMWIwMGUzYjNmZGFjZjUxODU5Y2EyMDY0M2U3ZmRiYTBkOTRjMzZhZjA4NjJkNDkxZTA2YmU) 
-- 创建一个 [Seldon Core’s Github repo]讨论(https://github.com/SeldonIO/seldon-core/issues)。
+- 联系 [Slack 社区](https://join.slack.com/t/seldondev/shared_invite/enQtMzA2Mzk1Mzg0NjczLTJlNjQ1NTE5Y2MzMWIwMGUzYjNmZGFjZjUxODU5Y2EyMDY0M2U3ZmRiYTBkOTRjMzZhZjA4NjJkNDkxZTA2YmU) 
+- 创建一个 [Seldon Core’s Github repo] 讨论(https://github.com/SeldonIO/seldon-core/issues)。
   请务必添加上述建议的任何诊断，
   以帮助我们诊断您的问题。

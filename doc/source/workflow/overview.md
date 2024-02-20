@@ -26,14 +26,14 @@ Seldon 将您的机器学习模型转换为 REST/gRPC 微服务。
 使用所谓的 `Reusable Model Servers` 你可以在短短几步将模型部署到 Kubernetes 集群：
 
 1. *数据科学家* 使用先进的类库如（mlflow, dvc, xgboost, scikit-learn 等）准备机器学习 `model` 。
-2. 训练后的模型上传到中心化的存储库（比如S3存储）。
+2. 训练后的模型上传到中心化的存储库（比如 S3 存储）。
 3. *软件工程师* 使用上传到镜像仓库的使用 `Seldon Core` 的 `Reusable Model Server`。
 4. 使用发布单（`Seldon Deployment` CRD）创建并应用到 k8s 集群。
 5. Seldon Core `Operator` 创建所有依赖的 Kubernetes 资源。
 6. 发送到 `Seldon Deployment` 的所有推理请求会通过 `Service Orchestrator` 转发到内部模型。
 7. 以通过利用我们与第三方框架的集成来收集指标和跟踪数据。
 
-如果在步骤 2 和 3 中使用了`Non-Reusable Model Servers`，你需要准备一个 Docker 镜像来实现机器学习模型的嵌入，我们将在后续章节进行讨论两种方法的区别。
+如果在步骤 2 和 3 中使用了 `Non-Reusable Model Servers`，你需要准备一个 Docker 镜像来实现机器学习模型的嵌入，我们将在后续章节进行讨论两种方法的区别。
 
 ## 2 种类型的模型服务器
 
@@ -42,7 +42,7 @@ Seldon 将您的机器学习模型转换为 REST/gRPC 微服务。
 
 - **可复用模型服务**: 通常称为预封装模型服务器。
   允许部署每次无需重新打包新服务器的相似模型。
-  他们经常从中心化仓库存储获取模型（比容公司的s3存储）。
+  他们经常从中心化仓库存储获取模型（比容公司的 s3 存储）。
 - **不可复用模型服务**: 专用服务，旨在为单一特殊模型服务。
   不需要中央存储库，但需要为每个模型构建新镜像。
 
@@ -55,7 +55,7 @@ Seldon 将您的机器学习模型转换为 REST/gRPC 微服务。
 - [Tensorflow 服务](../servers/tensorflow.html)
 - [XGBoost 服务](../servers/xgboost.html)
 
-从[这里](../servers/custom.html)阅读如何创建自己的预封装模型服务。
+从 [这里](../servers/custom.html) 阅读如何创建自己的预封装模型服务。
 
 ## 语言封装
 
@@ -106,7 +106,7 @@ $ curl http://localhost:9000/api/v1.0/predictions \
 
 要实现完全的容器化处理仍需两步：
 - 描述运行时依赖的 `requirements.txt`
-- 描述微服务的 `.s2/environment` (接口和模型类型）
+- 描述微服务的 `.s2/environment` （接口和模型类型）
 
 一旦这些就位，您可以使用一个简单的 s2i 命令
 ```bash
@@ -122,7 +122,7 @@ s2i build . seldonio/seldon-core-s2i-python3:1.9.1 model:0.1
 Seldon Deployment CRD （自定义资源）是 Seldon Core 的真正优势所在。
 它允许您轻松地将推理模型部署到 Kubernetes 集群并处理一些真正的生产流量！
 
-[自定义资源](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)  是 Kubernetes API 的基础扩展。
+[自定义资源](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) 是 Kubernetes API 的基础扩展。
 它们允许你创建基本的 Kubernetes 对象的自定义组合并协同工作。
 在 Seldon Core 我们通过 yaml 清单文件使用 CRDs 来定义推理图。
 
@@ -179,7 +179,7 @@ Seldon Core `Operator` 通过 [Kubebuilder](https://github.com/kubernetes-sigs/k
 
 ![](../images/metadata.svg)
 
-阅读更多有关[元数据来源的资料](../reference/apis/metadata.html).
+阅读更多有关 [元数据来源的资料](../reference/apis/metadata.html)。
 
 
 ## Prometheus指标
@@ -189,7 +189,7 @@ Seldon Core 通过 `Service Orchestrator` 暴露标准的指标给 [Prometheus](
 
 ![](images/metrics.svg)
 
-阅读更多有关 [指标资料](../analytics/analytics.html).
+阅读更多有关 [指标资料](../analytics/analytics.html)。
 
 ## 使用 Jaeger 进行分布式跟踪
 
@@ -197,7 +197,7 @@ Seldon Core 通过 `Service Orchestrator` 暴露标准的指标给 [Prometheus](
 
 ![](../images/tracing.svg)
 
-阅读更多有关[追踪资料文档](../graph/distributed-tracing.html).
+阅读更多有关 [追踪资料文档](../graph/distributed-tracing.html)。
 
 ## 所以，为什么不要 Flask 封装我的模型？
 

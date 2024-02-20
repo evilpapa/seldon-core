@@ -1,4 +1,4 @@
-# Source to Image (s2i)
+# 源码转镜像 (s2i)
 
 [Source to image](https://github.com/openshift/source-to-image) 是一个 supported 支持的工具来为源码创建 docker 镜像。 我们提供映像构建器，让您可以轻松地封装数据模型，以便它们可以由 seldon-core 进行管理。
 

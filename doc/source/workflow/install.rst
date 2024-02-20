@@ -18,7 +18,7 @@
    -  Istio（可在这里找到 Istio 1.5 版本的安装示例 
       https://github.com/SeldonIO/seldon-core/tree/master/examples/auth
       ）
-   -  Ambassador v1 (v2 当前不支持)
+   -  Ambassador v1 （v2 当前不支持）
 
 正在运行旧版的 Seldon Core ？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -269,7 +269,7 @@ Operator 文件夹中的 Makefile 中提供了一个示例安装：
 ~~~~~~~~~~~~~~~~~~~~~~
 
 当您的 kubernetes 集群位于代理后面时， ``kube-apiserver``通常会继承系统代理变量。
-这可以阻止 ``kube-apiserver`` 访问创建 Seldon 所需的 webhook资源。
+这可以阻止 ``kube-apiserver`` 访问创建 Seldon 所需的 webhook 资源。
 
 你可能会看到如下错误：
 
@@ -278,5 +278,5 @@ Operator 文件夹中的 Makefile 中提供了一个示例安装：
     Internal error occurred: failed calling webhook "v1.vseldondeployment.kb.io": Post https://seldon-webhook-service.seldon-system.svc:443/validate-machinelearning-seldon-io-v1-seldondeployment?timeout=30s: Service Unavailable
 
 要解决此问题，请确保 ``kube-apiserver`` 的环境变量 ``no_proxy``包含 ``.svc,.svc.cluster.local``。
-查看`这个 Github Issue 回复 <https://github.com/jetstack/cert-manager/issues/2640#issuecomment-601872165>`__来参考。
+查看 `这个 Github Issue 回复 <https://github.com/jetstack/cert-manager/issues/2640#issuecomment-601872165>`__来参考。
 如那里所述，错误也可能发生在 ``cert-manager-webhook``。

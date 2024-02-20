@@ -9,7 +9,7 @@
 * 直接用 Python 客户端运行模型
 * 以 Docker 容器方式运行模型
     * 此法可用于所有封装语言（除却预封装推理服务）
-* 在K8s开发环境运行 SeldonDeployment，比如 KIND，或者 minikube
+* 在 K8s 开发环境运行 SeldonDeployment，比如 KIND，或者 minikube
     * 此法可用于所有模型
     * 可通过生成的文档 UI, Python 客户端或者 CLI 工具发送请求
 
@@ -50,7 +50,7 @@ hello world
 2020-03-23 16:59:17,366 - werkzeug:_log:122 - INFO:   * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
 ```
 
-现在，我们的模型微服务正在运行，我们可以使用curl发送请求：
+现在，我们的模型微服务正在运行，我们可以使用 curl 发送请求：
 
 ```console
 > curl -X POST \
@@ -63,7 +63,7 @@ hello world
 
 我们可以看到模型通过 API 返回的输出。
 
-您也可以使用 [Python 客户端](../python/seldon_client.xhtml)发送请求。 
+您也可以使用 [Python 客户端](../python/seldon_client.xhtml) 发送请求。 
 
 ### 以 Docker 容器方式运行模型
 
@@ -86,15 +86,15 @@ docker run --rm --name mymodel -p 5000:5000 mymodel:0.1
 {"data":{"names":[],"ndarray":["hello","world"]},"meta":{}}
 ```
 
-您也可以使用 [Python 客户端](../python/seldon_client.xhtml)发送请求。 
+您也可以使用 [Python 客户端](../python/seldon_client.xhtml) 发送请求。 
 
 ## 在K8s中测试模型
 
 对于 Kubernetes，您可以按照文档的安装部分设置一个集群。
 
-您也可以使用本地客户端（如 KIND，我们使用Kind开发并进行 e2e 测试）来运行 Seldon。
+您也可以使用本地客户端（如 KIND，我们使用 Kind 开发并进行 e2e 测试）来运行 Seldon。
 
-一旦通过 Kind 或自建 k8s 集群完成，你需要为集群创建 [Ingress (as outlined in installation docs)](install.xhtml)支持，只会，可以向模型发送请求。
+一旦通过 Kind 或自建 k8s 集群完成，你需要为集群创建 [Ingress （如安装文档中所述）](install.xhtml) 支持，只会，可以向模型发送请求。
 
 根据你 Seldon Core 设定的 Ambassador 或 API 网关，可以通过以下讨论方式访问模型：
 
@@ -102,7 +102,7 @@ docker run --rm --name mymodel -p 5000:5000 mymodel:0.1
 
 每个部署在 K8s 集群后的模型都会暴露标准化的用户界面，以便使用我们的 OpenAPI 模式发送请求。
 
-通过浏览器访问`http://<ingress_url>/seldon/<namespace>/<model-name>/api/v1.0/doc/` 节点来发送请求。
+通过浏览器访问 `http://<ingress_url>/seldon/<namespace>/<model-name>/api/v1.0/doc/` 节点来发送请求。
 
 ![](https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/rest-openapi.jpg) 
 
@@ -111,7 +111,7 @@ docker run --rm --name mymodel -p 5000:5000 mymodel:0.1
 
 #### Ambassador REST
 
-假设 名为 `<deploymentName>` 的 Seldon deployment 在命名空间 `<namespace>` 通过 Ambassador 中暴露在 `<ambassadorEndpoint>` 节点：
+假设名为 `<deploymentName>` 的 Seldon deployment 在命名空间 `<namespace>` 通过 Ambassador 中暴露在 `<ambassadorEndpoint>` 节点：
 
  * REST节点暴露为 : `http://<ambassadorEndpoint>/seldon/<namespace>/<deploymentName>/api/v1.0/predictions`
 
@@ -134,7 +134,7 @@ docker run --rm --name mymodel -p 5000:5000 mymodel:0.1
 
 #### Istio gRPC
 
-假设名为 `<deploymentName>` 的 Seldon deployment 在命名空间`<namespace>` 通过 istio 网关 `<istioGateway>` 暴露:
+假设名为 `<deploymentName>` 的 Seldon deployment 在命名空间 `<namespace>` 通过 istio 网关 `<istioGateway>` 暴露:
 
   * gRPC 节点暴露为 `<istioGateway>` ，你需要在请求中设置 metadata 头信息
     * `seldon` 参数和 `<deploymentName>` 值

@@ -6,14 +6,14 @@
 
 ### 开启使用报告
 
-为了帮助 seldon-core 的开发支持，任何时候都可通过「seldon-core-operator」 helm chart设置 `–set usageMetrics.enabled=true` 选项来自愿开启使用报告回馈。
+为了帮助 seldon-core 的开发支持，任何时候都可通过「seldon-core-operator」 helm chart 设置 `–set usageMetrics.enabled=true` 选项来自愿开启使用报告回馈。
 
 ```bash
 helm install seldon-core seldon-core-operator \
         --repo https://storage.googleapis.com/seldon-charts --set usageMetrics.enabled=true
 ```
 
-报告的信息是匿名的，只包含有关集群中每个节点的一些信息，包括操作系统版本、kubelet 版本、docker 版本以及CPU 和内存容量信息。
+报告的信息是匿名的，只包含有关集群中每个节点的一些信息，包括操作系统版本、kubelet 版本、docker 版本以及 CPU 和内存容量信息。
 
 一个上报信息的示例：
 ```json

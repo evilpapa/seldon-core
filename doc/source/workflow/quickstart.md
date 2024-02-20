@@ -22,13 +22,13 @@
 
 ### 2. 定义运行时服务图
 
-要在 Kubernetes 上运行机器学习图，您需要在最后一步中创建一个服务图来定义所创建的组件如何组合运行。这是在 `SeldonDeployment` Kubernetes 自定义资源中定义的。这里提供了[推理图构建指南](../graph/inference-graph.md)。
+要在 Kubernetes 上运行机器学习图，您需要在最后一步中创建一个服务图来定义所创建的组件如何组合运行。这是在 `SeldonDeployment` Kubernetes 自定义资源中定义的。这里提供了 [推理图构建指南](../graph/inference-graph.md)。
 
 ![graph](./graph.png)
 
 ### 3. 部署发布预估服务
 
-像其他 Kubernetes 资源一样，你可以使用 `kubectl` 来部署 ML 服务。可在[这里](deploying.md)参与讨论。部署后，可通过[调用公开 API ](serving.md)来获取预估。
+像其他 Kubernetes 资源一样，你可以使用 `kubectl` 来部署 ML 服务。可在 [这里](deploying.md) 参与讨论。部署后，可通过 [调用公开 API ](serving.md) 来获取预估。
 
 
 ## Seldon Core 工作流示例
@@ -49,7 +49,7 @@ helm install seldon-core seldon-core-operator \
     # You can set ambassador instead with --set ambassador.enabled=true
 ```
 
-有关展示如何使用不同参数和选项安装 Seldon Core 的高级指南，可在我们的[详细安装指南](./install.html)中进一步了解。
+有关展示如何使用不同参数和选项安装 Seldon Core 的高级指南，可在我们的 [详细安装指南](./install.html) 中进一步了解。
 
 ### 使用 Seldon Core 制作您的第一个模型
 
@@ -66,7 +66,7 @@ helm install seldon-core seldon-core-operator \
 
 **1. 导出模型二进制文件/制品**
 
-使用您计划使用的[预封装模型服务器](../servers/overview.html)，按照提供的概述说明导出模型二进制文件。
+使用您计划使用的 [预封装模型服务器](../servers/overview.html) ，按照提供的概述说明导出模型二进制文件。
 
 ```python
 >>my_sklearn_model.train(...)
@@ -89,7 +89,7 @@ $ gsutil cp model.joblib gs://seldon-models/v1.10.0-dev/sklearn/iris/model.jobli
 
 **3. 部署到 Kubernetes 中的 Seldon Core**
 
-最后，您可以通过使用选择的预封装模型服务器加载二进制文件/制品来部署您的模型。您可以构建使用多个组件进行推理的[复杂推理图](../graph/inference-graph.html)。
+最后，您可以通过使用选择的预封装模型服务器加载二进制文件/制品来部署您的模型。您可以构建使用多个组件进行推理的 [复杂推理图](../graph/inference-graph.html)。
 
 ```yaml
 $ kubectl apply -f - << END
@@ -118,7 +118,7 @@ END
 
 ![](../images/rest-openapi.jpg)
 
-或者，您可以使用我们的 [Seldon Python 客户端](../python/seldon_client.html)或其他 Linux CLI 工具发送请求：
+或者，您可以使用我们的 [Seldon Python 客户端](../python/seldon_client.html) 或其他 Linux CLI 工具发送请求：
 
 ```console
 $ curl -X POST http://<ingress>/seldon/model-namespace/iris-model/api/v1.0/predictions \
@@ -148,7 +148,7 @@ $ curl -X POST http://<ingress>/seldon/model-namespace/iris-model/api/v1.0/predi
 
 以下是使用 Seldon Core 语言封装器容器化模型的高级步骤。
 
-语言封装器用于更多我们的预封装模型服务器未涵盖依赖的自定义用例。可以使用我们已孵化的 Python 和 Java 构建语言封装器 - 有关更多详细信息，请查看我们的[语言封装器部分](../wrappers/language_wrappers.html)。
+语言封装器用于更多我们的预封装模型服务器未涵盖依赖的自定义用例。可以使用我们已孵化的 Python 和 Java 构建语言封装器 - 有关更多详细信息，请查看我们的 [语言封装器部分](../wrappers/language_wrappers.html)。
 
 **1. 导出模型二进制文件/制品：**
 
@@ -179,7 +179,7 @@ class Model:
 
 **3. 本地测试模型**
 
-在我们将模型部署到生产环境之前，我们实际上可以使用 [Python seldon-core Module](../python/python_module.md)微服务 CLI 功能在本地运行我们的模型。
+在我们将模型部署到生产环境之前，我们实际上可以使用 [Python seldon-core Module](../python/python_module.md) 微服务 CLI 功能在本地运行我们的模型。
 
 ```console
 $ seldon-core-microservice Model REST --service-type MODEL
@@ -316,6 +316,6 @@ $ curl -X POST http://<ingress>/seldon/model-namespace/iris-model/api/v1.0/predi
 * [Tensorflow Serving (TFServing) 集成示例](../examples/tfserving_mnist.html)
 * [MLFlow 集成示例](../examples/mlflow_server_ab_test_ambassador.html)
 
-## 关于 "Seldon Core" 这个名字
+## 关于 「Seldon Core」 这个名字
 
-Seldon (ˈSɛldən) Core 这个名字的灵感来自于 [the Foundation Series (Scifi Novel)](https://en.wikipedia.org/wiki/Foundation_series) 它的是由一位名叫 "Hari Seldon" 的数学家组成，他毕生都在发展一种心理历史理论，这是一种新的有效的数学社会学，可以展望未来在很长一段时间内（跨越数十万年）进行极其准确的预测。
+Seldon (ˈSɛldən) Core 这个名字的灵感来自于 [the Foundation Series (Scifi Novel)](https://en.wikipedia.org/wiki/Foundation_series) 它的是由一位名叫 「Hari Seldon」 的数学家组成，他毕生都在发展一种心理历史理论，这是一种新的有效的数学社会学，可以展望未来在很长一段时间内（跨越数十万年）进行极其准确的预测。
