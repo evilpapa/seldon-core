@@ -5,17 +5,17 @@
 
 ## 概述
 
-Seldon core 转换及的机器学习模型（Tensorflow, Pytorch, H2o, 等）或封装语言 (Python, Java, 等）为生产化额 REST/GRPC 微服务。
+Seldon core 转换及的机器学习模型（Tensorflow, Pytorch, H2o 等）或封装语言 （Python, Java 等）为生产化额 REST/GRPC 微服务。
 
 Seldon 处理扩展到数千个生产机器学习模型，并提供开箱即用的高级机器学习功能，包括高级指标、请求记录、解释器、异常值检测器、A/B 测试、金丝雀等。
 
 * 阅读 [Seldon Core 文档](https://docs.seldon.io/projects/seldon-core/en/latest/)
 * 加入 [Slack 社区](https://join.slack.com/t/seldondev/shared_invite/zt-vejg6ttd-ksZiQs3O_HOtPQsen_labg) 来问问题
-* 从 [Seldon Core 笔记本示例]开始(https://docs.seldon.io/projects/seldon-core/en/latest/examples/notebooks.html)
+* 从 [Seldon Core 笔记本示例](https://docs.seldon.io/projects/seldon-core/en/latest/examples/notebooks.html) 开始
 * 加入我们每两周一次的 [在线工作组电话会议](https://docs.seldon.io/projects/seldon-core/en/latest/developer/community.html)：[Google 日历](https://calendar.google.com/event?action=TEMPLATE&tmeid=MXBtNzI1cjk0dG9kczhsZTRkcWlmcm1kdjVfMjAyMDA3MDlUMTUwMDAwWiBzZWxkb24uaW9fbTRuMnZtcmZubDI3M3FsczVnYjlwNjVpMHNAZw&tmsrc=seldon.io_m4n2vmrfnl273qls5gb9p65i0s%40group.calendar.google.com&scp=ALL)
 * 了解如何 [开始贡献](https://docs.seldon.io/projects/seldon-core/en/latest/developer/contributing.html)
 * 查看深入 Seldon Core 组件的 [博客](https://docs.seldon.io/projects/seldon-core/en/latest/tutorials/blogs.html)
-* 观看使用 Seldon Core 的[视频和访谈](https://docs.seldon.io/projects/seldon-core/en/latest/tutorials/videos.html)
+* 观看使用 Seldon Core 的 [视频和访谈](https://docs.seldon.io/projects/seldon-core/en/latest/tutorials/videos.html)
 
 ![](https://raw.githubusercontent.com/SeldonIO/seldon-core/master/doc/source/images/seldon-core-high-level.jpg)
 
@@ -23,20 +23,20 @@ Seldon 处理扩展到数千个生产机器学习模型，并提供开箱即用�
 
 Seldon Core 的安装量超过 200 万，用于跨组织管理机器学习模型的大规模部署，主要优势包括：
 
- * 超简单方式使用 [预包装推理服务](https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html)封装你的机器学习模型，[自定义服务](https://docs.seldon.io/projects/seldon-core/en/latest/servers/custom.html)，或[封装语言](https://docs.seldon.io/projects/seldon-core/en/latest/wrappers/language_wrappers.html)。
- * 开箱即用的 [Swagger UI](https://docs.seldon.io/projects/seldon-core/en/latest/reference/apis/openapi.html?highlight=swagger)端点测试，[Seldon Python 客户端或 Curl / GRPCurl](https://docs.seldon.io/projects/seldon-core/en/latest/python/python_module.html#seldon-core-python-api-client)。
+ * 超简单方式使用 [预包装推理服务](https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html)封装你的机器学习模型，[自定义服务](https://docs.seldon.io/projects/seldon-core/en/latest/servers/custom.html)，或 [封装语言](https://docs.seldon.io/projects/seldon-core/en/latest/wrappers/language_wrappers.html)。
+ * 开箱即用的 [Swagger UI](https://docs.seldon.io/projects/seldon-core/en/latest/reference/apis/openapi.html?highlight=swagger) 端点测试，[Seldon Python 客户端或 Curl / GRPCurl](https://docs.seldon.io/projects/seldon-core/en/latest/python/python_module.html#seldon-core-python-api-client)。
  * Cloud 无关并且在 [AWS EKS，Azure AKS，Google GKE，Alicloud，Digital Ocean 及 Openshift](https://docs.seldon.io/projects/seldon-core/en/latest/examples/notebooks.html#cloud-specific-examples) 都测试过。
  * 丰富强大的推理图来管理 [predictors, transformers, routers, combiners等](https://docs.seldon.io/projects/seldon-core/en/latest/examples/graph-metadata.html)。
  * 元数据输出以确保每个模型都能追溯 [训练系统，数据及指标](https://docs.seldon.io/projects/seldon-core/en/latest/reference/apis/metadata.html)。
  * 高级自定义 [Prometheus 和 Grafana](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/analytics.html) 指标实现。
  * 可审计的模型输入输出记录 [Elasticsearch 日志集成](https://docs.seldon.io/projects/seldon-core/en/latest/analytics/log_level.html)。
  * 通过 [Jaeger 集成](https://docs.seldon.io/projects/seldon-core/en/latest/graph/distributed-tracing.html) 实现微服务分布式追踪，以了解各微服务点延迟。
- * 通过一致的[安全及更新策略](https://github.com/SeldonIO/seldon-core/blob/master/SECURITY.md)实现安全、可靠、强大的系统。
+ * 通过一致的 [安全及更新策略](https://github.com/SeldonIO/seldon-core/blob/master/SECURITY.md) 实现安全、可靠、强大的系统。
 
 
 ## 开始
 
-通过我们的预包装服务器和封装语言可以非常容易的在 Seldon Core 发布模型。下面能查看一个 "hello world Iris" 发布示例。你可以在[快速开始文档](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/quickstart.html)查看有关这些工作流程的更多详细信息。
+通过我们的预包装服务器和封装语言可以非常容易的在 Seldon Core 发布模型。下面能查看一个 "hello world Iris" 发布示例。你可以在 [快速开始文档](https://docs.seldon.io/projects/seldon-core/en/latest/workflow/quickstart.html) 查看有关这些工作流程的更多详细信息。
 
 ### 安装 Seldon Core
 

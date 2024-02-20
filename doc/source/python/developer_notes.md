@@ -44,6 +44,6 @@ cd ${SELDON_CORE_DIR}/executor/proto && grpcurl \
     -plaintext -proto ./prediction.proto  0.0.0.0:5000 seldon.protos.Seldon/Predict
 ```
 
-`grpcurl` 工具可以使用 [GitHub](https://github.com/fullstorydev/grpcurl) 或者使用 [asdf-vm](https://github.com/asdf-vm/asdf-plugins).
+`grpcurl` 工具可以使用 [GitHub](https://github.com/fullstorydev/grpcurl) 或者使用 [asdf-vm](https://github.com/asdf-vm/asdf-plugins)。
 
 查看 [Python 服务器](./python_server.html#configuration) 文档获取配置选项。

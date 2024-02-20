@@ -6,7 +6,7 @@ Seldon Core 随 Kubeflow 一起安装。[Seldon Core 网站](https://docs.seldon
 
 如果你有保存在 PersistentVolume (PV), Google Cloud Storage bucket 或 Amazon S3 Storage 的模型，你可以使用 [Seldon Core 提供的模型服务器](https://docs.seldon.io/projects/seldon-core/en/latest/servers/overview.html)。
 
-Seldon Core 也提供了[特定模型语言封装](../wrappers/language_wrappers.html)来封装你的推理代码，使其在 Seldon Core 中运行。
+Seldon Core 也提供了 [特定模型语言封装](../wrappers/language_wrappers.html) 来封装你的推理代码，使其在 Seldon Core 中运行。
 
 ## Kubeflow 细节
 

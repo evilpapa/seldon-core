@@ -24,10 +24,10 @@
    和以上会禁用服务器的请求日志，
    推荐 ``INFO`` 等级。
 
-使用 [Python wrapper](../python/index) （包括[MLflow](../servers/mlflow), [SKLearn](../servers/sklearn) 和 [XGBoost](../servers/xgboost) 预封装服务器）时，
+使用 [Python wrapper](../python/index) （包括 [MLflow](../servers/mlflow)，[SKLearn](../servers/sklearn) 和 [XGBoost](../servers/xgboost) 预封装服务器）时，
 您可以使用 `SELDON_LOG_LEVEL` 环境变量控制日志级别。
 请注意，
-`SELDON_LOG_LEVEL` 必须在推理图中的**相应容器中** 设置变量。
+`SELDON_LOG_LEVEL` 必须在推理图中的 **相应容器中** 设置变量。
 
 例如，要在使用 python 封装器运行的每个容器中设置它，您可以通过添加 `SELDON_LOG_LEVEL` 环境变量到由 python 封装器运行镜像容器容器：
 

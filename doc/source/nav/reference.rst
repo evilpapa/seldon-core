@@ -18,4 +18,4 @@
     Seldon Deployment CRD </reference/seldon-deployment.md>
     服务编排器 </graph/svcorch.md>
     Kubeflow </analytics/kubeflow.md>
-    文档归档 </nav/archive.rst>
+    归档文档 </nav/archive.rst>

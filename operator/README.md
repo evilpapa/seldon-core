@@ -1,22 +1,22 @@
 # Kubebuilder v2 Seldon Operator
 
-## Development
+## 开发
 
-We assume:
+我们推荐:
 
  * Go 1.13
  * Kubebuilder 2.3.0
 
-### Issues
+### 讨论
 
  * Generated CRD is not structural: https://github.com/kubernetes-sigs/controller-tools/issues/304
    There is a PR for this: https://github.com/kubernetes-sigs/controller-tools/pull/312
 
-### Prerequisites
+### 要求
 
 For running locally `kind`, `kustomize` and `kubebuilder` should be installed.
 
-### Testing
+### 测试
 
 If you installed kubebuilder outside of `/usr/local/kubebuilder` then you will need to set the env var `KUBEBUILDER_ASSETS` for example:
 
@@ -45,13 +45,13 @@ Build image
 make docker-build
 ```
 
-## Standard Deploy
+## 标准部署
 
 ```
 make deploy
 ```
 
-## Local Development Deploy
+## 本地开发部署
 
 
 Deploy with webhook config set to point to host
@@ -82,10 +82,10 @@ You should now be able to create SeldonDeployments and Webhook calls will hit th
 
 You should delete the Operator running in the cluster at this point.
 
-# Build Helm Chart
+# 构建 Helm Chart
 
 Use the Makefile in the `./helm` directory. Ensure you have `pyyaml` in your python environment.
 
 # Openshift
 
-see [here](openshift.md)
+参考 [这里](openshift.md)

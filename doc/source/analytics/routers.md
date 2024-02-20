@@ -1,12 +1,12 @@
 # Seldon Core 中的路由
 
 ## 定义
-路由器是 Seldon Core 中预定义类型的[预测单元](../reference/apis/prediction.md#proto-buffer-and-grpc-definition)。
+路由器是 Seldon Core 中预定义类型的 [预测单元](../reference/apis/prediction.md#proto-buffer-and-grpc-definition)。
 它是一种微服务，可将请求路由到其子节点之一，并可选择接收反馈奖励以做出路由选择。
-REST 和 gRPC 内部 API，必须是路由器组件必须符合的[内部 API](../reference/apis/internal-api.md#route)参考。
+REST 和 gRPC 内部 API，必须是路由器组件必须符合的 [内部 API](../reference/apis/internal-api.md#route)参考。
 
 ## 实现
-目前我们在 Python 中提供了两个路由器的参考实现。他们都是 [multi-armed bandits](https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies)的实现：
+目前我们在 Python 中提供了两个路由器的参考实现。他们都是 [multi-armed bandits](https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies) 的实现：
 * [Epsilon-greedy router](https://github.com/SeldonIO/seldon-core/tree/master/components/routers/epsilon-greedy)
 * [Thompson Sampling](https://github.com/SeldonIO/seldon-core/tree/master/components/routers/thompson-sampling)
 
@@ -31,4 +31,4 @@ REST 响应应为 SeldonMessage 负载返回，包含路由值或包含整数数
 
 ## 限制
 
-当前 Go 中的默认编排「executor」在请求调用中未返回路由元数据。这是个[已知问题](https://github.com/SeldonIO/seldon-core/issues/1823)。
+当前 Go 中的默认编排「executor」在请求调用中未返回路由元数据。这是个 [已知问题](https://github.com/SeldonIO/seldon-core/issues/1823)。

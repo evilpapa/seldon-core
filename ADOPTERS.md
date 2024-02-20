@@ -1,8 +1,8 @@
-# Adopters of Seldon Core
+# Seldon Core 用户
 
-This page show organisations that are using Seldon Core in production or providing integrations with their products. If you would like to be included on this page please raise a PR. Please keep the alphabetical order.
+此页面显示在生产中使用 Seldon Core 或提供与其产品集成的组织。 如果您想加入此页面，请提出 PR。 请保持字母顺序。
 
-| Organisation | URL |
+| 组织 | 链接 |
 | ------------ | ----|
 | CaiCloud | https://caicloud.io/ |
 | Capital One | https://www.capitalone.com/tech |

@@ -17,7 +17,7 @@ _在打开 PR 前_ 考虑：
 我们管理发行说明的过程是以 Kubernetes 项目如何处理它们为模型的。
 该过程可分为两个独立阶段：
 
-- 在 **PR 创建时**为每个 PR 增加说明。
+- 在 **PR 创建时** 为每个 PR 增加说明。
 - **发布时** 在发布之前编译所有PR注释。
 
 ### 为每个 PR 增加说明
@@ -32,8 +32,7 @@ Some public-facing release note.
 ````
 
 如果没有，PR 会被打标为 `do-not-merge/release-note-label-needed`。
-请注意，为了加快速度，[默认的 PR
-模板](https://github.com/SeldonIO/seldon-core/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
+请注意，为了加快速度，[默认的 PR 模板](https://github.com/SeldonIO/seldon-core/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
 会为你创建一个空的 `release-notes` 块。
 对于不需要面向公众的发布说明的 PR (e.g. 继承测试的修复程序)，你可以使用 `/release-note-none` Prow 命令。
 
@@ -63,8 +62,7 @@ Some public-facing release note.
 
 ### 发布前编译所有PR注释
 
-发布时，有一个 [release-notes
-命令](https://github.com/kubernetes/release/blob/master/cmd/release-notes/README.md)
+发布时，有一个 [release-notes命令](https://github.com/kubernetes/release/blob/master/cmd/release-notes/README.md)
 会在 2 个特定标签之间的所有 PR 上爬取行提取发行说明块（例如 `v1.1.0` 到 `v1.2.0`）。
 然后可以使用这些块来生成最终发行说明。
 
@@ -75,14 +73,14 @@ Some public-facing release note.
 推荐在任何修改代码前进行设置。
 如果代码不符合存储库中每种语言的样式指南，那么接下来的额外检查将停止构建。
 
-参考[官方说明](https://pre-commit.com/#install)进行安装。
-Once installed, run:
+参考 [官方说明](https://pre-commit.com/#install) 进行安装。
+一旦安装完成，请运行：
 
 ```console
 $ pre-commit install
 ```
 
-这会读取 `.pre-commit-config.yaml` 的 hook 定义并照着安装到本地仓库。
+这将会读取 `.pre-commit-config.yaml` 的 hook 定义并照着安装到本地仓库。
 
 ### Java
 
@@ -90,14 +88,14 @@ Java 代码格式遵循 [Google's Java 风格指南](https://google.github.io/st
 为了确保代码库保持一致，我们使用
 [checkstyle](https://github.com/checkstyle/checkstyle) 作为 `mvn validate` 生命周期的一部分。
 
-要在本地编辑器整合，你可以参考[本地配置 checkstyle](https://checkstyle.org/beginning_development.html) 的官方说明并
+要在本地编辑器整合，你可以参考 [本地配置 checkstyle](https://checkstyle.org/beginning_development.html) 的官方说明并
 [设置 google-java-format](https://github.com/google/google-java-format#using-the-formatter)。
 
 ### Python
 
 Python 代码格式遵循 [black](https://github.com/psf/black)，一个很重的格式化程序。
 
-要在本地编辑器整合，你可以参考[设置 black](https://github.com/psf/black#editor-integration)的官方说明。
+要在本地编辑器整合，你可以参考 [设置 black](https://github.com/psf/black#editor-integration) 的官方说明。
 
 ## Tests
 
@@ -111,7 +109,7 @@ $ make test
 ### Python
 
 我们使用 [pytest](https://docs.pytest.org/en/latest/) 作为主要的执行器。
-然而，为了确保测试能在最终用户通过 `pip` 及 pypi.org 下载的相同版本的包上运行，我们在其上使用[tox](https://tox.readthedocs.io/en/latest/)。
+然而，为了确保测试能在最终用户通过 `pip` 及 pypi.org 下载的相同版本的包上运行，我们在其上使用 [tox](https://tox.readthedocs.io/en/latest/)。
 安装两者（亦或者其他以来的插件），使用：
 
 ```bash
@@ -143,4 +141,4 @@ $ pytest
 这些使用 [Kind](https://github.com/kubernetes-sigs/kind) 生成了一个实际的Kubernetes集群并
 部署不同的 `SeldonDeployment` 及资源。
 
-你可以通过[专门的文档](https://docs.seldon.io/projects/seldon-core/en/latest/developer/e2e.html)学习如何运行并添加测试用例。
+你可以通过 [专门的文档](https://docs.seldon.io/projects/seldon-core/en/latest/developer/e2e.html) 学习如何运行并添加测试用例。

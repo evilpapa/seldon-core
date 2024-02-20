@@ -8,7 +8,7 @@
     R 语言封装 Docker </R/r_wrapping_docker.md>
     Seldon OpenVino </charts/seldon-openvino.rst>
     Ambassador 熔断 </examples/ambassador_circuit_breakers.nblink>
-    自定义初始化容器 Containers </examples/custom_init_container.nblink>
+    自定义初始化容器 </examples/custom_init_container.nblink>
     Drift CIFAR10 </examples/drift_cifar10.nblink>
     DVC </examples/dvc.nblink>
     图元数据 </examples/graph-metadata.nblink>
@@ -23,7 +23,7 @@
     Seldon 客户端 </examples/seldon_client.nblink>
     Server 示例 </examples/server_examples.nblink>
     Triton E2E </examples/triton_mnist_e2e.nblink>
-    Custom Service Name 示例 </graph/custom_svc_name.md>
+    自定义 Service 名称示例 </graph/custom_svc_name.md>
     gRPC 负载均衡 </graph/grpc_load_balancing_ambassador.md>
     Rest gRPC 设置 </graph/model_rest_grpc_settings.md>
     模型服务编排 </graph/model_svcorch_sep.md>

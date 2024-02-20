@@ -7,9 +7,9 @@
 * [简单的 CPP 单文件示例](../examples/cpp_simple)
 * [高级 CPP 构建系统示例](../examples/cpp_advanced)
 
-CPP 封装通过 C++ 打包利用 [Python Inference Server](../python)进行核心 CPP 原生组件通信。
+CPP 封装通过 C++ 打包利用 [Python Inference Server](../python) 进行核心 CPP 原生组件通信。
 
-如果你对 s2i 不熟悉，请参考 [s2i 使用说明](../wrappers/s2i.md)并跟随下面的步骤。
+如果你对 s2i 不熟悉，请参考 [s2i 使用说明](../wrappers/s2i.md) 并跟随下面的步骤。
 
 ## 步骤 1 - 安装 s2i
 

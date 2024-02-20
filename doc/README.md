@@ -1,6 +1,6 @@
 # Seldon Core 文档
 
-该目录包含文档的（`.md` 和 `.rst` 文件)。
+该目录包含文档的（`.md` 和 `.rst` 文件）。
 主索引页面定义在 `source/index.rst`。
 Sphinx 配置和插件可以在 `source/conf.py` 找到。
 文档生成通过 `make html` 命令实现。
@@ -67,9 +67,9 @@ make livehtml-fast
 
 要链接存储在 `doc` 目录之外的 notebooks 文件，你需要创建一个链接到它的 `*.nblink` 文件。
 
-参考 [source/examples/seldon_core_setup.nblink](source/examples/seldon_core_setup.nblink)示例。
+参考 [source/examples/seldon_core_setup.nblink](source/examples/seldon_core_setup.nblink) 示例。
 
-注意有些 notebooks 可能链接了其他资源，比如图片，通常这些图片会保存在他们所在目录中（比如：`images/` 文件夹）。
+注意有些 notebooks 可能链接了其他资源，比如图片，通常这些图片会保存在他们所在目录中（比如： `images/` 文件夹）。
 这些文件也需要被引用到，这样他们在最终输出才能被正确链接。
 可在 `*.nblink` 文件定义 `extra-media` 关键词来使用他们。
 请参考 [source/examples/graph-metadata.nblink](source/examples/seldon_core_setup.nblink) 示例。

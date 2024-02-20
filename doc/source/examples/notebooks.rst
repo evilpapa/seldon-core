@@ -25,7 +25,7 @@ Seldon Core 设置
    MLflow v2 协议点对点 Workflow (孵化中) <mlflow_v2_protocol_end_to_end>
    发布二进制 XGBoost 模型 <../servers/xgboost.md>
    发布集成集群 MinIO 的预包装模型服务 <minio-sklearn>
-   自定义 预包装 LightGBM 服务 <custom_server>
+   自定义预包装 LightGBM 服务 <custom_server>
 
 Python 语言封装示例
 --------------------------------

@@ -108,7 +108,7 @@ $ kubectl port-forward -n seldon-monitoring svc/seldon-monitoring-prometheus 909
 
 ## 自定义指标
 
-Seldon Core 通过 Prometheus 节点在服务编排上暴露基础指标如：请求总数，请求时间百分位数和[指标](./analytics.md)文档中描述的每个运行模型的滚动精度。
+Seldon Core 通过 Prometheus 节点在服务编排上暴露基础指标如：请求总数，请求时间百分位数和 [指标](./analytics.md) 文档中描述的每个运行模型的滚动精度。
 然而，你也想将组件中的自定义指标暴露添加到 Prometheus。
 为了实现以上目的，你可提供一些字段用于组件 API 调用返回元数据对象的方式来实现：
 

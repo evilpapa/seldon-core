@@ -34,14 +34,14 @@ Seldon Core 支持的 [Alibi](https://github.com/SeldonIO/alibi) 可用方法子
  2. 遵循 [Alibi 文档](https://docs.seldon.io/projects/alibi/en/latest/index.html)以获取特定所需的解释器。Seldon Wrapper 目前支持：Anchors（表格、文本和图像），KernelShap 和 Integrated Gradients。
  3. 使用 [dill](https://pypi.org/project/dill/) python 包将解释器保存为 `explainer.dill` 并保存到存储桶或集群中的 PVC 上。我们支持 gcs、s3（包括 Minio）或 Azure blob。
 
-[Alibi Explain Server](https://github.com/SeldonIO/seldon-core/tree/master/components/alibi-explain-server) 运行环境使用 [Poetry](https://python-poetry.org/) 锁定。在[此](../examples/iris_explainer_poetry.html) 查看我们如何使用定义来训练解释器。
+[Alibi Explain Server](https://github.com/SeldonIO/seldon-core/tree/master/components/alibi-explain-server) 运行环境使用 [Poetry](https://python-poetry.org/) 锁定。在 [此](../examples/iris_explainer_poetry.html) 查看我们如何使用定义来训练解释器。
 
 ### 使用 [MLServer](https://github.com/SeldonIO/MLServer) 的解释器 V2 协议 (孵化中)
 
 对 v2 协议的支持现在由 MLServer 处理。 这是实验性的
 并且仅适用于黑盒解释器。
 
-有关 e2e 示例，请在[这里](../examples/iris_anchor_tabular_explainer_v2.html)查看 AnchorTabular 笔记本。
+有关 e2e 示例，请在 [这里](../examples/iris_anchor_tabular_explainer_v2.html) 查看 AnchorTabular 笔记本。
 
 ## 解释器 API
 

@@ -89,7 +89,7 @@ spec:
 * 它自己的密钥库，由密钥对和签名证书组成
 * 用于签署密钥-证书对的 CA 证书
 
-CA证书需要得到broker的认可，也可以用来验证broker的证书。
+CA 证书需要得到 broker 的认可，也可以用来验证 broker 的证书。
 
 可在 [Confluent 文档](https://docs.confluent.io/platform/current/kafka/authentication_ssl.html) 和 [librdkafka 配置](https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md) 页阅读不同的配置项。
 
