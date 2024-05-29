@@ -224,7 +224,8 @@ examples/models/autoscaling/autoscaling_example.py
 # testing
 *.coverprofile
 *.log
-
+# vscode
+.vscode
 # vscode local history
 .history/
 

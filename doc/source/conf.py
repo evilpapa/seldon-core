@@ -181,7 +181,7 @@ pygments_style = None
 # Chosen Themes:
 # * https://github.com/bashtage/sphinx-material/
 # * https://github.com/myyasuda/sphinx_materialdesign_theme
-html_theme = "sphinx_book_theme"
+html_theme = "sphinx_typo3_theme"
 
 html_theme_options = {
     "announcement": None,
@@ -205,7 +205,7 @@ html_theme_options = {
 # }
 
 # The Seldon Logo located at the top of the navigation bar.
-html_logo = "seldon.png"
+logo = "seldon.png"
 
 html_favicon = 'favicon.ico'
 
