@@ -14,10 +14,8 @@
 #
 import os
 import sys
-import pathlib
 from sphinx.errors import NoUri
 
-sys.path.insert(0, os.path.abspath("."))
 sys.path.insert(0, os.path.abspath("../.."))
 
 # -- Project information -----------------------------------------------------
@@ -204,22 +202,7 @@ pygments_style = None
 # * https://github.com/myyasuda/sphinx_materialdesign_theme
 html_theme = "sphinx_typo3_theme"
 
-html_theme_options = {
-    "announcement": None,
-    "navbar_align": "left",
-    "navbar_persistent": [
-        "theme-switcher",
-    ],
-    "secondary_sidebar_items": [
-        "page-toc",
-        "edit-this-page",
-    ],
-    "content_footer_items": [
-    ],
-    "navigation_depth": 4,
-}
-
-
+html_theme_options = {}
 
 # html_sidebars = {
 #     "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
