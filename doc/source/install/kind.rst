@@ -51,35 +51,37 @@ Helm
 
 当在及其安装 kind 之后，通过运行以下命令创建一个先的 Kubernetes 集群
 
-.. tabbed:: Istio 
+.. tab-set::
 
-    .. code-block:: bash
+    .. tab-item:: Istio
 
-        kind create cluster --name seldon
+        .. code-block:: bash
 
-.. tabbed:: Ambassador
+            kind create cluster --name seldon
 
-    .. code-block:: bash 
+    .. tab-item:: Ambassador
 
-        cat <<EOF | kind create cluster --name seldon --config=-
-        kind: Cluster
-        apiVersion: kind.x-k8s.io/v1alpha4
-        nodes:
-        - role: control-plane
-          kubeadmConfigPatches:
-          - |
-            kind: InitConfiguration
-            nodeRegistration:
-              kubeletExtraArgs:
-                node-labels: "ingress-ready=true"
-          extraPortMappings:
-          - containerPort: 80
-            hostPort: 80
-            protocol: TCP
-          - containerPort: 443
-            hostPort: 443
-            protocol: TCP
-        EOF
+        .. code-block:: bash
+
+            cat <<EOF | kind create cluster --name seldon --config=-
+            kind: Cluster
+            apiVersion: kind.x-k8s.io/v1alpha4
+            nodes:
+            - role: control-plane
+            kubeadmConfigPatches:
+            - |
+                kind: InitConfiguration
+                nodeRegistration:
+                kubeletExtraArgs:
+                    node-labels: "ingress-ready=true"
+            extraPortMappings:
+            - containerPort: 80
+                hostPort: 80
+                protocol: TCP
+            - containerPort: 443
+                hostPort: 443
+                protocol: TCP
+            EOF
 
 在 ``kind`` 创建集群后，可通过设置上下文配置 ``kubectl`` 使用集群：
 
@@ -98,92 +100,95 @@ Helm
 
 Seldon Core 支持使用 `Istio <https://istio.io/>`_ 或 `Ambassador <https://www.getambassador.io/>`_ 来管理传入流量。Seldon Core 自动创建将流量路由到您部署的机器学习模型所需的对象和规则。
 
-.. tabbed:: Istio
+.. tab-set::
 
-    Istio 是一个开源服务网格。如果您对 *service mesh* 不熟悉，非常值得去阅读 `更多关于Istio 的内容 <https://istio.io/latest/about/service-mesh/>`_ 。
+    .. tab-item:: Istio
 
-    **下载 Istio**
 
-    对于 Linux 及 macOS，最简单的方式是使用以下命令下载 Istio：
+        Istio 是一个开源服务网格。如果您对 *service mesh* 不熟悉，非常值得去阅读 `更多关于Istio 的内容 <https://istio.io/latest/about/service-mesh/>`_ 。
 
-    .. code-block:: bash 
+        **下载 Istio**
 
-        curl -L https://istio.io/downloadIstio | sh -
+        对于 Linux 及 macOS，最简单的方式是使用以下命令下载 Istio：
 
-    进入 Istio 包目录。比如，包 ``istio-1.11.4``：
+        .. code-block:: bash 
 
-    .. code-block:: bash
+            curl -L https://istio.io/downloadIstio | sh -
 
-        cd istio-1.11.4
+        进入 Istio 包目录。比如，包 ``istio-1.11.4``：
 
-    添加 istioctl 客户端到 path (Linux or macOS):
+        .. code-block:: bash
 
-    .. code-block:: bash
+            cd istio-1.11.4
 
-        export PATH=$PWD/bin:$PATH
+        添加 istioctl 客户端到 path (Linux or macOS):
 
-    **安装 Istio**
+        .. code-block:: bash
 
-    Istio 提供了一个命令工具 ``istioctl`` 来使安装更便捷。``示例`` `配置项 <https://istio.io/latest/docs/setup/additional-setup/config-profiles/>`_ 有一组很好的默认值来运行在你本地集群。
+            export PATH=$PWD/bin:$PATH
 
-    .. code-block:: bash
+        **安装 Istio**
 
-        istioctl install --set profile=demo -y
+        Istio 提供了一个命令工具 ``istioctl`` 来使安装更便捷。``示例`` `配置项 <https://istio.io/latest/docs/setup/additional-setup/config-profiles/>`_ 有一组很好的默认值来运行在你本地集群。
 
-    命名空间标签 ``istio-injection=enabled`` 指示 Istio 注入自动代理我们在该命名空间中部署的任何内容。我们将为我们的 ``default`` 命名空间设置它：
+        .. code-block:: bash
 
-    .. code-block:: bash 
+            istioctl install --set profile=demo -y
 
-        kubectl label namespace default istio-injection=enabled
+        命名空间标签 ``istio-injection=enabled`` 指示 Istio 注入自动代理我们在该命名空间中部署的任何内容。我们将为我们的 ``default`` 命名空间设置它：
 
-    **创建 Istio 网关**
+        .. code-block:: bash 
 
-    为了让 Seldon Core 使用 Istio 的特性来管理流量，我们使用如下命令来创建一个 `Istio Gateway <https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/>`_ ：
+            kubectl label namespace default istio-injection=enabled
 
-    .. warning:: 你需要拷贝下面全部的命令
-    
-    .. code-block:: yaml
+        **创建 Istio 网关**
 
-        kubectl apply -f - << END
-        apiVersion: networking.istio.io/v1alpha3
-        kind: Gateway
-        metadata:
-          name: seldon-gateway
-          namespace: istio-system
-        spec:
-          selector:
-            istio: ingressgateway # use istio default controller
-          servers:
-          - port:
-              number: 80
-              name: http
-              protocol: HTTP
-            hosts:
-            - "*"
-        END
-    
-    自定义配置及更多 seldon core 集成 Istio 安装的细节请查看 `Istio 入口 <../ingress/istio.md>`_ 页。
+        为了让 Seldon Core 使用 Istio 的特性来管理流量，我们使用如下命令来创建一个 `Istio Gateway <https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/>`_ ：
 
-.. tabbed:: Ambassador
+        .. warning:: 你需要拷贝下面全部的命令
+        
+        .. code-block:: yaml
 
-    `Ambassador <https://www.getambassador.io/>`_ 是 Kubernetes 入口控制器及 API 网关。他通过配置路由请求流量到 kubernetes 负载。
+            kubectl apply -f - << END
+            apiVersion: networking.istio.io/v1alpha3
+            kind: Gateway
+            metadata:
+            name: seldon-gateway
+            namespace: istio-system
+            spec:
+            selector:
+                istio: ingressgateway # use istio default controller
+            servers:
+            - port:
+                number: 80
+                name: http
+                protocol: HTTP
+                hosts:
+                - "*"
+            END
+        
+        自定义配置及更多 seldon core 集成 Istio 安装的细节请查看 `Istio 入口 <../ingress/istio.md>`_ 页。
 
-    **安装 Ambassador**
+    .. tab-item:: Ambassador
 
-    首先通过命令安装 Custom Resource Definitions：
+        `Ambassador <https://www.getambassador.io/>`_ 是 Kubernetes 入口控制器及 API 网关。他通过配置路由请求流量到 kubernetes 负载。
 
-    .. code-block:: bash 
+        **安装 Ambassador**
 
-        kubectl apply -f https://github.com/datawire/ambassador-operator/releases/latest/download/ambassador-operator-crds.yaml
+        首先通过命令安装 Custom Resource Definitions：
 
-    现在安装 kind-specific manifests in the ``ambassador`` namespace:
+        .. code-block:: bash 
 
-    .. code-block:: bash 
+            kubectl apply -f https://github.com/datawire/ambassador-operator/releases/latest/download/ambassador-operator-crds.yaml
 
-        kubectl apply -n ambassador -f https://github.com/datawire/ambassador-operator/releases/latest/download/ambassador-operator-kind.yaml
-        kubectl wait --timeout=180s -n ambassador --for=condition=deployed ambassadorinstallations/ambassador
+        现在安装 kind-specific manifests in the ``ambassador`` namespace:
 
-    Ambassador 已就绪。自定义配置及更多集成 Ambassador 安装 seldon core 的细节请查看 `Ambassador 入口 <../ingress/ambassador.md>`_ 页。
+        .. code-block:: bash 
+
+            kubectl apply -n ambassador -f https://github.com/datawire/ambassador-operator/releases/latest/download/ambassador-operator-kind.yaml
+            kubectl wait --timeout=180s -n ambassador --for=condition=deployed ambassadorinstallations/ambassador
+
+        Ambassador 已就绪。自定义配置及更多集成 Ambassador 安装 seldon core 的细节请查看 `Ambassador 入口 <../ingress/ambassador.md>`_ 页。
 
 安装 Seldon Core
 ----------------------------
@@ -196,25 +201,27 @@ Seldon Core 支持使用 `Istio <https://istio.io/>`_ 或 `Ambassador <https://w
 
 现在我们已经为在集群安装 Seldon Core 准备就绪。根据选择的入口类型执行如下命令：
 
-.. tabbed:: Istio
+.. tab-set::
 
-    .. code:: bash
+    .. tab-item:: Istio
 
-        helm install seldon-core seldon-core-operator \
-            --repo https://storage.googleapis.com/seldon-charts \
-            --set usageMetrics.enabled=true \
-            --set istio.enabled=true \
-            --namespace seldon-system
+        .. code:: bash
 
-.. tabbed:: Ambassador
+            helm install seldon-core seldon-core-operator \
+                --repo https://storage.googleapis.com/seldon-charts \
+                --set usageMetrics.enabled=true \
+                --set istio.enabled=true \
+                --namespace seldon-system
 
-    .. code:: bash
+    .. tab-item:: Ambassador
 
-        helm install seldon-core seldon-core-operator \
-            --repo https://storage.googleapis.com/seldon-charts \
-            --set usageMetrics.enabled=true \
-            --set ambassador.enabled=true \
-            --namespace seldon-system
+        .. code:: bash
+
+            helm install seldon-core seldon-core-operator \
+                --repo https://storage.googleapis.com/seldon-charts \
+                --set usageMetrics.enabled=true \
+                --set ambassador.enabled=true \
+                --namespace seldon-system
 
 使用以下命令检查 Seldon Controller 运行状态：
 
@@ -229,17 +236,19 @@ Seldon Core 支持使用 `Istio <https://istio.io/>`_ 或 `Ambassador <https://w
 
 因为 kubernetes 集群运行在本地，我们需要转发一个本地及其端口到集群，以便我们从外部访问。可通过命令尝试：
 
-.. tabbed:: Istio
+.. tab-set::
 
-    .. code-block:: bash
+    .. tab-item:: Istio
 
-        kubectl port-forward -n istio-system svc/istio-ingressgateway 8080:80
+        .. code-block:: bash
 
-.. tabbed:: Ambassador
+            kubectl port-forward -n istio-system svc/istio-ingressgateway 8080:80
 
-    .. code-block:: bash 
+    .. tab-item:: Ambassador
 
-        kubectl port-forward -n ambassador svc/ambassador 8080:80
+        .. code-block:: bash 
+
+            kubectl port-forward -n ambassador svc/ambassador 8080:80
 
 这将转发本地端口 8080 的任意流量到集群内 80 端口。
 

@@ -45,25 +45,27 @@
 
 现在我们可以在命名空间 ``seldon-system`` 中安装 Seldon Core。
 
-.. tabbed:: Istio
+.. tab-set::
 
-    .. code:: bash
+    .. tab-item:: Istio
 
-        helm install seldon-core seldon-core-operator \
-            --repo https://storage.googleapis.com/seldon-charts \
-            --set usageMetrics.enabled=true \
-            --set istio.enabled=true \
-            --namespace seldon-system
+        .. code:: bash
 
-.. tabbed:: Ambassador
+            helm install seldon-core seldon-core-operator \
+                --repo https://storage.googleapis.com/seldon-charts \
+                --set usageMetrics.enabled=true \
+                --set istio.enabled=true \
+                --namespace seldon-system
 
-    .. code:: bash
+    .. tab-item:: Ambassador
 
-        helm install seldon-core seldon-core-operator \
-            --repo https://storage.googleapis.com/seldon-charts \
-            --set usageMetrics.enabled=true \
-            --set ambassador.enabled=true \
-            --namespace seldon-system
+        .. code:: bash
+
+            helm install seldon-core seldon-core-operator \
+                --repo https://storage.googleapis.com/seldon-charts \
+                --set usageMetrics.enabled=true \
+                --set ambassador.enabled=true \
+                --namespace seldon-system
 
 
 完整的 Istio 和 Ambassador 安装说明
