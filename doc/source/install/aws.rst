@@ -1,112 +1,113 @@
 ========================================
-Install on Amazon Web Services
+在 Amazon Web Services 上安装
 ========================================
 
-This guide runs through how to set up and install Seldon Core in a Kubernetes cluster running on AWS. By the end, you’ll have Seldon Core up and running and be ready to start deploying machine learning models.
+本指南介绍了如何在 AWS 上运行的 Kubernetes 集群中设置和安装 Seldon Core。最后，您将启动并运行 Seldon Core，并准备开始部署机器学习模型。
 
-Prerequisites
+先决条件
 -----------------------------
 
 AWS CLI
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You will need the AWS CLI in order to retrieve your cluster authentication credentials. It can also be used to create clusters and other resources for you:
+您将需要 AWS CLI 来检索集群身份验证凭证。它还可用于为您创建集群和其他资源：
 
-* `Install AWS CLI <https://aws.amazon.com/cli/>`_
+* `安装 AWS CLI <https://aws.amazon.com/cli/>`_
 
-Elastic Kubernetes Service (EKS) Cluster
+弹性 Kubernetes 服务 (EKS) 集群
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If you haven't already created a Kubernetes cluster on EKS, you can follow this quickstart guide to get set up with your first cluster. We recommend using the `eksctl` path to create your cluster as it simplifies the process of creating IAM roles, VPCs and subnets. 
+If you haven't already created a Kubernetes cluster on EKS, you can follow this quickstart guide to get set up with your first cluster. We recommend using the `eksctl` path to create your cluster as it simplifies the process of creating IAM roles, VPCs and subnets.
+如果您尚未在 EKS 上创建 Kubernetes 集群，您可以按照此快速入门指南设置您的第一个集群。我们建议使用 `eksctl` 路径来创建集群，因为它简化了创建 IAM 角色、VPC 和子网的过程。
 
-* `Install eksctl CLI <https://eksctl.io/introduction/#installation>`_
-* `Create EKS Cluster <https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html>`_
+* `安装 eksctl CLI <https://eksctl.io/introduction/#installation>`_
+* `创建 EKS 集群 <https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html>`_
 
 .. warning:: 
 
-    If you are planning to use Ambassador for ingress, your cluster needs to be running Kubernetes 
+    如果你计划使用 Ambassador 作为入口，你的集群需要运行 Kubernetes
 
 Kubectl
 ^^^^^^^^^^^^^
-`kubectl <https://kubernetes.io/docs/reference/kubectl/overview/>`_ is the Kubernetes command-line tool. It allows you to run commands against Kubernetes clusters, which we'll need to do as part of setting up Seldon Core. 
+`kubectl <https://kubernetes.io/docs/reference/kubectl/overview/>`_ 是 Kubernetes 命令行工具。它允许您针对 Kubernetes 集群运行命令，这是我们在设置 Seldon Core 时需要执行的操作。
 
-* `Install kubectl on Linux <https://kubernetes.io/docs/tasks/tools/install-kubectl-linux>`_ 
-* `Install kubectl on macOS <https://kubernetes.io/docs/tasks/tools/install-kubectl-macos>`_ 
-* `Install kubectl on Windows <https://kubernetes.io/docs/tasks/tools/install-kubectl-windows>`_ 
+* `在 Linux 上安装 kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl-linux>`_
+* `在 macOS 上安装 kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl-macos>`_
+* `在 Windows 上安装 kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl-windows>`_
 
 Helm
 ^^^^^^^^^^^^^
-`Helm <https://helm.sh/>`_ is a package manager that makes it easy to find, share and use software built for Kubernetes. If you don't already have Helm installed locally, you can install it here:
+`Helm <https://helm.sh/>`_ 是一个软件包管理器，可让您轻松查找、共享和使用为 Kubernetes 构建的软件。如果您尚未在本地安装 Helm，可以在此处安装：
 
-* `Install Helm <https://helm.sh/docs/intro/install/>`_ 
+* `安装 Helm <https://helm.sh/docs/intro/install/>`_
 
-Connect to Your Cluster
+连接到您的集群
 ------------------------------
 
-You can connect to your cluster by running the following `aws eks` command:
+您可以通过运行以下 `aws eks` 命令连接到您的集群：
 
 .. code-block:: bash
 
     aws eks update-kubeconfig --region REGION_CODE --name CLUSTER_NAME
 
-This will configure ``kubectl`` to use your aws kubernetes cluster. Don't forget to replace ``CLUSTER_NAME`` with whatever you called your cluster when you created it. If you've forgotten your cluster name you can run ``aws eks list-clusters``.
+这将配置 ``kubectl`` 使用您的 aws kubernetes 集群。不要忘记用您创建集群时的名称替换 ``CLUSTER_NAME`` 。如果您忘记了集群名称，您可以运行 ``aws eks list-clusters``。
 
 .. note:: 
 
-    If you get authentication errors while running the command above, try running ``aws configure`` to check you are correctly logged in.
+    如果在运行上述命令时出现身份验证错误，请尝试运行 ``aws configure`` 以检查您是否正确登录。
 
-Install Cluster Ingress
+安装 Cluster Ingress
 ------------------------------
 
-``Ingress`` is a Kubernetes object that provides routing rules for your cluster. It manages the incomming traffic and routes it to the services running inside the cluster.
+``Ingress`` 是一个 Kubernetes 对象，为您的集群提供路由规则。它管理传入流量并将其路由到集群内运行的服务。
 
-Seldon Core supports using either `Istio <https://istio.io/>`_ or `Ambassador <https://www.getambassador.io/>`_ to manage incomming traffic. Seldon Core automatically creates the objects and rules required to route traffic to your deployed machine learning models.
+Seldon Core 支持使用 `Istio <https://istio.io/>`_ 或 `Ambassador <https://www.getambassador.io/>`_ 来管理传入流量。 Seldon Core 会自动创建将流量路由到已部署的机器学习模型所需的对象和规则。
 
 .. tab-set::
 
     .. tab-item:: Istio
 
-        Istio is an open source service mesh. If the term *service mesh* is unfamiliar to you, it's worth reading `a little more about Istio <https://istio.io/latest/about/service-mesh/>`_.
+        Istio 是一个开源服务网格。如果您不熟悉 *服务网格* 这个术语，那么值得多读 `一些有关 Istio 的内容 <https://istio.io/latest/about/service-mesh/>`_。
 
-        **Download Istio**
+        **下载 Istio**
 
-        For Linux and macOS, the easiest way to download Istio is using the following command:
+        对于 Linux 和 macOS，下载 Istio 最简单的方法是使用以下命令：
 
         .. code-block:: bash 
 
             curl -L https://istio.io/downloadIstio | sh -
 
-        Move to the Istio package directory. For example, if the package is ``istio-1.11.4``:
+        移至 Istio 包目录。例如，如果包是 ``istio-1.11.4``：
 
         .. code-block:: bash
 
             cd istio-1.11.4
 
-        Add the istioctl client to your path (Linux or macOS):
+        将 istioctl 客户端添加到您的路径（Linux 或 macOS）：
 
         .. code-block:: bash
 
             export PATH=$PWD/bin:$PATH
 
-        **Install Istio**
+        **安装 Istio**
 
-        Istio provides a command line tool ``istioctl`` to make the installation process easy. The ``demo`` `configuration profile <https://istio.io/latest/docs/setup/additional-setup/config-profiles/>`_ has a good set of defaults that will work on your local cluster.
+        Istio 提供了一个命令行工具 ``istioctl`` ，使安装过程变得简单。``demo`` `配置文件 <https://istio.io/latest/docs/setup/additional-setup/config-profiles/>`_ 有一组很好的默认设置，可以在您的本地集群上运行。
 
         .. code-block:: bash
 
             istioctl install --set profile=demo -y
 
-        The namespace label ``istio-injection=enabled`` instructs Istio to automatically inject proxies alongside anything we deploy in that namespace. We'll set it up for our ``default`` namespace:
+        命名空间标签 ``istio-injection=enabled`` 指示 Istio 自动注入代理以及我们在该命名空间中部署的任何内容。我们将为我们的  ``default`` 命名空间设置它：
 
         .. code-block:: bash 
 
             kubectl label namespace default istio-injection=enabled
 
-        **Create Istio Gateway**
+        **创建 Istio 网关**
 
-        In order for Seldon Core to use Istio's features to manage cluster traffic, we need to create an `Istio Gateway <https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/>`_ by running the following command:
+        为了让 Seldon Core 使用 Istio 的功能来管理集群流量，我们需要通过运行以下命令创建一个 `Istio 网关 <https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/>`_ ：
 
-        .. warning:: You will need to copy the entire command from the code block below
+        .. warning:: 您需要从下面的代码块复制整个命令
         
         .. code-block:: yaml
 
@@ -128,45 +129,45 @@ Seldon Core supports using either `Istio <https://istio.io/>`_ or `Ambassador <h
                 - "*"
             END
         
-        For custom configuration and more details on installing seldon core with Istio please see the `Istio Ingress <../ingress/istio.md>`_ page.
+        有关自定义配置和使用 Istio 安装 seldon core 的更多详细信息，请参阅 `Istio Ingress <../ingress/istio.md>`_ 页面。
 
     .. tab-item:: Ambassador
 
-        .. warning:: Ambassador is currently not supported on Kubernetes 1.22+, the following instructions will only work on Kubernetes v1.21 or older.
+        .. warning:: Ambassador 目前不支持 Kubernetes 1.22+，以下说明仅适用于 Kubernetes v1.21 或更早版本。
 
-        `Ambassador <https://www.getambassador.io/>`_ is a Kubernetes ingress controller and API gateway. It routes incomming traffic to the underlying kubernetes workloads through configuration. 
+        `Ambassador <https://www.getambassador.io/>`_ 是 Kubernetes 入口控制器和 API 网关。它通过配置将传入流量路由到底层 Kubernetes 工作负载。
 
-        **Install Ambassador**
+        **安装 Ambassador**
 
         .. note::
-            Seldon Core currently only supports the Ambassador V1 APIs. The installation instructions below will install the latest v1 version of emissary ingress.
+            目前仅支持 Ambassador V1 API。以下安装说明将安装最新的 v1 版本的 emissary ingress。
 
-        First add the datawire helm repository:
+        首先添加 datawire helm 存储库：
 
         .. code-block:: bash
 
             helm repo add datawire https://www.getambassador.io
             helm repo update
 
-        Run the following `helm` command to install Ambassador on your GKE cluster:
+        运行以下 `helm` 命令在您的 GKE 集群上安装 Ambassador：
 
         .. code-block:: bash
 
             helm install ambassador datawire/ambassador --set enableAES=false --namespace ambassador --create-namespace
             kubectl rollout status -n ambassador deployment/ambassador -w
             
-        Ambassador is now ready to use. For custom configuration and more details on installing seldon core with Ambassador please see the `Ambassador Ingress <../ingress/ambassador.md>`_ page.
+        Ambassador 现已准备就绪。有关自定义配置以及使用 Ambassador 安装 seldon core 的更多详细信息，请参阅 `Ambassador Ingress <../ingress/ambassador.md>`_ 页面。
 
-Install Seldon Core
+安装 Seldon Core
 ----------------------------
 
-Before we install Seldon Core, we'll create a new namespace ``seldon-system`` for the operator to run in:
+在安装 Seldon Core 之前，我们将为控制器创建一个名为 ``seldon-system`` 的新命名空间：
 
 .. code:: bash
 
     kubectl create namespace seldon-system
 
-We're now ready to install Seldon Core in our cluster. Run the following command for your choice of Ingress:
+现在，我们已准备好在集群中安装 Seldon Core。针对您选择的 Ingress 运行以下命令：
 
 .. tab-set::
 
@@ -182,7 +183,7 @@ We're now ready to install Seldon Core in our cluster. Run the following command
 
     .. tab-item:: Ambassador
 
-        .. warning:: Ambassador is currently not supported on Kubernetes 1.22+, the following instructions will only work on Kubernetes v1.21 or older.
+        .. warning:: Ambassador 目前不支持 Kubernetes 1.22+，以下说明仅适用于 Kubernetes v1.21 或更早版本。
 
         .. code:: bash
 
@@ -192,18 +193,18 @@ We're now ready to install Seldon Core in our cluster. Run the following command
                 --set ambassador.enabled=true \
                 --namespace seldon-system
 
-You can check that your Seldon Controller is running by doing:
+您可以通过执行以下操作来检查 Seldon 控制器是否正在运行：
 
 .. code-block:: bash
 
     kubectl get pods -n seldon-system
 
-You should see a ``seldon-controller-manager`` pod with ``STATUS=Running``.
+您应该会看到一个 ``seldon-controller-manager`` pod 状态为 ``STATUS=Running``。
 
-Accessing your models
+访问你的模型
 -------------------------
 
-Congratulations! Seldon Core is now fully installed and operational. Before you move on to deploying models, make a note of your cluster IP and port:
+恭喜！Seldon Core 现已完全安装并运行。在继续部署模型之前，请记下您的集群 IP 和端口：
 
 .. tab-set::
 
@@ -216,11 +217,11 @@ Congratulations! Seldon Core is now fully installed and operational. Before you 
             export INGRESS_URL=$INGRESS_HOST:$INGRESS_PORT
             echo $INGRESS_URL
 
-        This is the public address you will use to access models running in your cluster.
+        这是您用于访问集群中运行的模型的公共地址。
 
     .. tab-item:: Ambassador
 
-        .. warning:: Ambassador is currently not supported on Kubernetes 1.22+, the following instructions will only work on Kubernetes v1.21 or older.
+        .. warning:: Ambassador 目前不支持 Kubernetes 1.22+，以下说明仅适用于 Kubernetes v1.21 或更早版本。
 
         .. code-block:: bash
 
@@ -229,6 +230,6 @@ Congratulations! Seldon Core is now fully installed and operational. Before you 
             export INGRESS_URL=$INGRESS_HOST:$INGRESS_PORT
             echo $INGRESS_URL
 
-        This is the public address you will use to access models running in your cluster.
+        这是您用于访问集群中运行的模型的公共地址。
 
-You are now ready to `deploy models to your cluster <../workflow/github-readme.md>`_.
+您现在可以将 `模型部署到您的集群了 <../workflow/github-readme.md>`_。
