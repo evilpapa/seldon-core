@@ -32,14 +32,14 @@
 
   * ```seldon.io/engine-separate-pod``` : 为服务编排器使用单独的 pod
     * 位置 : SeldonDeployment.spec.annotations
-    * [Separate svc-orc pod example](model_svcorch_sep.md)
+    * [Separate svc-orc pod 示例](model_svcorch_sep.md)
   * ```seldon.io/headless-svc``` : 将主端点作为无状态 Kubernetes 服务运行。这是通过 Ingress 进行 gRPC 负载平衡所必需的。
     * 位置 : SeldonDeployment.spec.annotations
     * [gRPC 无状态示例](grpc_load_balancing_ambassador.md)
-  * ```seldon.io/executor-logger-queue-size``` : Size of request logging worker queue
-    * Locations: SeldonDeployment.metadata.annotations, SeldonDeployment.spec.annotations
-  * ```seldon.io/executor-logger-write-timeout-ms``` : Write timeout for adding to logging work queue
-    * Locations: SeldonDeployment.metadata.annotations, SeldonDeployment.spec.annotations
+  * ```seldon.io/executor-logger-queue-size``` : 请求记录工作队列的大小
+    * 位置: SeldonDeployment.metadata.annotations, SeldonDeployment.spec.annotations
+  * ```seldon.io/executor-logger-write-timeout-ms``` : 写入到日志工作队列的超时时间
+    * 位置: SeldonDeployment.metadata.annotations, SeldonDeployment.spec.annotations
 
 
 ### Misc
