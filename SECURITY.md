@@ -1,23 +1,23 @@
-# Security Policy
+# 安全政策
 
-This document provides an overview of the security policy of Seldon Core.
+本文档概述了 Seldon Core 的安全政策。
 
-Seldon Core aims to follow the two following policies:
+Seldon Core 旨在遵循以下两项政策：
 
-* Address CVEs in project dependencies by upgrading versions where possible
-* Address CVEs in docker images by performing recommended upgrades
+* 通过升级版本解决项目依赖项中的 CVE
+* 通过执行推荐的升级解决 Docker 镜像中的 CVE
 
-# Security Scans
+# 安全扫描
 
-As part of every release we perform a security scan. The scans include dependencies and docker image scans.
+在每次发布时，我们都会进行安全扫描。扫描包括依赖项和 Docker 镜像扫描。
 
-You can find the [exact commands that are used](https://github.com/SeldonIO/seldon-core/blob/master/.github/workflows/security_tests.yml) for the scans, together with the [reports generated](https://github.com/SeldonIO/seldon-core/actions/workflows/security_tests.yml) from each of these runs.
+您可以在此处找到用于扫描的[确切命令](https://github.com/SeldonIO/seldon-core/blob/master/.github/workflows/security_tests.yml)，以及每次运行生成的[报告](https://github.com/SeldonIO/seldon-core/actions/workflows/security_tests.yml)。
 
-## Supported Versions
+## 支持的版本
 
-We use semver for our version management. We release security patches as a `patch version` for the latest maor.minor release.
+我们使用语义化版本管理。我们发布安全补丁作为最新的主版本.次版本的`补丁版本`。
 
-## Reporting a Vulnerability
+## 报告漏洞
 
-If you identify a vulnerability, if a public CVE the best way to report it is by opening an issue with the type "bug", the discussion can then take place on the ticket around next steps (ie updating library, reaching out to 3rd party projects, etc).
+如果您发现漏洞，如果是公开的 CVE，最好的报告方式是打开一个类型为“bug”的问题，然后可以在票据上讨论下一步（即更新库，联系第三方项目等）。
 

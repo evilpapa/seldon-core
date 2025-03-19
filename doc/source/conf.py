@@ -14,6 +14,7 @@
 #
 import os
 import sys
+import sphinx_material
 from sphinx.errors import NoUri
 
 sys.path.insert(0, os.path.abspath("../.."))
@@ -50,7 +51,7 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.ifconfig",
     "sphinx.ext.viewcode",
-    #    'recommonmark',
+    # TODO Switch from M2R2 to MyST Parser
     "m2r2",
     "sphinx.ext.napoleon",
     "sphinx_autodoc_typehints",
@@ -144,12 +145,18 @@ language = "en"
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# Ignore building, and thus warnings/errors for various scenarios
+
+# Scenario: slow and many examples
 is_fast_build = os.environ.get("FAST_BUILD", "False")
 if is_fast_build.lower() == "true":
+    print("Excluding slow files")
     exclude_patterns = ["examples", "python/api"]
 
+# Scenario: When running the linkcheck command
 is_linkcheck = os.environ.get("LINKCHECK", "False")
 if is_linkcheck.lower() == "true":
+    print("Excluding allowable linkcheck files")
     exclude_patterns = [
         # Ignore all PR and issues links
         "reference/changelog.rst",
@@ -200,16 +207,74 @@ pygments_style = None
 # Chosen Themes:
 # * https://github.com/bashtage/sphinx-material/
 # * https://github.com/myyasuda/sphinx_materialdesign_theme
-html_theme = "sphinx_typo3_theme"
+html_theme = "sphinx_material"
 
-html_theme_options = {}
+if html_theme == "sphinx_material":
+    html_theme_options = {
+        "google_analytics_account": "UA-54780881-2",
+        "base_url": "https://docs.seldon.io/projects/seldon-core/",
+        "color_primary": "indigo",
+        "color_accent": "teal",
+        "repo_url": "https://github.com/SeldonIO/seldon-core/",
+        "repo_name": "Seldon Core",
+        "nav_title": "Seldon Core Documentation",
+        "globaltoc_depth": 3,
+        "globaltoc_collapse": True,
+        "globaltoc_includehidden": True,
+        "repo_type": "github",
+        # We're currently not providing any past versions info
+        # https://bashtage.github.io/sphinx-material/customization.html#version-dropdown
+        "version_dropdown": False,
+        "master_doc": False,
+        "nav_links": [
+            {
+                "href": "/",
+                "internal": False,
+                "title": "🚀 Our Other Projects & Products:",
+            },
+            {
+                "href": "https://docs.seldon.io/projects/alibi/en/stable/",
+                "internal": False,
+                "title": "Alibi Explain",
+            },
+            {
+                "href": "https://docs.seldon.io/projects/alibi-detect/en/stable/",
+                "internal": False,
+                "title": "Alibi Detect",
+            },
+            {
+                "href": "https://mlserver.readthedocs.io/en/latest/",
+                "internal": False,
+                "title": "MLServer",
+            },
+            {
+                "href": "https://tempo.readthedocs.io/en/latest/",
+                "internal": False,
+                "title": "Tempo SDK",
+            },
+            {
+                "href": "https://deploy.seldon.io",
+                "internal": False,
+                "title": "Seldon Enterprise Platform",
+            },
+            {
+                "href": "https://github.com/SeldonIO/seldon-deploy-sdk#seldon-deploy-sdk",
+                "internal": False,
+                "title": "Seldon Enterprise Platform SDK",
+            },
+        ],
+    }
 
-# html_sidebars = {
-#     "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
-# }
+    extensions.append("sphinx_material")
+    html_theme_path = sphinx_material.html_theme_path()
+    html_context = sphinx_material.get_html_context()
+
+html_sidebars = {
+    "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
+}
 
 # The Seldon Logo located at the top of the navigation bar.
-html_logo = "seldon.png"
+html_logo = "Seldon_White.png"
 
 html_favicon = "favicon.ico"
 
@@ -218,7 +283,7 @@ html_favicon = "favicon.ico"
 # documentation.
 html_static_path = ["_static"]
 
-# html_css_files = ['theme_overrides.css']
+html_css_files = ["theme_overrides.css"]
 
 html_extra_path = ["_extra"]
 

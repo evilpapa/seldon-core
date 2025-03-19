@@ -134,7 +134,7 @@ spec:
   protocol: kfserving
 
 ```
-Follow a [benchmarking notebook for CIFAR10 image payload logging showing 3K predictions per second with Triton Inference Server](../examples/kafka_logger.html).
+请参考 [CIFAR10 图像负载日志记录的基准测试笔记本，展示了使用 Triton 推理服务器每秒 3K 次预测](../examples/kafka_logger.html)。
 
 ## 设置全局默认值
 

@@ -12,7 +12,7 @@
 
 实例中的基础框架使用 Seldon Core 有效负载记录器将请求传递给异步处理它们的组件。结果可以继续传递给告警系统。
 
-![Example architecture](analytics.png)
+![架构示例](analytics.png)
 
 
 

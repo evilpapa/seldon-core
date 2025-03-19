@@ -289,4 +289,3 @@ wheel==0.42.0
 # The following packages are considered to be unsafe in a requirements file:
 # pip
 # setuptools
-sphinx-typo3-theme==4.9.0

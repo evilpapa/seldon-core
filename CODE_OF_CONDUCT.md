@@ -1,8 +1,8 @@
-# Contributor Covenant Code of Conduct
+# 贡献者公约行为准则
 
-## Our Pledge
+## 我们的承诺
 
-In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation.
+为了促进一个开放和欢迎的环境，我们作为贡献者和维护者承诺，无论年龄、体型、残疾、种族、性别认同与表达、经验水平、国籍、个人外貌、种族、宗教或性取向，所有人都能在我们的项目和社区中享有无骚扰的参与体验。
 
 ## Our Standards
 
